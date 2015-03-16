@@ -116,19 +116,23 @@ ggplot(data=MCClist,aes(x=sqrt(pAir),y=pEffectiveComp))+geom_point()
 fit <- lm(pEffectiveComp ~ pProduct+sqrt(pRnD)+ pAir, data=MCClist)
 summary(fit) 
 dfPlatform<-LMsummaryLine(fit)
-
+plot(fit)
 
 fit <- lm(pEffectiveComp ~ pProduct+sqrt(pRnD)+ sqrt(pAir), data=MCClist)
 summary(fit) 
 dfPlatform<-LMsummaryLine(fit)
+plot(fit)
 
 #Keeping pAir without sqrt
 
-fit <- lm(pEffectiveComp ~ pProduct+sqrt(pRnD)+ pAir, data=MCClist)
+fit <- lm(pEffectiveComp ~ pProduct + pProduct:pAir+ sqrt(pRnD)+ pAir, data=MCClist)
 summary(fit) 
 dfPlatform<-LMsummaryLine(fit)
 plot(fit)
+```
 
+
+```{r pVessel}
 ggplot(data=MCClist,aes(x=pVessel,y=pEffectiveComp))+geom_point()
 ggplot(data=MCClist,aes(x=sqrt(pVessel),y=pEffectiveComp))+geom_point()
 #Sqrt doesn't seem to illuminate much
@@ -136,6 +140,15 @@ fit <- lm(pEffectiveComp ~ pProduct+sqrt(pRnD)+ pAir+pVessel, data=MCClist)
 summary(fit) 
 dfPlatform<-rbind(dfPlatform,LMsummaryLine(fit))
 
+fit <- lm(pEffectiveComp ~sqrt(pRnD)+ pAir+pVessel, data=subset(MCClist,rownames(MCClist)!=58))
+summary(fit) 
+plot(fit)
+dfPlatform<-rbind(dfPlatform,LMsummaryLine(fit))
+
+```
+Leaving off vessel as it complicates products and after an outlier is removed it has a reversed sign.
+
+```{r pLand}
 #Slight reduction in R-Squared
 
 
@@ -146,29 +159,29 @@ ggplot(data=MCClist,aes(x=pLand,y=pEffectiveComp))+geom_point()
 fit <- lm(pEffectiveComp ~ pLand, data=MCClist)
 summary(fit) 
 
-fit <- lm(pEffectiveComp ~ pProduct+sqrt(pRnD)+ pAir+pVessel+pLand, data=MCClist)
+fit <- lm(pEffectiveComp ~pProduct + sqrt(pRnD)+ pAir+pLand, data=subset(MCClist,rownames(MCClist)!=58))
 summary(fit) 
+plot(fit)
 ```
 
 Land has a sign reversal on inclusion and reduces the F-statistic, so well leave it out.
 
-```{r }
-dfPlatform<-rbind(dfPlatform,LMsummaryLine(fit))
-
-
-
-
+```{r MnS}
 
 ggplot(data=MCClist,aes(x=pMnS,y=pEffectiveComp))+geom_point()
+ggplot(data=MCClist,aes(x=sqrt(pMnS),y=pEffectiveComp))+geom_point()
 fit <- lm(pEffectiveComp ~ pMnS, data=MCClist)
 summary(fit) 
-dfPlatform<-rbind(dfPlatform,LMsummaryLine(fit))
-
-
-fit <- lm(pEffectiveComp ~ pMnS+  pService + I(pService^2), data=MCClist)
+fit <- lm(pEffectiveComp ~ sqrt(pMnS), data=MCClist)
 summary(fit) 
 dfPlatform<-rbind(dfPlatform,LMsummaryLine(fit))
 
+fit <- lm(pEffectiveComp ~ sqrt(pRnD)+ pAir+pVessel+pLand, data=MCClist)
+summary(fit) 
+
+fit <- lm(pEffectiveComp ~ pAir+pVessel+pLand+sqrt(pMnS), data=MCClist)
+summary(fit) 
+plot(fit)
 
 ggplot(data=MCClist,aes(x=pEnC,y=pEffectiveComp))+geom_point()
 fit <- lm(pEffectiveComp ~ pEnC, data=MCClist)
