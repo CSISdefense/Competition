@@ -1,0 +1,26 @@
+---
+title: "Obligations by PoPStateCode - Tiny to Exclude"
+author: "JE"
+date: "Friday, January 30, 2015"
+output: html_document
+---
+"Obligations by PoPStateCode - Tiny to Exclude" identifies Place of Performance State Codes (PoPStateCode) which do not exceed $100 million in total obligations in any given year from 2000-2013 or over $1 billion for the period.
+
+In total, there are 14 PoPStateCodes excluded by this threshold:
+
+VI
+AS
+MP
+AE
+PW
+US
+UK
+GM
+GB
+JA
+ON
+QC
+"   "  (Just a blank)
+BC
+
+This analysis was performed using a custom query drawing off of the view Summary.CompetitionVehicleHistoryBucketSubCustomerClassification

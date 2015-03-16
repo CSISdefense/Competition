@@ -1,0 +1,19 @@
+---
+title: "Obligations by MCC - Tiny to Exclude"
+author: "JE"
+date: "Wednesday, January 28, 2015"
+output: html_document
+---
+
+"Obligations by MCC - Tiny to Exclude" identifies Major Command Codes (MCCs) which do not exceed $100 million in total obligations in any given year from 2000-2013 or over $1 billion for the period.
+In total, there are 8 MCCs excluded by this threshold:
+ORG-2841
+ORG-2776
+ORG-4793
+ORG-2849
+ORG-2762
+ORG-4020
+ORG-2840
+ORG-2757
+
+This analysis was performed using a custom query drawing off of the view Summary.CompetitionVehicleHistoryBucketSubCustomerClassification
