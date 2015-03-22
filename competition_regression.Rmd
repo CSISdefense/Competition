@@ -9,7 +9,7 @@ This is an R Markdown document. Markdown is a simple formatting syntax for autho
 
 ```{r hiddensetup, echo = FALSE}
 require(ggplot2)
-require(stringr)
+require(stringr)MCC
 require(plyr)
 require(Hmisc)
 options(error=recover)
@@ -18,7 +18,7 @@ setwd("K:\\Development\\Competition")
 Path<-"K:\\2007-01 PROFESSIONAL SERVICES\\R scripts and data\\"
 # Path<-"C:\\Users\\Greg Sanders\\SkyDrive\\Documents\\R Scripts and Data SkyDrive\\"
 source(paste(Path,"lookups.r",sep=""))
-
+layout(matrix(c(1,2,3,4),2,2))
 ```
 
 When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
@@ -31,9 +31,20 @@ MCClist  <- read.csv(
     stringsAsFactors = TRUE
     )
 
-MCClist$TotalValue<-MCClist$TotalValue*1000000000
-MCClist<-subset(MCClist,TotalValue>=50000000)
-log10(MCClist$TotalValue)
+MCClist$TotalValue<-MCClist$TotalValue
+MCClist<-subset(MCClist,!MajorCommandID %in% c("ORG-2841",
+"ORG-2776",
+"ORG-4793",
+"ORG-2849",
+"ORG-2762",
+"ORG-4020",
+"ORG-2840",
+"ORG-2757")
+)
+
+ggplot(data=MCClist,aes(x=pEffectiveComp))+geom_bar()
+ggplot(data=MCClist,aes(x=sqrt(pEffectiveComp)))+geom_bar()
+ggplot(data=MCClist,aes(x=log1p(pEffectiveComp)))+geom_bar()
 
 
 names(MCClist)
@@ -64,31 +75,44 @@ LMsummaryLine<-function(fit,Unit=NULL){
 
 rcorr(as.matrix(subset(MCClist,select=c(pProduct,pService,pRnD))))
 
-ggplot(data=MCClist,aes(x=pProduct,y=pEffectiveComp))+geom_point()
+ggplot(data=MCClist,aes(x=pAir))+geom_bar(bin=0.01)
+ggplot(data=MCClist,aes(x=sqrt(pAir)))+geom_bar(bin=0.01)
+ggplot(data=MCClist,aes(x=log1p(pAir)))+geom_bar(bin=0.01)
+
+
+
+ggplot(data=MCClist,aes(x=pService,y=pEffectiveComp))+geom_point()
 fit <- lm(pEffectiveComp ~ pService, data=MCClist)
 summary(fit) 
 dfPSR<-LMsummaryLine(fit)   
 plot(fit)
+MCClist$pcService<-MCClist$pService-0.5
+
+
+ggplot(data=MCClist,aes(x=pcService,y=pEffectiveComp))+geom_point()
+fit <- lm(pEffectiveComp ~ pcService + I(pcService^2), data=MCClist)
+summary(fit) 
+dfPSR<-LMsummaryLine(fit)   
+plot(fit)
+
 
 ggplot(data=MCClist,aes(x=pProduct,y=pEffectiveComp))+geom_point()
 fit <- lm(pEffectiveComp ~ pProduct, data=MCClist)
 summary(fit) 
-dfPSR<-LMsummaryLine(fit)   
+sqdfPSR<-LMsummaryLine(fit)   
 plot(fit)
 
 
 ggplot(data=MCClist,aes(x=pRnD,y=pEffectiveComp))+geom_point()
 MCClist$pRnD[MCClist$pRnD<0]<-0
-ggplot(data=MCClist,aes(x=sqrt(pRnD),y=pEffectiveComp))+geom_point()
-fit <- lm(pEffectiveComp ~ pService+ sqrt(pRnD), data=MCClist)
+
+
+ggplot(data=MCClist,aes(x=log1p(pRnD),y=pEffectiveComp))+geom_point()
+fit <- lm(pEffectiveComp ~ pcService + I(pcService^2) + sqrt(pRnD), data=MCClist)
 summary(fit) 
 dfPSR<-LMsummaryLine(fit)   
 plot(fit)
 
-fit <- lm(pEffectiveComp ~ pProduct+ sqrt(pRnD), data=MCClist)
-summary(fit) 
-dfPSR<-LMsummaryLine(fit)   
-plot(fit)
 
 
 
@@ -105,7 +129,8 @@ Switching over ot log of RnD is significantly more promising, but still doesn't 
 
 ```{r Platform}
 
-rcorr(as.matrix(subset(MCClist,select=c(pProduct,pRnD,pAir,pVessel,pLand,pWnA,pMnS,pEnC))))
+rcorr(as.matrix(subset(MCClist,select=c(pService,pRnD,pFnC,pAir,pVessel,pLand,pWnA,pMnS,pEnC))))
+rcorr(cbind(MCClist$pFnC,MCClist$pService^2))
 #Missiles and Space is highly correlated with RnD
 
 
@@ -113,40 +138,57 @@ rcorr(as.matrix(subset(MCClist,select=c(pProduct,pRnD,pAir,pVessel,pLand,pWnA,pM
 # fit <- lm(y ~ x1 + x2 + x3, data=mydata)
 ggplot(data=MCClist,aes(x=pAir,y=pEffectiveComp))+geom_point()
 ggplot(data=MCClist,aes(x=sqrt(pAir),y=pEffectiveComp))+geom_point()
-fit <- lm(pEffectiveComp ~ pProduct+sqrt(pRnD)+ pAir, data=MCClist)
+fit <- lm(pEffectiveComp ~ pcService+I(pcService^2)+ sqrt(pRnD)+ pAir, data=MCClist)
 summary(fit) 
-dfPlatform<-LMsummaryLine(fit)
+dfMCC<-LMsummaryLine(fit)
 plot(fit)
 
-fit <- lm(pEffectiveComp ~ pProduct+sqrt(pRnD)+ sqrt(pAir), data=MCClist)
+fit <- lm(pEffectiveComp ~ pcService+I(pcService^2)+ sqrt(pAir), data=MCClist)
 summary(fit) 
-dfPlatform<-LMsummaryLine(fit)
+dfMCC<-LMsummaryLine(fit)
 plot(fit)
 
-#Keeping pAir without sqrt
 
-fit <- lm(pEffectiveComp ~ pProduct + pProduct:pAir+ sqrt(pRnD)+ pAir, data=MCClist)
-summary(fit) 
-dfPlatform<-LMsummaryLine(fit)
-plot(fit)
 ```
 
 
 ```{r pVessel}
 ggplot(data=MCClist,aes(x=pVessel,y=pEffectiveComp))+geom_point()
 ggplot(data=MCClist,aes(x=sqrt(pVessel),y=pEffectiveComp))+geom_point()
+
+ggplot(data=MCClist,aes(x=pVessel))+geom_bar(bin=0.01)
+ggplot(data=MCClist,aes(x=sqrt(pVessel)))+geom_bar(bin=0.01)
+ggplot(data=MCClist,aes(x=log1p(pVessel)))+geom_bar(bin=0.01)
+
+
 #Sqrt doesn't seem to illuminate much
 fit <- lm(pEffectiveComp ~ pProduct+sqrt(pRnD)+ pAir+pVessel, data=MCClist)
 summary(fit) 
-dfPlatform<-rbind(dfPlatform,LMsummaryLine(fit))
+dfMCC<-rbind(dfMCC,LMsummaryLine(fit))
 
-fit <- lm(pEffectiveComp ~sqrt(pRnD)+ pAir+pVessel, data=subset(MCClist,rownames(MCClist)!=58))
+
+fit <- lm(pEffectiveComp ~ pcService+I(pcService^2)+ sqrt(pRnD)+ sqrt(pAir) +sqrt(pVessel), data=MCClist)
 summary(fit) 
+dfMCC<-LMsummaryLine(fit)
 plot(fit)
-dfPlatform<-rbind(dfPlatform,LMsummaryLine(fit))
+
+fit <- lm(pEffectiveComp ~ pcService+I(pcService^2)+ sqrt(pRnD)+ pAir +pVessel, data=MCClist)
+summary(fit) 
+dfMCC<-LMsummaryLine(fit)
+plot(fit)
+
+fit <- lm(pEffectiveComp ~ pcService+I(pcService^2)+ sqrt(pRnD)+ pAir +pVessel,
+          data=MCClist[rownames(MCClist)!=58,])
+summary(fit) 
+dfMCC<-LMsummaryLine(fit)
+plot(fit)
+
+
 
 ```
-Leaving off vessel as it complicates products and after an outlier is removed it has a reversed sign.
+
+
+Leaving off vessel as after an outlier is removed it has a reversed sign.
 
 ```{r pLand}
 #Slight reduction in R-Squared
@@ -154,368 +196,402 @@ Leaving off vessel as it complicates products and after an outlier is removed it
 
 ggplot(data=MCClist,aes(x=pLand,y=pEffectiveComp))+geom_point()
 ggplot(data=MCClist,aes(x=sqrt(pLand),y=pEffectiveComp))+geom_point()
-
+ggplot(data=MCClist,aes(x=log1p(pLand),y=pEffectiveComp))+geom_point()
 ggplot(data=MCClist,aes(x=pLand,y=pEffectiveComp))+geom_point()
-fit <- lm(pEffectiveComp ~ pLand, data=MCClist)
-summary(fit) 
 
-fit <- lm(pEffectiveComp ~pProduct + sqrt(pRnD)+ pAir+pLand, data=subset(MCClist,rownames(MCClist)!=58))
+fit <- lm(pEffectiveComp ~ pcService+I(pcService^2)+ sqrt(pRnD)+ pAir + pLand, data=MCClist)
 summary(fit) 
+dfMCC<-LMsummaryLine(fit)
 plot(fit)
+
+
+fit <- lm(pEffectiveComp ~ pcService+I(pcService^2)+ sqrt(pRnD)+ sqrt(pAir) + sqrt(pLand), data=MCClist)
+summary(fit) 
+dfMCC<-LMsummaryLine(fit)
+plot(fit)
+
+
 ```
 
-Land has a sign reversal on inclusion and reduces the F-statistic, so well leave it out.
+Land vehicles has a smaller competitive than other platforms, but it still should be negative, so we'll leave it out.
 
 ```{r MnS}
 
 ggplot(data=MCClist,aes(x=pMnS,y=pEffectiveComp))+geom_point()
 ggplot(data=MCClist,aes(x=sqrt(pMnS),y=pEffectiveComp))+geom_point()
-fit <- lm(pEffectiveComp ~ pMnS, data=MCClist)
-summary(fit) 
-fit <- lm(pEffectiveComp ~ sqrt(pMnS), data=MCClist)
-summary(fit) 
-dfPlatform<-rbind(dfPlatform,LMsummaryLine(fit))
 
-fit <- lm(pEffectiveComp ~ sqrt(pRnD)+ pAir+pVessel+pLand, data=MCClist)
+
+fit <- lm(pEffectiveComp ~ pcService+I(pcService^2)+ sqrt(pRnD)+ pAir + pMnS, data=MCClist)
 summary(fit) 
 
-fit <- lm(pEffectiveComp ~ pAir+pVessel+pLand+sqrt(pMnS), data=MCClist)
+fit <- lm(pEffectiveComp ~ pcService+I(pcService^2)+ pAir + pMnS, data=MCClist)
 summary(fit) 
 plot(fit)
 
-ggplot(data=MCClist,aes(x=pEnC,y=pEffectiveComp))+geom_point()
-fit <- lm(pEffectiveComp ~ pEnC, data=MCClist)
+
+
+fit <- lm(pEffectiveComp ~ pcService+I(pcService^2)+ pAir + pMnS  +pVessel, data=subset(MCClist,
+                                                                       
+                                                                                         rownames(MCClist)!=58))
 summary(fit) 
-dfPlatform<-rbind(dfPlatform,LMsummaryLine(fit))
-
-layout(matrix(c(1,2,3,4),2,2)) # optional 4 graphs/page 
 plot(fit)
+```
 
+Due to the correlation betwen pMnS and pRnD, it is risks multicollinearity to have them both in the same plot.Happily, MnS appears has the correct sign and a lower p-value than sqrt(RnD) which also eliminates the difficult to interpret square roots. Trading them appears to be a positive exchange. Land briefly showed the wrong sign, but upon removing entry 11, that problem was eliminated. However, adding vessel back in without entry 58 still leaves vessel with a positive sign.
+
+```{r pWnA}
 
 
 ggplot(data=MCClist,aes(x=pWnA,y=pEffectiveComp))+geom_point()
-fit <- lm(pEffectiveComp ~ pWnA, data=MCClist)
+ggplot(data=MCClist,aes(x=sqrt(pWnA),y=pEffectiveComp))+geom_point()
+
+
+fit <- lm(pEffectiveComp ~ pcService+I(pcService^2)+ pAir + pMnS +pWnA, data=MCClist)
 summary(fit) 
-dfPlatform<-rbind(dfPlatform,LMsummaryLine(fit))
-
-
-fit <- lm(pEffectiveComp ~ pWnA+  pService + I(pService^2), data=MCClist)
-summary(fit) 
-dfPlatform<-rbind(dfPlatform,LMsummaryLine(fit))
-
-
-fit <- lm(pEffectiveComp ~ pWnA+ pAir+ pService + I(pService^2), data=MCClist)
-summary(fit) 
-dfPlatform<-rbind(dfPlatform,LMsummaryLine(fit))
 plot(fit)
 
-fit <- lm(pEffectiveComp ~ pWnA+ pAir+ pService + I(pService^2), data=MCClist[rownames(MCClist)!=26
-                                                                                  ,])
-summary(fit) 
-dfPlatform<-rbind(dfPlatform,LMsummaryLine(fit))
-plot(fit)
+dfMCC<-rbind(dfMCC,LMsummaryLine(fit))
 
 
-
-MCClist$pPlatform<-(MCClist$pAir + MCClist$pMnS + MCClist$pVessel+MCClist$pLand+
-                        MCClist$pWnA+MCClist$pEnC)
-ggplot(data=MCClist,aes(x=pPlatform,y=pEffectiveComp))+geom_point()
-fit <- lm(pEffectiveComp ~ pPlatform, data=MCClist)
-summary(fit) 
-dfPlatform<-rbind(dfPlatform,LMsummaryLine(fit))
-plot(fit)
-
-fit <- lm(pEffectiveComp ~ pPlatform+  pService + I(pService^2), data=MCClist)
-summary(fit) 
-dfPlatform<-rbind(dfPlatform,LMsummaryLine(fit))
-
-
-MCClist$pPlatformNoLand<-(MCClist$pAir + MCClist$pMnS + MCClist$pVessel+MCClist$pWnA+MCClist$pEnC)
-ggplot(data=MCClist,aes(x=pPlatformNoLand,y=pEffectiveComp))+geom_point()
-fit <- lm(pEffectiveComp ~ pPlatformNoLand, data=MCClist)
-summary(fit) 
-dfPlatform<-rbind(dfPlatform,LMsummaryLine(fit))
-
-fit <- lm(pEffectiveComp ~ pPlatformNoLand+  pService + I(pService^2), data=MCClist)
-summary(fit) 
-dfPlatform<-rbind(dfPlatform,LMsummaryLine(fit))
-plot(fit)
-
-MCClist$pPlatformNoLandOrAir<-(MCClist$pMnS + MCClist$pVessel+MCClist$pWnA+MCClist$pEnC)
-ggplot(data=MCClist,aes(x=pPlatformNoLandOrAir,y=pEffectiveComp))+geom_point()
-fit <- lm(pEffectiveComp ~ pPlatformNoLandOrAir, data=MCClist)
-summary(fit) 
-dfPlatform<-rbind(dfPlatform,LMsummaryLine(fit))
-
-
-
-fit <- lm(pEffectiveComp ~ pPlatformNoLandOrAir + pAir, data=MCClist)
-summary(fit) 
-dfPlatform<-rbind(dfPlatform,LMsummaryLine(fit))
-plot(fit)
-
-fit <- lm(pEffectiveComp ~ pAir + pPlatformNoLandOrAir+  pService + I(pService^2), data=MCClist)
-summary(fit) 
-dfPlatform<-rbind(dfPlatform,LMsummaryLine(fit))
-plot(fit)
-
-MCClist$pWAMnS<-(MCClist$pMnS + MCClist$pWnA)
-ggplot(data=MCClist,aes(x=log1p(pWAMnS),y=pEffectiveComp))+geom_point()
-fit <- lm(pEffectiveComp ~ pWAMnS, data=MCClist)
-summary(fit) 
-dfPlatform<-rbind(dfPlatform,LMsummaryLine(fit))
-
-
-
-fit <- lm(pEffectiveComp ~ pWAMnS+  pService + I(pService^2), data=subset(MCClist,rownames(MCClist)!=59))
-summary(fit) 
-dfPlatform<-rbind(dfPlatform,LMsummaryLine(fit))
-plot(fit)
-
-fit <- lm(pEffectiveComp ~ pAir + pWAMnS, data=MCClist)
-summary(fit) 
-dfPlatform<-rbind(dfPlatform,LMsummaryLine(fit))
-plot(fit)
-
-fit <- lm(pEffectiveComp ~ pWAMnS+ pAir+  pService + I(pService^2), data=MCClist)
-summary(fit) 
-dfPlatform<-rbind(dfPlatform,LMsummaryLine(fit))
-plot(fit)
-
-
-View(dfPlatform)
 ```
 
-Platform No Land seems to be the best fit, but it does have a fat tail at the bottom end in the Q-Q plot. However, transforming the data does not appear to help matters.
+```{r ElectronicAndCommunications}
 
+ggplot(data=MCClist,aes(x=pEnC,y=pEffectiveComp))+geom_point()
+ggplot(data=MCClist,aes(x=sqrt(pEnC),y=pEffectiveComp))+geom_point()
+ggplot(data=MCClist,aes(x=log1p(pEnC),y=pEffectiveComp))+geom_point()
 
-
-
-
-
-```{r Characteristic}
-#
-# fit <- lm(y ~ x1 + x2 + x3, data=mydata)
-ggplot(data=MCClist,aes(x=pFixed,y=pEffectiveComp))+geom_point()
-fit <- lm(pEffectiveComp ~ pFixed, data=MCClist)
+fit <- lm(pEffectiveComp ~ I(pcService^2)+ pAir  +pMnS +pWnA +pEnC, data=MCClist)
 summary(fit) 
-dfCharacteristic<-LMsummaryLine(fit)
 plot(fit)
 
-fit <- lm(pEffectiveComp ~ pFixed + I(pFixed^2), data=MCClist)
+fit <- lm(pEffectiveComp ~ I(pcService^2)+ pAir  +pMnS +pWnA +pLand+ pEnC, data=MCClist)
 summary(fit) 
-dfCharacteristic<-rbind(dfCharacteristic,LMsummaryLine(fit))
+plot(fit)
 
-
-ggplot(data=MCClist,aes(x=pCostPlus,y=pEffectiveComp))+geom_point()
-fit <- lm(pEffectiveComp ~ pCostPlus , data=MCClist)
+fit <- lm(pEffectiveComp ~ I(pcService^2)+ pAir  +pMnS +pWnA +pEnC +pVessel, data=subset(MCClist,
+                
+                                                                                         rownames(MCClist)!=58 ))
 summary(fit) 
-dfCharacteristic<-rbind(dfCharacteristic,LMsummaryLine(fit))
+plot(fit)
+```
+
+pcService was dropped because its p-value reached one, after the addition of Electronics and Communications it provided no additional information. Unfortunately attempts to reintroduce vessel or land were unsuccessful as the sign was still postive.
+
+
+```{r FacilityAndConstruction}
+
+ggplot(data=MCClist,aes(x=pFnC,y=pEffectiveComp))+geom_point()
+ggplot(data=MCClist,aes(x=sqrt(pFnC),y=pEffectiveComp))+geom_point()
+ggplot(data=MCClist,aes(x=log1p(pFnC),y=pEffectiveComp))+geom_point()
 
 
 
-fit <- lm(pEffectiveComp ~ pCostPlus + I(pCostPlus^2), data=MCClist)
+
+fit <- lm(pEffectiveComp ~ I(pcService^2)+ pAir  +pMnS +pWnA +pEnC +pFnC, data=MCClist)
 summary(fit) 
-dfCharacteristic<-rbind(dfCharacteristic,LMsummaryLine(fit))
-
-ggplot(data=MCClist,aes(x=pIncentFee,y=pEffectiveComp))+geom_point()
-fit <- lm(pEffectiveComp ~ pIncentFee, data=MCClist)
-summary(fit) 
-dfCharacteristic<-rbind(dfCharacteristic,LMsummaryLine(fit))
 plot(fit)
 
 
-fit <- lm(pEffectiveComp ~ pIncentFee +pCostPlus, data=MCClist)
+fit <- lm(pEffectiveComp ~ pcService+I(pcService^2)+ pAir  +pMnS +pWnA +pEnC +pFnC +pLand, data=MCClist)
 summary(fit) 
-dfCharacteristic<-rbind(dfCharacteristic,LMsummaryLine(fit))
+plot(fit)
 
-fit <- lm(pEffectiveComp ~ pIncentFee +pFixed, data=MCClist)
+fit <- lm(pEffectiveComp ~ I(pcService^2)+ pAir  +pMnS +pWnA +pEnC +pVessel + pFnC, data=MCClist)
 summary(fit) 
-dfCharacteristic<-rbind(dfCharacteristic,LMsummaryLine(fit))
+plot(fit)
+
+fit <- lm(pEffectiveComp ~ I(pcService^2)+ pAir  +pMnS +pWnA +pEnC +pVessel + pFnC, data=subset(MCClist,
+                                                                                         rownames(MCClist)!=58 &
+                                                                                             rownames(MCClist)!=59 ))
+summary(fit) 
+plot(fit)
+```
+
+
+The remaining platform portfolios: Other R&D, other products, and other services were not included in this analysis as the type of they either do not support a particular platform or said support is uncategorized. As a result they add little information to that already available through pProduct, pService, and pRnD
+
+```{r IDV}
+rcorr(as.matrix(subset(MCClist,select=c(pService,pRnD,pAir,pLand,pWnA,pMnS,pEnC,pIDV,pFixed,pCostPlus,pIncentFee))))
+
 
 ggplot(data=MCClist,aes(x=pIDV,y=pEffectiveComp))+geom_point()
-fit <- lm(pEffectiveComp ~ pIDV, data=MCClist)
+
+fit <- lm(pEffectiveComp ~ I(pcService^2)+ pAir  +pMnS +pWnA +pEnC +pFnC +pIDV, data=MCClist)
 summary(fit) 
-dfCharacteristic<-rbind(dfCharacteristic,LMsummaryLine(fit))
 plot(fit)
 
-
-
-fit <- lm(pEffectiveComp ~ pWnA+ pAir+ pService + I(pService^2) +pFixed, data=MCClist[rownames(MCClist)!=26
-                                                                                  ,])
+fit <- lm(pEffectiveComp ~ I(pcService^2)+ pAir + +pMnS + pWnA +pEnC +pIDV +pFnC +pService, data=MCClist)
+           
 summary(fit) 
-dfPlatform<-rbind(dfPlatform,LMsummaryLine(fit))
+dfMCC<-rbind(dfMCC,LMsummaryLine(fit))
 plot(fit)
-
-fit <- lm(pEffectiveComp ~ pWnA+ pAir+ pService + I(pService^2) +pCostPlus, data=MCClist[rownames(MCClist)!=26
-                                                                                  ,])
-summary(fit) 
-dfPlatform<-rbind(dfPlatform,LMsummaryLine(fit))
-plot(fit)
-
-fit <- lm(pEffectiveComp ~ pWnA+ pAir+ pService + I(pService^2) +pIncentFee, data=MCClist[rownames(MCClist)!=26
-                                                                                  ,])
-summary(fit) 
-dfPlatform<-rbind(dfPlatform,LMsummaryLine(fit))
-plot(fit)
-
-fit <- lm(pEffectiveComp ~ pFixed+ pAir+ pService + I(pService^2) +pIDV, data=MCClist[rownames(MCClist)!=26&
-                                                                                  ,])
-summary(fit) 
-dfPlatform<-rbind(dfPlatform,LMsummaryLine(fit))
-plot(fit)
-
-
-
-
-
-
-View(dfCharacteristic)
-
-```
-
-Both Incentive Fee and IDV are significant, but incentive fee has a sign opposite of what was expected by the study team. This may be driven by incentive fees often being used on larger more challenging contracts.
-
-
-```{r CharacteristicInspection}
-fit <- lm(pEffectiveComp ~ pIDV, data=MCClist)
-layout(matrix(c(1,2,3,4),2,2)) # optional 4 graphs/page 
-plot(fit)
-
-
-fit <- lm(pEffectiveComp ~ exp(pIDV), data=MCClist)
-layout(matrix(c(1,2,3,4),2,2)) # optional 4 graphs/page 
-summary(fit)
-plot(fit)
-
-fit <- lm(pEffectiveComp ~ log(pIDV+0.0001), data=MCClist)
-layout(matrix(c(1,2,3,4),2,2)) # optional 4 graphs/page 
-summary(fit)
-plot(fit)
-
-
-
-fit <- lm(pEffectiveComp ~ pIncentFee, data=MCClist)
-layout(matrix(c(1,2,3,4),2,2)) # optional 4 graphs/page 
-plot(fit)
-
-ggplot(data=MCClist,aes(x=pIncentFee,y=pEffectiveComp))+geom_point()
-ggplot(data=MCClist,aes(x=log(pIncentFee+0.00001),y=pEffectiveComp))+geom_point()
-
-
-fit <- lm(pEffectiveComp ~ log(pIncentFee+0.0001), data=MCClist)
-layout(matrix(c(1,2,3,4),2,2)) # optional 4 graphs/page 
-summary(fit)
-plot(fit)
-
 
 
 ```
 
+IDV is a solid new addition, statistically significant in its own right.
 
 
 
 
 
-
-
-
-
-```{r SizeAndCount}
-#
-# fit <- lm(y ~ x1 + x2 + x3, data=mydata)
-fit <- lm(pEffectiveComp ~ log(avSize), data=MCClist)
+```{r FixedPrice}
+ggplot(data=MCClist,aes(x=pFixed,y=pEffectiveComp))+geom_point()
+fit <- lm(pEffectiveComp ~ I(pcService^2)+ pAir + pEnC +pIDV +pWnA +pFnC +pFixed, data=MCClist)
 summary(fit) 
-dfSizeAndCount<-LMsummaryLine(fit)
-
-fit <- lm(pEffectiveComp ~ avSize, data=MCClist)
-summary(fit) 
-dfSizeAndCount<-rbind(dfSizeAndCount,LMsummaryLine(fit))
-
-fit <- lm(pEffectiveComp ~ log(TotalValue), data=MCClist)
-summary(fit) 
-dfSizeAndCount<-rbind(dfSizeAndCount,LMsummaryLine(fit))
-
-fit <- lm(pEffectiveComp ~ log(TotalCount), data=MCClist)
-summary(fit) 
-dfSizeAndCount<-rbind(dfSizeAndCount,LMsummaryLine(fit))
-
-fit <- lm(pEffectiveComp ~ log(TotalValue)+ log(TotalCount), data=MCClist)
-summary(fit) 
-dfSizeAndCount<-rbind(dfSizeAndCount,LMsummaryLine(fit))
-
-
+dfMCC<-rbind(dfMCC,LMsummaryLine(fit))
+plot(fit)
 
 
 ```
 
-Total Count and Total Size seem most promising, but they describe similar characterstics and of the two total count has the expected sign. Larger contracts tend to have lower rates of competition, so contracting office throughput appears to be the determining factor here with count by itself having the best p-values. We went directly to log because we are comparing greatly varied counts and dollar values, and quick checking with the untransformed values was not promising. However, after removing an outlier with fewer than 1,000 contracts, the pattern disappears.
+Fixed-price does does not subtsantially add to the model when compared to PMnS and pWnA which it replaces. The sigh also does not align with expectations, given tht fixed-price contracts place greater risk on the vendor.
 
-
-```{r CharacteristicInspection}
-fit <- lm(pEffectiveComp ~ log(TotalCount), data=TotalCount)
-layout(matrix(c(1,2,3,4),2,2)) # optional 4 graphs/page 
+```{r CostPluse}
+ggplot(data=MCClist,aes(x=pFixed,y=pEffectiveComp))+geom_point()
+fit <- lm(pEffectiveComp ~ I(pcService^2)+ pAir + pEnC +pWnA +pFnC+pIDV+pCostPlus, data=MCClist)
+summary(fit) 
+dfMCC<-rbind(dfMCC,LMsummaryLine(fit))
 plot(fit)
-summary(fit)
+
+fit <- lm(pEffectiveComp ~ I(pcService^2)+ pAir + pEnC +pWnA +pFnC+pIDV+pCostPlus, data=subset(MCClist,
+                                                                                               !rownames(MCClist) %in% c(59) ))
+summary(fit) 
+dfMCC<-rbind(dfMCC,LMsummaryLine(fit))
+plot(fit)
+```
+
+similarly, pCostPlus does not add to the model versus the correlating variables it replaces.
+
+
+```{r IncentiveFee}
+
+fit <- lm(pEffectiveComp ~ I(pcService^2)+ pAir  +pMnS +pWnA +pEnC +pFnC +pIDV +pIncentFee, data=MCClist)
+summary(fit) 
+plot(fit)
+
+fit <- lm(pEffectiveComp ~ I(pcService^2)+ pAir  +pWnA +pEnC +pFnC +pIDV +pCostPlus +pIncentFee+pCostPlus:pIncentFee, data=MCClist)
+summary(fit) 
+plot(fit)
+
+```
+
+The study team had expected incentive fee contracts to increase competition. In addition, it has an abysmal p-value, so it will not be added to the model.
+
+
+
+
+
+
+
+
+
+```{r TotalCount}
+
+rcorr(as.matrix(subset(MCClist,select=c(pService,pRnD,pAir,pLand,pWnA,pMnS,pEnC,pIDV,TotalCount,TotalValue,avSize))))
+
+ggplot(data=MCClist,aes(x=TotalCount))+geom_bar()
+ggplot(data=MCClist,aes(x=log(TotalCount)))+geom_bar()
+ggplot(data=MCClist,aes(x=TotalCount,y=pEffectiveComp))+geom_point()
 ggplot(data=MCClist,aes(x=log(TotalCount),y=pEffectiveComp))+geom_point()
-
-
-fit <- lm(pEffectiveComp ~ log(TotalCount), data=subset(MCClist,log(TotalCount)>3))
-layout(matrix(c(1,2,3,4),2,2)) # optional 4 graphs/page 
-plot(fit)
+fit <- lm(pEffectiveComp ~ I(pcService^2)+ pAir + pMnS  +pWnA+pEnC +pFnC +pIDV+log(TotalCount), data=MCClist)
 summary(fit)
-ggplot(data=subset(MCClist,log(TotalCount)>3),aes(x=log(TotalCount),y=pEffectiveComp))+geom_point()
-
-
-
-fit <- lm(pEffectiveComp ~ log(TotalValue), data=MCClist)
-layout(matrix(c(1,2,3,4),2,2)) # optional 4 graphs/page 
 plot(fit)
-ggplot(data=MCClist,aes(x=log(TotalValue),y=pEffectiveComp))+geom_point()
 
 
-fit <- lm(pEffectiveComp ~ log(TotalValue), data=subset(MCClist,log(TotalValue)>-2.5))
-layout(matrix(c(1,2,3,4),2,2)) # optional 4 graphs/page 
-plot(fit)
+ggplot(data=MCClist,aes(x=TotalCount))+geom_bar()
+ggplot(data=MCClist,aes(x=log(TotalCount)))+geom_bar()
+ggplot(data=MCClist,aes(x=TotalCount,y=pEffectiveComp))+geom_point()
+ggplot(data=MCClist,aes(x=log(TotalCount),y=pEffectiveComp))+geom_point()
+fit <- lm(pEffectiveComp ~ I(pcService^2)+ pAir + pMnS  +pWnA+pEnC +pFnC +pIDV+log(TotalCount)+pLand+pLand:I(pcService^2), data=MCClist)
 summary(fit)
+plot(fit)
+
+fit <- lm(pEffectiveComp ~ I(pcService^2)+ pAir + pMnS  +pWnA+pEnC +pFnC +pIDV+log(TotalCount)+pVessel+pVessel:I(pcService^2), data=subset(MCClist,
+                                                                                               !rownames(MCClist) %in% c(10,12.56,58,59) ))
+summary(fit)
+plot(fit)
 
 ```
 
 
-fitJoint <- lm(pEffectiveComp ~ pIDV+ pPlatform , data=MCClist)
-summary(fitJoint) # show results
-#Adding in RnD doesn't help at all
+
+```{r TotalValue}
+
+rcorr(as.matrix(subset(MCClist,select=c(pService,pRnD,pAir,pLand,pWnA,pMnS,pEnC,pIDV,TotalCount,TotalValue,avSize))))
+
+ggplot(data=MCClist,aes(x=TotalValue))+geom_bar()
+ggplot(data=MCClist,aes(x=log(TotalValue)))+geom_bar()
+ggplot(data=MCClist,aes(x=TotalValue,y=pEffectiveComp))+geom_point()
+ggplot(data=MCClist,aes(x=log(TotalValue),y=pEffectiveComp))+geom_point()
+fit <- lm(pEffectiveComp ~ I(pcService^2)+ pAir + pMnS  +pWnA+pEnC +pFnC +pIDV+log(TotalValue), data=MCClist)
+summary(fit)
+plot(fit)
+
+fit <- lm(pEffectiveComp ~ I(pcService^2)+ pAir + pFnC  +pWnA+pEnC +pIDV+log(TotalValue) + log(TotalValue):I(pcService^2), data=subset(MCClist,
+                                                                                     rownames(MCClist)!=26))
+summary(fit)
+plot(fit)
+
+fit <- lm(pEffectiveComp ~ pLand+pAir + pFnC  +pWnA+pEnC +pIDV+log(TotalValue), data=subset(MCClist,
+                                                                                     rownames(MCClist)!=26))
+summary(fit)
+plot(fit)
+
+fit <- lm(pEffectiveComp ~ pVessel+pAir + pFnC  +pWnA+pEnC +pIDV+log(TotalValue), data=subset(MCClist,
+                                                                                     rownames(MCClist)!=26&
+                                                                                         rownames(MCClist)!=58))
+summary(fit)
+plot(fit)
+
+fit <- lm(pEffectiveComp ~ pMnS+pAir + pFnC  +pWnA+pEnC +pIDV+log(TotalValue), data=subset(MCClist,
+                                                                                     rownames(MCClist)!=26))
+summary(fit)
+plot(fit)
+
+
+```
+
+
+
+```{r AverageSize}
+
+
+fit <- lm(pEffectiveComp ~ I(pcService^2)+ pAir  +pMnS +pWnA +pEnC +pFnC +pIDV +avSize, data=MCClist)
+summary(fit) 
+plot(fit)
+
+
+fit <- lm(pEffectiveComp ~ I(pcService^2)+ pAir  +pMnS +pWnA +pEnC +pFnC +pIDV +lavSize, data=MCClist)
+summary(fit) 
+plot(fit)
+
+rcorr(as.matrix(subset(MCClist,select=c(pService,pRnD,pAir,pLand,pWnA,pMnS,pEnC,pIDV,TotalCount,TotalValue,avSize))))
+
+ggplot(data=MCClist,aes(x=avSize))+geom_bar()
+ggplot(data=MCClist,aes(x=log(avSize)))+geom_bar()
+ggplot(data=MCClist,aes(x=avSize,y=pEffectiveComp))+geom_point()
+ggplot(data=MCClist,aes(x=log(avSize),y=pEffectiveComp))+geom_point()
+fit <- lm(pEffectiveComp ~ I(pcService^2)+ pAir + pLand  +log(avSize)  +pWnA+pEnC +pIDV+log(TotalCount), data=subset(MCClist,
+                                                                                     rownames(MCClist)!=26))
+summary(fit)
+plot(fit)
+
+
+fit <- lm(pEffectiveComp ~ I(pcService^2)+ pAir + pLand  +log(avSize)  +pWnA+pEnC +pIDV+log(TotalCount) +pRnD, data=subset(MCClist,
+                                                                                     rownames(MCClist)!=26))
+summary(fit)
+plot(fit)
 
 
 
 
 
-fitJoint <- lm(pEffectiveComp ~ pAir+ pMnS+ pIDV +pIncentFee  , data=MCClist)
-summary(fitJoint) # show results
-fitJoint <- lm(pEffectiveComp ~ pAir+ pMnS+ pIDV +pIncentFee +lavSize  , data=MCClist)
-summary(fitJoint) # show results
-#Incentive fee does work, though the sign is the reverse of what I expect
 
-fitJoint <- lm(pEffectiveComp ~ pAir+ pMnS+ pIDV  , data=MCClist)
-summary(fitJoint) # show results
-
-fitJoint <- lm(pEffectiveComp ~ pPlatformResidual + pIDV , data=MCClist)
-summary(fitJoint) # show results
+fit <- lm(pEffectiveComp ~ I(pcService^2)+ pAir + pLand  +log(avSize)  +pWnA+pEnC +pIDV+log(TotalCount) +pRnD +pVessel, data=subset(MCClist,
+                                                                                     rownames(MCClist)!=26) &
+              rownames(MCClist)!=59))
+summary(fit)
+plot(fit)
 
 
-
-# Other useful functions 
-# coefficients(fit) # model coefficients
-# confint(fit, level=0.95) # CIs for model parameters 
-#fitted(fit) # predicted values
-# residuals(fit) # residuals
-# anova(fit) # anova table 
-#vcov(fit) # covariance matrix for model parameters 
-#influence(fit) # regression diagnostics
-#Diagnostic Plots
-#Diagnostic plots provide checks for heteroscedasticity, normality, and influential observerations.
-# diagnostic plots 
-#layout(matrix(c(1,2,3,4),2,2)) # optional 4 graphs/page 
-#plot(fit)
+fit <- lm(log1p(pEffectiveComp) ~ I(pcService^2)+ pAir + pLand  +log(avSize)  +pWnA+pEnC +pIDV+log(TotalCount) +pRnD, data=subset(MCClist,
+                                                                                     rownames(MCClist)!=26) &
+              rownames(MCClist)!=59))
+summary(fit)
+plot(fit)
 
 
+```
+
+
+```{r StateValidation}
+fit <- lm(pEffectiveComp ~ pService:pProduct+ pAir  +pMnS +pWnA +pEnC  +pIDV +pService +pService:pIDV +pProduct:pService:pIDV, data=MCClist)
+summary(fit) 
+plot(fit)
+
+
+fit <- lm(pEffectiveComp ~ I(pcService^2)+ pAir  +pMnS +pWnA +pEnC  +pIDV +pIDV:I(pcService^2), data=MCClist)
+summary(fit) 
+plot(fit)
+
+
+fit <- lm(pEffectiveComp ~ I(pcService^2)+ pAir  +pMnS +pWnA +pEnC  +pIDV +pIDV:I(pcService^2)+pIDV:pcService +pcService, data=MCClist)
+summary(fit) 
+plot(fit)
+
+
+StateList  <- read.csv(
+    paste("data\\defense_state_competition_combined.csv", sep = ""),
+    header = TRUE, sep = ",", dec = ".", strip.white = TRUE, 
+    na.strings = c("NULL","NA",""),
+    stringsAsFactors = TRUE
+    )
+names(StateList)
+
+StateList <-subset(StateList ,!PoPstateCode %in% c("VI",
+"AS",
+"MP",
+"AE",
+"PW",
+"US",
+"UK",
+"GM",
+"GB",
+"JA",
+"ON",
+"QC",
+"   ",
+"BC"))
+
+rcorr(as.matrix(subset(StateList,select=c(pService,pProduct,pRnD,pAir,pLand,pVessel,pWnA,pFnC,pMnS,pEnC,pIDV,pFixed,pCostPlus,TotalCount,TotalValue,avSize))))
+
+StateList$pcService<-StateList$pService-0.5
+fit <- lm(pEffectiveComp ~ I(pcService^2)+ pAir  +pMnS +pWnA +pEnC  +pIDV +pIDV:I(pcService^2)+pIDV:pcService +pcService, data=StateList)
+summary(fit) 
+plot(fit)
+
+
+fit <- lm(pEffectiveComp ~  pLand +pMnS +pWnA +pEnC  +pIDV +pService, data=StateList)
+summary(fit) 
+plot(fit)
+
+
+
+fit <- lm(pEffectiveComp ~  pAir  +pMnS +pWnA +pWnA:pProduct+pEnC  +pIDV  +pProduct, data=StateList)
+summary(fit) 
+plot(fit)
+
+
+fit <- lm(pEffectiveComp ~  pAir  +pMnS +pWnA +pWnA:pIDV+pEnC  +pIDV  +pProduct, data=StateList)
+summary(fit) 
+plot(fit)
+
+fit <- lm(pEffectiveComp ~  pAir  +pMnS +pEnC +pIDV +pProduct, data=StateList)
+summary(fit) 
+plot(fit)
+
+fit <- lm(pEffectiveComp ~  pAir  +pMnS +pEnC +pIDV+ pVessel+pProduct, data=StateList)
+summary(fit) 
+plot(fit)
+
+
+fit <- lm(pEffectiveComp ~  pAir  +pMnS +pEnC +pIDV+ pVessel+pProduct+pEnC:pProduct, data=StateList)
+summary(fit) 
+plot(fit)
+
+
+fit <- lm(pEffectiveComp ~  pAir  +pMnS +pEnC +pIDV+ pVessel+pProduct +lavSize, data=StateList)
+summary(fit) 
+plot(fit)
+
+
+fit <- lm(pEffectiveComp ~  pAir  +pMnS +pWnA +pEnC +pLand +pVessel + pIDV +pService, data=StateList)
+summary(fit) 
+plot(fit)
+
+
+
+
+```
