@@ -1,0 +1,40 @@
+---
+title: "texreg info"
+author: "src"
+date: "Wednesday, March 18, 2015"
+output: html_document
+---
+
+http://cran.r-project.org/web/packages/texreg/vignettes/v55i08.pdf
+
+```{r echo = TRUE}
+
+
+
+fit1 <- lm(pEffectiveComp ~ pService, data=MCClist)
+
+fit2 <- lm(pEffectiveComp ~ pService+ pRnD, data=MCClist)
+
+fit3 <- lm(pEffectiveComp ~ pService+ pRnD+ sqrt(pRnD), data=MCClist)
+
+install.packages("texreg", repos="http://R-Forge.R-project.org")
+require(texreg)
+options(error=recover)
+
+screenreg(list(fit1, fit2, fit3))
+
+
+
+
+```
+
+
+
+```{r echo = TRUE}
+
+library(texreg)
+texreg(m,omit.coef="IDs")
+
+
+
+```
