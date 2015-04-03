@@ -9,7 +9,7 @@ This is an R Markdown document. Markdown is a simple formatting syntax for autho
 
 ```{r hiddensetup, echo = FALSE}
 require(ggplot2)
-require(stringr)MCC
+require(stringr)
 require(plyr)
 require(Hmisc)
 options(error=recover)
@@ -490,25 +490,16 @@ plot(fit)
 
 
 fit <- lm(pEffectiveComp ~ I(pcService^2)+ pAir + pLand  +log(avSize)  +pWnA+pEnC +pIDV+log(TotalCount) +pRnD +pVessel, data=subset(MCClist,
-                                                                                     rownames(MCClist)!=26) &
+                                                                                     rownames(MCClist)!=26 &
               rownames(MCClist)!=59))
 summary(fit)
 plot(fit)
 
 
 fit <- lm(log1p(pEffectiveComp) ~ I(pcService^2)+ pAir + pLand  +log(avSize)  +pWnA+pEnC +pIDV+log(TotalCount) +pRnD, data=subset(MCClist,
-                                                                                     rownames(MCClist)!=26) &
+                                                                                     rownames(MCClist)!=26 &
               rownames(MCClist)!=59))
 summary(fit)
-plot(fit)
-
-
-```
-
-
-```{r StateValidation}
-fit <- lm(pEffectiveComp ~ pService:pProduct+ pAir  +pMnS +pWnA +pEnC  +pIDV +pService +pService:pIDV +pProduct:pService:pIDV, data=MCClist)
-summary(fit) 
 plot(fit)
 
 
@@ -518,6 +509,14 @@ plot(fit)
 
 
 fit <- lm(pEffectiveComp ~ I(pcService^2)+ pAir  +pMnS +pWnA +pEnC  +pIDV +pIDV:I(pcService^2)+pIDV:pcService +pcService, data=MCClist)
+summary(fit) 
+plot(fit)
+
+```
+
+
+```{r StateValidation}
+fit <- lm(pEffectiveComp ~ pService:pProduct+ pAir  +pMnS +pWnA +pEnC  +pIDV +pService +pService:pIDV +pProduct:pService:pIDV, data=MCClist)
 summary(fit) 
 plot(fit)
 
