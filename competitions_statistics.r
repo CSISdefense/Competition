@@ -55,7 +55,7 @@ summary(MCC.fit)
 plot(MCC.fit)
 
 
-mcc.competition.combined<-cbind(mcc.competition.combined,predict(fit,mcc.competition.combined,interval="prediction",level=0.95))
+mcc.competition.combined<-cbind(mcc.competition.combined,predict(MCC.fit,mcc.competition.combined,interval="prediction",level=0.95))
 subset(mcc.competition.combined,lwr>pEffectiveComp|upr<pEffectiveComp)$MajorCommandID
 
 
