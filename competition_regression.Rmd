@@ -93,7 +93,7 @@ MCClist$pcService<-MCClist$pService-0.5
 
 
 ggplot(data=MCClist,aes(x=pcService,y=pEffectiveComp))+geom_point()
-fitb <- lm(pEffectiveComp ~ pcService + I(pcService^2), data=MCClist)
+fitb <- lm(pEffectiveComp ~ pcService + I(pcService^2), data = MCClist)
 summary(fitb) 
 dfPSR<-LMsummaryLine(fitb)   
 plot(fitb)
@@ -146,10 +146,13 @@ fitb <- lm(pEffectiveComp ~ pcService + I(pcService^2), data=MCClist)
 fitd <- lm(pEffectiveComp ~ pcService + I(pcService^2) + pRnD, data=MCClist)
 fite <- lm(pEffectiveComp ~ pcService + I(pcService^2) + pRnD+ sqrt(pRnD), data=MCClist)
 afit <- lm(pEffectiveComp ~ pcService+I(pcService^2)+ pRnD+ sqrt(pRnD)+ pAir, data=MCClist)
+summary(fite)
 summary(afit) 
 dfMCC<-LMsummaryLine(afit)
 plot(afit)
 screenreg(list(fita, fitb, fitd, fite, afit))
+##sqrt(pRnD) increases R^2 and the significance of pcService
+##pAir increases R^2, decreases significance of pcService but increases value and significance of pcservice^2 pvalue(.0114 to .0082)
 
 bfit <- lm(pEffectiveComp ~ pcService+I(pcService^2)+ pRnD+ sqrt(pRnD)+ pAir+sqrt(pAir), data=MCClist)  
 summary(bfit) 
@@ -157,7 +160,7 @@ dfMCC<-LMsummaryLine(bfit)
 plot(bfit)
 
 screenreg(list(fita, fitb, fitd, fite, afit, bfit))
-
+##adding sqrt(pAir) does not change any of the descirptive statistics, it decreases the coefficient on psdrvice^2 by .003. R^2 does not change.  Thus it should not be further included 
 
 ```
 
@@ -177,17 +180,25 @@ fit5 <- lm(pEffectiveComp ~ pProduct+ pRnD, data=MCClist)
 fit6 <- lm(pEffectiveComp ~ pProduct+ pRnD+ sqrt(pRnD), data=MCClist)
 fit7 <- lm(pEffectiveComp ~ pProduct+ pRnD+ sqrt(pRnD)+ pAir, data=MCClist)
 fit1 <- lm(pEffectiveComp ~ pProduct+ pRnD+ sqrt(pRnD)+ pAir+ pVessel, data=MCClist)
+summary(fitc)
+summary(fit6)
+summary(fit7)
 summary(fit1) 
 dfMCC<-rbind(dfMCC,LMsummaryLine(fit1))
 screenreg(list(fitc, fit5, fit6, fit7, fit1))
+##air and vessel do not do not change descriptive statistics to any meaningful extent and are not significant. 
 
 ##effectivecomp ~service + vessel
-afit <- lm(pEffectiveComp ~ pcService+ I(pcService^2)+ pRnD+ sqrt(pRnD)+ pAir, data=MCClist)
-bfit <- lm(pEffectiveComp ~ pcService+I(pcService^2)+ pRnD+ sqrt(pRnD)+ pAir+sqrt(pAir), data=MCClist)  
-fit2 <- lm(pEffectiveComp ~ pcService+ I(pcService^2)+ pRnD+ sqrt(pRnD)+ pAir+ sqrt(pAir) + pVessel, data=MCClist)
-fit8 <- lm(pEffectiveComp ~ pcService+ I(pcService^2)+ pRnD+ sqrt(pRnD)+ pAir+ sqrt(pAir) + pVessel+ sqrt(pVessel), data=MCClist)
-fit4 <- lm(pEffectiveComp ~ pcService+ I(pcService^2)+ pRnD+ sqrt(pRnD)+ pAir+ sqrt(pAir) + pVessel+ sqrt(pVessel), data=MCClist[rownames(MCClist)!=58,])
-screenreg(list(afit, bfit, fit2, fit8, fit4))
+afit <- lm(pEffectiveComp ~ pcService+ I(pcService^2)+ pRnD+ sqrt(pRnD)+ pAir, data=MCClist) 
+fit2 <- lm(pEffectiveComp ~ pcService+ I(pcService^2)+ pRnD+ sqrt(pRnD)+ pAir+ pVessel, data=MCClist)
+fit8 <- lm(pEffectiveComp ~ pcService+ I(pcService^2)+ pRnD+ sqrt(pRnD)+ pAir+ pVessel+ sqrt(pVessel), data=MCClist)
+fit4 <- lm(pEffectiveComp ~ pcService+ I(pcService^2)+ pRnD+ sqrt(pRnD)+ pAir+ pVessel+ sqrt(pVessel), data=MCClist[rownames(MCClist)!=58,])
+summary(afit)
+summary(fit2)
+summary(fit8)
+summary(fit4)
+screenreg(list(afit, fit2, fit8, fit4))
+##vessel is not significant, nor sqrt(vessel) nor when outliers are removed, and doesn't affect descriptive statistics of the model or other variables, thus it should not be included.  
 
 summary(fit2) 
 dfMCC<-LMsummaryLine(fit2)
@@ -210,7 +221,6 @@ plot(fit4)
 ```
 
 
-Leaving off vessel as after an outlier is removed it has a reversed sign.
 
 ```{r pLand}
 #Slight reduction in R-Squared
@@ -221,20 +231,22 @@ ggplot(data=MCClist,aes(x=sqrt(pLand),y=pEffectiveComp))+geom_point()
 ggplot(data=MCClist,aes(x=log1p(pLand),y=pEffectiveComp))+geom_point()
 ggplot(data=MCClist,aes(x=pLand,y=pEffectiveComp))+geom_point()
 
-bfit <- lm(pEffectiveComp ~ pcService+I(pcService^2)+ pRnD+ sqrt(pRnD)+ pAir+sqrt(pAir), data=MCClist)  
-afit1 <- lm(pEffectiveComp ~ pcService+I(pcService^2)+ pRnD+ sqrt(pRnD)+ pAir + sqrt(pAir)+ pLand, data=MCClist)
+bfit <- lm(pEffectiveComp ~ pcService+ I(pcService^2)+ pRnD+ sqrt(pRnD)+ pAir, data=MCClist)  
+afit1 <- lm(pEffectiveComp ~ pcService+I(pcService^2)+ pRnD+ sqrt(pRnD)+ pAir+ pLand, data=MCClist)
+summary(bfit)
 summary(afit1) 
 dfMCC<-LMsummaryLine(afit1)
 plot(afit1)
 screenreg(list(bfit, afit1))
+##adding land does not change any coefficients or descriptive statistics and pair is not statistically significant 
 
 afit2 <- lm(pEffectiveComp ~ pcService+ I(pcService^2)+ pRnD+ sqrt(pRnD)+ pAir+ sqrt(pAir)+ pLand+ sqrt(pLand), data=MCClist)
 summary(afit2) 
 dfMCC<-LMsummaryLine(afit2)
 plot(afit2)
 screenreg(list(bfit, afit1, afit2))
+##sqrt(pland) does not change any descriptive statistics and is not statistically significant 
 
-##doesn't change descriptive statistics 
 ```
 
 Land vehicles has a smaller competitive than other platforms, but it still should be negative, so we'll leave it out. Also, Land does not improve the model (r squared does not change) neither is it significant (p=.77 for land and .7 for sqrtland)
@@ -244,31 +256,36 @@ Land vehicles has a smaller competitive than other platforms, but it still shoul
 ggplot(data=MCClist,aes(x=pMnS,y=pEffectiveComp))+geom_point()
 ggplot(data=MCClist,aes(x=sqrt(pMnS),y=pEffectiveComp))+geom_point()
 
-bfit <- lm(pEffectiveComp ~ pcService+I(pcService^2)+ pRnD+ sqrt(pRnD)+ pAir+sqrt(pAir), data=MCClist)  
+bfit <- lm(pEffectiveComp ~ pcService+I(pcService^2)+ pRnD+ sqrt(pRnD)+ pAir, data=MCClist)  
 
-bfit1 <- lm(pEffectiveComp ~ pcService+I(pcService^2)+ pRnD+ sqrt(pRnD)+ pAir + sqrt(pAir)+ pMnS, data=MCClist)
+bfit1 <- lm(pEffectiveComp ~ pcService+I(pcService^2)+ pRnD+ sqrt(pRnD)+ pAir+ pMnS, data=MCClist)
 summary(bfit1) 
 
-bfit2 <- lm(pEffectiveComp ~ pcService+I(pcService^2)+ pAir + pMnS, data=MCClist)
-summary(bfit2) 
+bfit2 <- lm(pEffectiveComp ~ pcService+I(pcService^2)+ pRnD+ sqrt(pRnD)+ pAir+ pMnS+ pVessel, data=MCClist)
+
+#bfit2 <- lm(pEffectiveComp ~ pcService+I(pcService^2)+ pAir + pMnS, data=MCClist)
+summary(bfit)
+summary(bfit1)
 plot(bfit2)
-screenreg(list(bfit1, bfit2))
+screenreg(list(bfit, bfit1))
+##pMns increases the r^2 from .38 to .42, is significant at the 90% level (p=.0569), increases the p value for pcservice^2 by .003 and increases the significance of pRnD and sqrt(pRnD) to the 90% level.   
 
-
-bfit3 <- lm(pEffectiveComp ~ pcService+ I(pcService^2)+ pAir, data=subset(MCClist,                                                                                    rownames(MCClist)!=58))
+bfit3 <- lm(pEffectiveComp ~ pcService+ I(pcService^2)+ pRnD+ sqrt(pRnD)+ pAir, data=subset(MCClist,                                                                                    rownames(MCClist)!=58))
 summary(bfit3) 
 plot(bfit3)
 
-bfit4 <- lm(pEffectiveComp ~ pcService+I(pcService^2)+ pAir + pMnS  +pVessel, data=subset(MCClist,                                                                                    rownames(MCClist)!=58))
+bfit4 <- lm(pEffectiveComp ~ pcService+ I(pcService^2)+ pRnD+ sqrt(pRnD)+ pAir + pMnS, data=subset(MCClist,                                                                                    rownames(MCClist)!=58))
 summary(bfit4)
 
-screenreg(list(bfit, bfit1, bfit2, bfit3, bfit4))
-##pmns is not significant and doesn't change anything significantly 
+bfit5 <- lm(pEffectiveComp ~ pcService+ I(pcService^2)+ pRnD+ sqrt(pRnD)+ pAir+ pMnS+ pVessel, data=subset(MCClist,                                                                                    rownames(MCClist)!=58))
+summary(bfit5)
+screenreg(list(bfit, bfit1, bfit2, bfit3, bfit4, bfit5))
+
+##pMnS increases signifiance when pVessel is added when eliminating the outlier.  the coefficient of pcService^2 decreases by .05 when the outlier is removed.  The r^2 between model with outlier and model without does not change.  comparing the models with and without the outlier when pvessel, there is not much difference.  The biggest change to note here is the increase in significance of pMnS when accounting for the outlier and adding pVessel 
 ```
 
-remove pRnD (p=.06), sqrt(pRnD) (p=.08) and sqrt(pAir)(p=.34) pMns (p=.07) vessel (p=.67) as well as high p-values, these variables don't change the descriptive statistics of the other variables in a statistical or meaningful way. (SRC) 
-
-Due to the correlation betwen pMnS and pRnD, it risks multicollinearity to have them both in the same plot.Happily, MnS appears has the correct sign and a lower p-value than sqrt(RnD) which also eliminates the difficult to interpret square roots. Trading them appears to be a positive exchange. Land briefly showed the wrong sign, but upon removing entry 11, that problem was eliminated. However, adding vessel back in without entry 58 still leaves vessel with a positive sign.  **NOTE** since the p-value of pMns is not significant and that neither the coefficients on service^2 OR the other variables change significantly pMns should not further be included. 
+**talk this over after looking at the models from the previous section**
+Due to the correlation betwen pMnS and pRnD (.59), it risks multicollinearity to have them both in the same plot, *but since .59 is less than .9 this should not cause any problems*. Happily, MnS appears has the correct sign and a lower p-value than sqrt(RnD) which also eliminates the difficult to interpret square roots. Trading them appears to be a positive exchange. Land briefly showed the wrong sign, but upon removing entry 11, that problem was eliminated. However, adding vessel back in without entry 58 still leaves vessel with a positive sign. *talk about notes that I wrote in the r sections* 
 
 ```{r pWnA}
 
@@ -276,19 +293,30 @@ Due to the correlation betwen pMnS and pRnD, it risks multicollinearity to have 
 ggplot(data=MCClist,aes(x=pWnA,y=pEffectiveComp))+geom_point()
 ggplot(data=MCClist,aes(x=sqrt(pWnA),y=pEffectiveComp))+geom_point()
 
+cfit1 <- lm(pEffectiveComp ~ pcService+I(pcService^2)+ pRnD+ sqrt(pRnD)+ pAir+ pMnS, data=MCClist) 
 
-cfit1 <- lm(pEffectiveComp ~ pcService+ I(pcService^2)+ pAir + pMnS, data=MCClist)
-summary(cfit1) 
-plot(cfit1)
+cfit3 <- lm(pEffectiveComp ~ pcService+ I(pcService^2)+ pRnD+ sqrt(pRnD)+ pAir+ pWnA, data=MCClist)
 
-cfit2 <- lm(pEffectiveComp ~ pcService+ I(pcService^2)+ pAir + pMnS +pWnA, data=MCClist)
-
-cfit3 <- lm(pEffectiveComp ~ pcService+ I(pcService^2)+ pAir+ pWnA, data=MCClist)
+cfit2 <- lm(pEffectiveComp ~ pcService+ I(pcService^2)+ pRnD+ sqrt(pRnD)+ pAir + pMnS +pWnA, data=MCClist)
+summary(cfit1)
 summary(cfit3)
 summary(cfit2)
-dfMCC<-rbind(dfMCC,LMsummaryLine(cfit1))
+screenreg(list(cfit1, cfit3, cfit2))
 
-screenreg(list(cfit1, cfit2, cfit3))
+##adding pWnA decreases the significance of pMnS.  Also, adding pWnA increases r^2 by .06.  Thus, including pMnS from now on should be discussed.  For now, I'm goign to not include it but it can always be added in if this logic is not sufficient. 
+
+# cfit1 <- lm(pEffectiveComp ~ pcService+ I(pcService^2)+ pAir + pMnS, data=MCClist)
+# summary(cfit1) 
+# plot(cfit1)
+# 
+# cfit2 <- lm(pEffectiveComp ~ pcService+ I(pcService^2)+ pAir + pMnS +pWnA, data=MCClist)
+# 
+# cfit3 <- lm(pEffectiveComp ~ pcService+ I(pcService^2)+ pAir+ pWnA, data=MCClist)
+# summary(cfit3)
+# summary(cfit2)
+# dfMCC<-rbind(dfMCC,LMsummaryLine(cfit1))
+
+#screenreg(list(cfit1, cfit3, cfit2))
 
 ```
 
@@ -300,26 +328,27 @@ ggplot(data=MCClist,aes(x=pEnC,y=pEffectiveComp))+geom_point()
 ggplot(data=MCClist,aes(x=sqrt(pEnC),y=pEffectiveComp))+geom_point()
 ggplot(data=MCClist,aes(x=log1p(pEnC),y=pEffectiveComp))+geom_point()
 
-dfit1 <- lm(pEffectiveComp ~ I(pcService^2)+ pAir +pWnA +pEnC, data=MCClist)
+dfit1 <- lm(pEffectiveComp ~ pcService+ I(pcService^2)+ pAir+ pRnD+ sqrt(pRnD)+ pWnA, data=MCClist)
 summary(dfit1) 
 plot(dfit1)
 
-dfit2 <- lm(pEffectiveComp ~ I(pcService^2)+ pAir +pWnA +pLand+ pEnC, data=MCClist)
+dfit2 <- lm(pEffectiveComp ~ pcService+ I(pcService^2)+ pAir+ pRnD+ sqrt(pRnD)+ pWnA+ pEnC, data=MCClist)
 summary(dfit2) 
 plot(dfit2)
 screenreg(list(dfit1, dfit2))
 
-dfit3 <- lm(pEffectiveComp ~ I(pcService^2)+ pAir +pWnA +pEnC +pVessel, data=subset(MCClist,
-                
-                                                                                         rownames(MCClist)!=58 ))
+dfit3 <- lm(pEffectiveComp ~ pcService+ I(pcService^2)+ pAir+ pRnD+ sqrt(pRnD)+ pWnA +pEnC +pVessel, data=subset(MCClist, rownames(MCClist)!=58 ))
 summary(dfit3) 
 plot(dfit3)
 screenreg(list(dfit1, dfit2, dfit3))
+
+##adding pEnC does not influence r^2 significantly and it decreases the significance of pcService^2.  It is also not significant.  When looked at with vessel and removing the outlier, neither pEnC or pVessel is significant, the r^2 does not change and the significance of pcService^2 is significant at the 95% level.  Thus, pEnC shoudl not be included.  
 ```
 
-pcService was dropped because its p-value reached one, after the addition of Electronics and Communications it provided no additional information. Unfortunately attempts to reintroduce vessel or land were unsuccessful as the sign was still postive.
+**relook at this**-->
+pcService was dropped because its p-value reached one(*I don't see this*), after the addition of Electronics and Communications it provided no additional information. Unfortunately attempts to reintroduce vessel or land were unsuccessful as the sign was still postive.
 
-SRC stopped
+
 ```{r FacilityAndConstruction}
 
 ggplot(data=MCClist,aes(x=pFnC,y=pEffectiveComp))+geom_point()
@@ -329,26 +358,26 @@ ggplot(data=MCClist,aes(x=log1p(pFnC),y=pEffectiveComp))+geom_point()
 
 
 
-efit1 <- lm(pEffectiveComp ~ I(pcService^2)+ pAir  +pMnS +pWnA +pEnC +pFnC, data=MCClist)
+efit1 <- lm(pEffectiveComp ~ pcService+ I(pcService^2)+ pAir+ pRnD+ sqrt(pRnD)+ pWnA, data=MCClist)
 summary(efit1) 
 plot(efit1)
 
-efit2 <- lm(pEffectiveComp ~ pcService+I(pcService^2)+ pAir  +pMnS +pWnA +pEnC +pFnC +pLand, data=MCClist)
+efit2 <- lm(pEffectiveComp ~ pcService+ I(pcService^2)+ pAir + pRnD+ sqrt(pRnD)+ pWnA + pFnC, data=MCClist)
 summary(efit2) 
 plot(efit2)
 screenreg(list(efit1, efit2))
 
-efit3 <- lm(pEffectiveComp ~ I(pcService^2)+ pAir  +pMnS +pWnA +pEnC +pVessel + pFnC, data=MCClist)
+efit3 <- lm(pEffectiveComp ~ pcService+ I(pcService^2)+ pAir+ pRnD+ sqrt(pRnD)+ +pWnA + pFnC+ pVessel, data=MCClist)
 summary(efit3) 
 plot(efit3)
 screenreg(list(efit1, efit2, efit3))
 
-efit4 <- lm(pEffectiveComp ~ I(pcService^2)+ pAir  +pMnS +pWnA +pEnC +pVessel + pFnC, data=subset(MCClist,
-                                                                                         rownames(MCClist)!=58 &
-                                                                                             rownames(MCClist)!=59 ))
+efit4 <- lm(pEffectiveComp ~ pcService+ I(pcService^2)+ pAir+ pRnD+ sqrt(pRnD)+ pWnA + pFnC+ pVessel, data=subset(MCClist, rownames(MCClist)!=58 & rownames(MCClist)!=59 ))
 summary(efit4) 
 plot(efit4)
 screenreg(list(efit1, efit2, efit3, efit4))
+
+##the addition of pFnC increases r^2 by .02, increases coefficients pcService^2 by .05, decreases the significance of sqrt(pRnD) and does not change the other variables significantly.  when vessel is added, r^2 does not change, and neither do any other coefficients to a large extent.  When the outlier is eliminated, the sign of pVessel changes to positive and increases by .51, however, it is not significant (p=.376).  thus, I do not think pFnC should continue as part of the model.  
 ```
 
 
@@ -360,17 +389,17 @@ rcorr(as.matrix(subset(MCClist,select=c(pService,pRnD,pAir,pLand,pWnA,pMnS,pEnC,
 
 ggplot(data=MCClist,aes(x=pIDV,y=pEffectiveComp))+geom_point()
 
-ffit1 <- lm(pEffectiveComp ~ I(pcService^2)+ pAir  +pMnS +pWnA +pEnC +pFnC +pIDV, data=MCClist)
+ffit1 <- lm(pEffectiveComp ~ pcService+ I(pcService^2)+ pRnD+ sqrt(pRnD)+ pAir + pWnA, data=MCClist)
 summary(ffit1) 
 plot(ffit1)
 
-ffit2 <- lm(pEffectiveComp ~ I(pcService^2)+ pAir + +pMnS + pWnA +pEnC +pIDV +pFnC +pService, data=MCClist)
+ffit2 <- lm(pEffectiveComp ~ pcService+ I(pcService^2)+ pRnD+ sqrt(pRnD)+ pAir + pWnA + pIDV, data=MCClist)
            
 summary(ffit2) 
 dfMCC<-rbind(dfMCC,LMsummaryLine(fit))
 plot(ffit2)
 screenreg(list(ffit1, ffit2))
-
+##pIdv increases r^2 by .04, increases the coefficient of pcService^2 by .02, maintains statistically significant coefficients of the other variables and is itself statistically significant at the 90% level, thus IDV should be included in the model.  
 ```
 
 IDV is a solid new addition, statistically significant in its own right.
@@ -381,11 +410,16 @@ IDV is a solid new addition, statistically significant in its own right.
 
 ```{r FixedPrice}
 ggplot(data=MCClist,aes(x=pFixed,y=pEffectiveComp))+geom_point()
-gfit1 <- lm(pEffectiveComp ~ I(pcService^2)+ pAir + pEnC +pIDV +pWnA +pFnC +pFixed, data=MCClist)
+
+gfit2 <- lm(pEffectiveComp ~ pcService+ I(pcService^2)+ pRnD+ sqrt(pRnD)+ pAir + pWnA + pIDV, data=MCClist)
+
+gfit1 <- lm(pEffectiveComp ~ pcService+ I(pcService^2)+ pRnD+ sqrt(pRnD)+ pAir+ pWnA+ pIDV+ pFixed, data=MCClist)
 summary(gfit1) 
 dfMCC<-rbind(dfMCC,LMsummaryLine(gfit1))
 plot(gfit1)
-screenreg(list(gfit1))
+screenreg(list(gfit2, gfit1))
+
+##With the addition of pFixed, the r^2 increases by .01, the coefficient of pcService does not change and pFixed is not statistically significant.  Thus, pFixed should not be included further on. 
 
 ```
 
@@ -393,17 +427,19 @@ Fixed-price does does not subtsantially add to the model when compared to PMnS a
 
 ```{r CostPluse}
 ggplot(data=MCClist,aes(x=pFixed,y=pEffectiveComp))+geom_point()
-hfit1 <- lm(pEffectiveComp ~ I(pcService^2)+ pAir + pEnC +pWnA +pFnC+pIDV+pCostPlus, data=MCClist)
+
+hfit1 <- lm(pEffectiveComp ~ pcService+ I(pcService^2)+ pRnD+ sqrt(pRnD)+ pAir + pWnA + pIDV, data=MCClist)
+
 summary(hfit1) 
 dfMCC<-rbind(dfMCC,LMsummaryLine(hfit1))
 plot(hfit1)
 
-hfit2 <- lm(pEffectiveComp ~ I(pcService^2)+ pAir + pEnC +pWnA +pFnC+pIDV+pCostPlus, data=subset(MCClist,
-                                                                                               !rownames(MCClist) %in% c(59) ))
+hfit2 <- lm(pEffectiveComp ~ pcService+ I(pcService^2)+ pRnD+ sqrt(pRnD)+ pAir + pWnA + pIDV+pCostPlus, data=subset(MCClist,!rownames(MCClist) %in% c(59) ))
 summary(hfit2) 
 dfMCC<-rbind(dfMCC,LMsummaryLine(hfit2))
 plot(hfit2)
 screenreg(list(hfit1, hfit2))
+##pCost plus also does not change any of the descriptive statistics very signficantly and itself is not statistically significant. 
 ```
 
 similarly, pCostPlus does not add to the model versus the correlating variables it replaces.
@@ -411,14 +447,17 @@ similarly, pCostPlus does not add to the model versus the correlating variables 
 
 ```{r IncentiveFee}
 
-ifit1 <- lm(pEffectiveComp ~ I(pcService^2)+ pAir  +pMnS +pWnA +pEnC +pFnC +pIDV +pIncentFee, data=MCClist)
+ifit1 <- lm(pEffectiveComp ~ pcService+ I(pcService^2)+ pRnD+ sqrt(pRnD)+ pAir + pWnA + pIDV, data=MCClist)
 summary(ifit1) 
 plot(ifit1)
 
-ifit2 <- lm(pEffectiveComp ~ I(pcService^2)+ pAir  +pWnA +pEnC +pFnC +pIDV +pCostPlus +pIncentFee+pCostPlus:pIncentFee, data=MCClist)
+ifit2 <- lm(pEffectiveComp ~ pcService+ I(pcService^2)+ pRnD+ sqrt(pRnD)+ pAir + pWnA + pIDV+ pIncentFee, data=MCClist)
+
 summary(ifit2) 
 plot(ifit2)
 screenreg(list(ifit1, ifit2))
+
+##the addition of incentive fee into the model does not change any of the coefficients of the other variables to a meaningful extent and does not change the r^2 value, thus it will not be continued in the model.  
 
 ```
 
@@ -440,7 +479,8 @@ ggplot(data=MCClist,aes(x=TotalCount))+geom_bar()
 ggplot(data=MCClist,aes(x=log(TotalCount)))+geom_bar()
 ggplot(data=MCClist,aes(x=TotalCount,y=pEffectiveComp))+geom_point()
 ggplot(data=MCClist,aes(x=log(TotalCount),y=pEffectiveComp))+geom_point()
-jfit1 <- lm(pEffectiveComp ~ I(pcService^2)+ pAir + pMnS  +pWnA+pEnC +pFnC +pIDV+log(TotalCount), data=MCClist)
+
+jfit1 <- lm(pEffectiveComp ~ pcService+ I(pcService^2)+ pRnD+ sqrt(pRnD)+ pAir + pWnA + pIDV, data=MCClist)
 summary(jfit1)
 plot(jfit1)
 
@@ -449,20 +489,30 @@ ggplot(data=MCClist,aes(x=TotalCount))+geom_bar()
 ggplot(data=MCClist,aes(x=log(TotalCount)))+geom_bar()
 ggplot(data=MCClist,aes(x=TotalCount,y=pEffectiveComp))+geom_point()
 ggplot(data=MCClist,aes(x=log(TotalCount),y=pEffectiveComp))+geom_point()
-jfit2 <- lm(pEffectiveComp ~ I(pcService^2)+ pAir + pMnS  +pWnA+pEnC +pFnC +pIDV+log(TotalCount)+pLand+pLand:I(pcService^2), data=MCClist)
+
+jfit2 <- lm(pEffectiveComp ~ pcService+ I(pcService^2)+ pRnD+ sqrt(pRnD)+ pAir + pWnA + pIDV+ TotalCount, data=MCClist)
 summary(jfit2)
 plot(jfit2)
 
-jfit3 <- lm(pEffectiveComp ~ I(pcService^2)+ pAir + pMnS  +pWnA+pEnC +pFnC +pIDV+log(TotalCount)+pVessel+pVessel:I(pcService^2), data=subset(MCClist,
-                                                                                               !rownames(MCClist) %in% c(10,12.56,58,59) ))
-summary(jfit3)
-plot(jfit3)
+jfit3 <- lm(pEffectiveComp ~ pcService+ I(pcService^2)+ pRnD+ sqrt(pRnD)+ pAir + pWnA + pIDV+ TotalCount+ log(TotalCount), data=MCClist)
+
+
+jfit4 <- lm(pEffectiveComp ~ pcService+ I(pcService^2)+ pRnD+ sqrt(pRnD)+ pAir + pWnA + pIDV+ TotalCount+ log(TotalCount), datadata=subset(MCClist,!rownames(MCClist) %in% c(10,12.56,58,59) ))=MCClist)
+
 screenreg(list(jfit1, jfit2, jfit3))
+
+
+# jfit3 <- lm(pEffectiveComp ~ I(pcService^2)+ pAir + pMnS  +pWnA+pEnC +pFnC +pIDV+log(TotalCount)+pVessel+pVessel:I(pcService^2), data=subset(MCClist,
+#                                                                                                !rownames(MCClist) %in% c(10,12.56,58,59) ))
+# summary(jfit3)
+# plot(jfit3)
+
+##total count does not change the model in anyway, and it's interesting to note that its coefficients are zero.
 
 ```
 
-
-
+SRCstopped
+*samantha comment:* I'm not sure what you are doing here:
 ```{r TotalValue}
 
 rcorr(as.matrix(subset(MCClist,select=c(pService,pRnD,pAir,pLand,pWnA,pMnS,pEnC,pIDV,TotalCount,TotalValue,avSize))))
