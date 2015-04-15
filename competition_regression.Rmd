@@ -111,7 +111,7 @@ MCClist$pRnD[MCClist$pRnD<0]<-0
 
 
 ggplot(data=MCClist,aes(x=log1p(pRnD),y=pEffectiveComp))+geom_point()
-fitd <- lm(pEffectiveComp ~ pcService + I(pcService^2) + sqrt(pRnD), data=MCClist)
+fitd <- lm(pEffectiveComp ~ pcService + I(pcService^2) + pRnD+ sqrt(pRnD), data=MCClist)
 summary(fitd) 
 dfPSR<-LMsummaryLine(fitd)   
 plot(fitd)
@@ -511,8 +511,7 @@ screenreg(list(jfit1, jfit2, jfit3))
 
 ```
 
-SRCstopped
-*samantha comment:* I'm not sure what you are doing here:
+
 ```{r TotalValue}
 
 rcorr(as.matrix(subset(MCClist,select=c(pService,pRnD,pAir,pLand,pWnA,pMnS,pEnC,pIDV,TotalCount,TotalValue,avSize))))
@@ -521,47 +520,44 @@ ggplot(data=MCClist,aes(x=TotalValue))+geom_bar()
 ggplot(data=MCClist,aes(x=log(TotalValue)))+geom_bar()
 ggplot(data=MCClist,aes(x=TotalValue,y=pEffectiveComp))+geom_point()
 ggplot(data=MCClist,aes(x=log(TotalValue),y=pEffectiveComp))+geom_point()
-kfit1 <- lm(pEffectiveComp ~ I(pcService^2)+ pAir + pMnS  +pWnA+pEnC +pFnC +pIDV+log(TotalValue), data=MCClist)
-summary(kfit1)
-plot(kfit1)
 
-kfit2 <- lm(pEffectiveComp ~ I(pcService^2)+ pAir + pFnC  +pWnA+pEnC +pIDV+log(TotalValue) + log(TotalValue):I(pcService^2), data=subset(MCClist,
-                                                                                     rownames(MCClist)!=26))
+kfit1 <- lm(pEffectiveComp ~ pcService+ I(pcService^2)+ pRnD+ sqrt(pRnD)+ pAir + pWnA + pIDV, data=MCClist)
+
+kfit2 <- lm(pEffectiveComp ~ pcService+ I(pcService^2)+ pRnD+ sqrt(pRnD)+ pAir + pWnA + pIDV+ log(TotalValue), data=MCClist)
 summary(kfit2)
 plot(kfit2)
 
-kfit3 <- lm(pEffectiveComp ~ pLand+pAir + pFnC  +pWnA+pEnC +pIDV+log(TotalValue), data=subset(MCClist,
-                                                                                     rownames(MCClist)!=26))
+kfit3 <- lm(pEffectiveComp ~ pcService+ I(pcService^2)+ pRnD+ sqrt(pRnD)+ pAir + pWnA + pIDV+ log(TotalValue) + log(TotalValue):I(pcService^2), data=subset(MCClist, rownames(MCClist)!=26))
 summary(kfit3)
 plot(kfit3)
 
-kfit4 <- lm(pEffectiveComp ~ pVessel+pAir + pFnC  +pWnA+pEnC +pIDV+log(TotalValue), data=subset(MCClist,
-                                                                                     rownames(MCClist)!=26&
-                                                                                         rownames(MCClist)!=58))
+kfit4 <- lm(pEffectiveComp ~ pcService+ I(pcService^2)+ pRnD+ sqrt(pRnD)+ pAir + pWnA + pIDV+ log(TotalValue), data=subset(MCClist, rownames(MCClist)!=26))
 summary(kfit4)
 plot(kfit4)
 
-kfit5 <- lm(pEffectiveComp ~ pMnS+pAir + pFnC  +pWnA+pEnC +pIDV+log(TotalValue), data=subset(MCClist,
-                                                                                     rownames(MCClist)!=26))
+kfit5 <- lm(pEffectiveComp ~ pcService+ I(pcService^2)+ pRnD+ sqrt(pRnD)+ pAir + pWnA + pIDV+ log(TotalValue), data=subset(MCClist, rownames(MCClist)!=26&rownames(MCClist)!=58))
 summary(kfit5)
 plot(kfit5)
-screenreg(list(kfit1, kfit2, kfit3, kfit4, kfit5))
 
+
+screenreg(list(kfit1, kfit2, kfit3, kfit4, kfit5))
+##log(Total value) decrease the coefficient of pcService^2 by .06, is not statistically significant and does not change the r^2 value significantly.  I(pcService^2):log(TotalValue) decreases the significance of service coefficients, does not change r^2 and itself is not significant.  Subsetting the data frame in models 4 and 5 do not change r^2, significances of other coefficient nor does it change any coefficients in either direction.  Thus, out of these models, kfit2 (including log(TotalValue)) should be continued as the base model.  
 ```
 
 
 
 ```{r AverageSize}
 
-
-lfit1 <- lm(pEffectiveComp ~ I(pcService^2)+ pAir  +pMnS +pWnA +pEnC +pFnC +pIDV +avSize, data=MCClist)
-summary(lfit1) 
-plot(lfit1)
-
-
-lfit2 <- lm(pEffectiveComp ~ I(pcService^2)+ pAir  +pMnS +pWnA +pEnC +pFnC +pIDV +lavSize, data=MCClist)
+lfit1 <- lm(pEffectiveComp ~ pcService+ I(pcService^2)+ pRnD+ sqrt(pRnD)+ pAir + pWnA + pIDV+ log(TotalValue), data=MCClist)
+summary(lfit1)
+lfit2 <- lm(pEffectiveComp ~ pcService+ I(pcService^2)+ pRnD+ sqrt(pRnD)+ pAir + pWnA + pIDV+ log(TotalValue)+ avSize, data=MCClist)
 summary(lfit2) 
 plot(lfit2)
+
+
+lfit3 <- lm(pEffectiveComp ~ pcService+ I(pcService^2)+ pRnD+ sqrt(pRnD)+ pAir+ pWnA+ pIDV+ log(TotalValue)+ lavSize, data=MCClist)
+summary(lfit3) 
+plot(lfit3)
 
 rcorr(as.matrix(subset(MCClist,select=c(pService,pRnD,pAir,pLand,pWnA,pMnS,pEnC,pIDV,TotalCount,TotalValue,avSize))))
 
@@ -569,51 +565,38 @@ ggplot(data=MCClist,aes(x=avSize))+geom_bar()
 ggplot(data=MCClist,aes(x=log(avSize)))+geom_bar()
 ggplot(data=MCClist,aes(x=avSize,y=pEffectiveComp))+geom_point()
 ggplot(data=MCClist,aes(x=log(avSize),y=pEffectiveComp))+geom_point()
-lfit3 <- lm(pEffectiveComp ~ I(pcService^2)+ pAir + pLand  +log(avSize)  +pWnA+pEnC +pIDV+log(TotalCount), data=subset(MCClist,
-                                                                                     rownames(MCClist)!=26))
-summary(lfit3)
-plot(lfit3)
 
-
-lfit4 <- lm(pEffectiveComp ~ I(pcService^2)+ pAir + pLand  +log(avSize)  +pWnA+pEnC +pIDV+log(TotalCount) +pRnD, data=subset(MCClist,
-                                                                                     rownames(MCClist)!=26))
+lfit4 <- lm(pEffectiveComp ~ pcService+ I(pcService^2)+ pRnD+ sqrt(pRnD)+ pAir + pWnA + pIDV+ log(TotalValue)+ avSize+ log(avSize), data=MCClist)
 summary(lfit4)
 plot(lfit4)
 
-
-
-
-
-
-lfit5 <- lm(pEffectiveComp ~ I(pcService^2)+ pAir + pLand  +log(avSize)  +pWnA+pEnC +pIDV+log(TotalCount) +pRnD +pVessel, data=subset(MCClist,
-                                                                                     rownames(MCClist)!=26 &
-              rownames(MCClist)!=59))
+lfit5 <- lm(pEffectiveComp ~ pcService+ I(pcService^2)+ pRnD+ sqrt(pRnD)+ pAir+ pWnA+ pIDV+ log(TotalValue)+ avSize+ log(avSize), data=subset(MCClist, rownames(MCClist)!=26))
 summary(lfit5)
 plot(lfit5)
 
 
-lfit6 <- lm(log1p(pEffectiveComp) ~ I(pcService^2)+ pAir + pLand  +log(avSize)  +pWnA+pEnC +pIDV+log(TotalCount) +pRnD, data=subset(MCClist,
-                                                                                     rownames(MCClist)!=26 &
-              rownames(MCClist)!=59))
+lfit6 <- lm(pEffectiveComp ~ pcService+ I(pcService^2)+ pRnD+ sqrt(pRnD)+ pAir+ pWnA+ pIDV+ log(TotalValue)+ avSize+ log(avSize)+ pVessel, data=subset(MCClist, rownames(MCClist)!=26&rownames(MCClist)!=59))
 summary(lfit6)
 plot(lfit6)
 
 
-lfit7 <- lm(pEffectiveComp ~ I(pcService^2)+ pAir  +pMnS +pWnA +pEnC  +pIDV +pIDV:I(pcService^2), data=MCClist)
+lfit7 <- lm(pEffectiveComp ~ pcService+ I(pcService^2)+ pRnD+ sqrt(pRnD)+ pAir+ pWnA+ log(TotalValue)+ avSize+ log(avSize)+ pVessel+ pIDV:I(pcService^2), data=MCClist)
 summary(lfit7) 
 plot(lfit7)
 
 
-lfit8 <- lm(pEffectiveComp ~ I(pcService^2)+ pAir  +pMnS +pWnA +pEnC  +pIDV +pIDV:I(pcService^2)+pIDV:pcService +pcService, data=MCClist)
+lfit8 <- lm(pEffectiveComp ~ pcService+ I(pcService^2)+ pRnD+ sqrt(pRnD)+ pAir+ pWnA+ log(TotalValue)+ avSize+ log(avSize)+ pVessel + pIDV:I(pcService^2)+ pIDV:pcService, data=MCClist)
 summary(lfit8) 
 plot(lfit8)
 screenreg(list(lfit1, lfit2, lfit3, lfit4, lfit5, lfit6, lfit7, lfit8))
+
+##adding average size as no impact on the model and itself is not significant.  Adding lavSize also does not have any impact in the model and itself is not significant.  Adding log(avSize) decreases the coefficient on pcService^2 by .04 and increases r^2 by .01.  It itself is not significant.  The rest of the additions/modifications do not contribute in a way that merits further inclusion.  Because log(avSize) does not change the r^2, is itself not significant and only changes the coefficient of pcService^2 by .04 I do not think it should continue.  However, it is possible that the .04 change merits inclusion if one were to argue that conceptually this variable definitely contributes to effective competition.  
 
 ```
 
 
 ```{r StateValidation}
-mfit1 <- lm(pEffectiveComp ~ pService:pProduct+ pAir  +pMnS +pWnA +pEnC  +pIDV +pService +pService:pIDV +pProduct:pService:pIDV, data=MCClist)
+mfit1 <- lm(pEffectiveComp ~ pcService+ I(pcService^2)+ pRnD+ sqrt(pRnD)+ pAir + pWnA + pIDV+ log(TotalValue), data=MCClist)
 summary(mfit1) 
 plot(mfit1)
 
@@ -643,51 +626,69 @@ StateList <-subset(StateList ,!PoPstateCode %in% c("VI",
 
 rcorr(as.matrix(subset(StateList,select=c(pService,pProduct,pRnD,pAir,pLand,pVessel,pWnA,pFnC,pMnS,pEnC,pIDV,pFixed,pCostPlus,TotalCount,TotalValue,avSize))))
 
+
 StateList$pcService<-StateList$pService-0.5
-mfit2 <- lm(pEffectiveComp ~ I(pcService^2)+ pAir  +pMnS +pWnA +pEnC  +pIDV +pIDV:I(pcService^2)+pIDV:pcService +pcService, data=StateList)
+mfit2 <- lm(pEffectiveComp ~ pcService + I(pcService^2) + pRnD+ sqrt(pRnD), data=StateList)
 summary(mfit2) 
 plot(mfit2)
 
+screenreg(list(mfit1, mfit2))
 
-mfit3 <- lm(pEffectiveComp ~  pLand +pMnS +pWnA +pEnC  +pIDV +pService, data=StateList)
+##using statelist certainly yields very different results. 
+
+mfit3 <- lm(pEffectiveComp ~ pcService + I(pcService^2), data=StateList)
 summary(fit) 
 plot(fit)
 
 
-
-mfit4 <- lm(pEffectiveComp ~  pAir  +pMnS +pWnA +pWnA:pProduct+pEnC  +pIDV  +pProduct, data=StateList)
+mfit4 <- lm(pEffectiveComp ~ pcService+I(pcService^2)+ pRnD+ sqrt(pRnD)+ pAir+sqrt(pAir), data=StateList)
 summary(mfit4) 
 plot(mfit4)
 
 
-mfit5 <- lm(pEffectiveComp ~  pAir  +pMnS +pWnA +pWnA:pIDV+pEnC  +pIDV  +pProduct, data=StateList)
+mfit5 <- lm(pEffectiveComp ~ pProduct+ pRnD+ sqrt(pRnD)+ pAir+ pVessel, data=StateList)
 summary(mfit5) 
 plot(mfit5)
 
-mfit6 <- lm(pEffectiveComp ~  pAir  +pMnS +pEnC +pIDV +pProduct, data=StateList)
+mfit6 <- lm(pEffectiveComp ~ pcService+I(pcService^2)+ pRnD+ sqrt(pRnD)+ pAir+ pLand, data=StateList)
 summary(mfit6) 
 plot(mfit6)
 
-mfit7 <- lm(pEffectiveComp ~  pAir  +pMnS +pEnC +pIDV+ pVessel+pProduct, data=StateList)
+mfit7 <- lm(pEffectiveComp ~ pcService+ I(pcService^2)+ pRnD+ sqrt(pRnD)+ pAir + pMnS, data=StateList)
 summary(mfit7) 
 plot(mfit7)
 
 
-mfit8 <- lm(pEffectiveComp ~  pAir  +pMnS +pEnC +pIDV+ pVessel+pProduct+pEnC:pProduct, data=StateList)
+mfit8 <- lm(pEffectiveComp ~ pcService+ I(pcService^2)+ pRnD+ sqrt(pRnD)+ pAir + pMnS +pWnA, data=StateList)
 summary(mfit8) 
 plot(mfit8)
 
 
-mfit9 <- lm(pEffectiveComp ~  pAir  +pMnS +pEnC +pIDV+ pVessel+pProduct +lavSize, data=StateList)
+mfit9 <- lm(pEffectiveComp ~ pcService+ I(pcService^2)+ pRnD+ sqrt(pRnD)+ pAir + pWnA + pIDV, data=StateList)
 summary(mfit9) 
 plot(mfit9)
 
 
-mfit10 <- lm(pEffectiveComp ~  pAir  +pMnS +pWnA +pEnC +pLand +pVessel + pIDV +pService, data=StateList)
+mfit10 <- lm(pEffectiveComp ~ pcService+ I(pcService^2)+ pRnD+ sqrt(pRnD)+ pAir+ pWnA+ pIDV+ pFixed, data=StateList)
 summary(mfit10) 
 plot(mfit10)
 screenreg(list(mfit1, mfit2, mfit3, mfit4, mfit5, mfit6, mfit7, mfit8, mfit9, mfit10))
 
+mfit11 <- lm(pEffectiveComp ~ pcService+ I(pcService^2)+ pRnD+ sqrt(pRnD)+ pAir + pWnA + pIDV+pCostPlus, data=StateList)
+summary(mfit11)
+
+mfit12 <- lm(pEffectiveComp ~ pcService+ I(pcService^2)+ pRnD+ sqrt(pRnD)+ pAir + pWnA + pIDV+ pIncentFee, data=StateList)
+summary(mfit12)
+
+
+mfit13 <- lm(pEffectiveComp ~ pcService+ I(pcService^2)+ pRnD+ sqrt(pRnD)+ pAir + pWnA + pIDV+ TotalCount, data=StateList)
+
+
+mfit14 <- lm(pEffectiveComp ~ pcService+ I(pcService^2)+ pRnD+ sqrt(pRnD)+ pAir + pWnA + pIDV+ log(TotalValue), data=StateList)
+
+mfit15 <- lm(pEffectiveComp ~ pcService+ I(pcService^2)+ pRnD+ sqrt(pRnD)+ pAir + pWnA + pIDV+ log(TotalValue)+ avSize+ log(avSize), data=StateList)
+
+screenreg(list(mfit1, mfit2, mfit3, mfit4, mfit5, mfit6, mfit7, mfit8, mfit9, mfit10, mfit11, mfit12, mfit13, mfit14, mfit15))
 
 
 ```
