@@ -183,7 +183,6 @@ summary(fit2)
 summary(fit8)
 summary(fit4)
 screenreg(list(afit, fit2, fit8, fit4))
-##vessel is not significant, nor sqrt(vessel) nor when outliers are removed, and doesn't affect descriptive statistics of the model or other variables, thus it should not be included.  
 
 ```
 
@@ -394,7 +393,7 @@ hfit1 <- lm(pEffectiveComp ~ pcService+ I(pcService^2)+ pRnD+ sqrt(pRnD)+ pAir +
 summary(hfit1) 
 plot(hfit1)
 
-hfit2 <- lm(pEffectiveComp ~ pcService+ I(pcService^2)+ pRnD+ sqrt(pRnD)+ pAir + pWnA + pIDV+pCostPlus, data=subset(MCClist,!rownames(MCClist) %in% c(59) ))
+hfit2 <- lm(pEffectiveComp ~ pcService+ I(pcService^2)+ pRnD+ sqrt(pRnD)+ pAir + pWnA + pIDV+ pCostPlus, data=subset(MCClist,!rownames(MCClist) %in% c(59) ))
 summary(hfit2) 
 plot(hfit2)
 screenreg(list(hfit1, hfit2)) 
@@ -446,8 +445,8 @@ jfit2 <- lm(pEffectiveComp ~ pcService+ I(pcService^2)+ pRnD+ sqrt(pRnD)+ pAir +
 summary(jfit2)
 plot(jfit2)
 
-jfit3 <- lm(pEffectiveComp ~ pcService+ I(pcService^2)+ pRnD+ sqrt(pRnD)+ pAir + pWnA + pIDV+ TotalCount+ log(TotalCount), data=MCClist)
-
+jfit3 <- lm(pEffectiveComp ~ pcService+ I(pcService^2)+ pRnD+ sqrt(pRnD)+ pAir + pWnA + pIDV+ log(TotalCount), data=MCClist)
+summary(jfit3)
 screenreg(list(jfit1, jfit2, jfit3))
 
 
@@ -456,6 +455,7 @@ screenreg(list(jfit1, jfit2, jfit3))
 Observations:
 
 1.total count does not change the model in anyway, and it's interesting to note that its coefficients are zero.
+2. Log of total count decreases the coefficient on pcservice^2 by .04 
 
 
 ```{r TotalValue}
@@ -518,26 +518,26 @@ ggplot(data=MCClist,aes(x=log(avSize)))+geom_bar()
 ggplot(data=MCClist,aes(x=avSize,y=pEffectiveComp))+geom_point()
 ggplot(data=MCClist,aes(x=log(avSize),y=pEffectiveComp))+geom_point()
 
-lfit4 <- lm(pEffectiveComp ~ pcService+ I(pcService^2)+ pRnD+ sqrt(pRnD)+ pAir + pWnA + pIDV+ log(TotalValue)+ avSize+ log(avSize), data=MCClist)
+lfit4 <- lm(pEffectiveComp ~ pcService+ I(pcService^2)+ pRnD+ sqrt(pRnD)+ pAir + pWnA + pIDV+ log(TotalValue)+ log(avSize), data=MCClist)
 summary(lfit4)
 plot(lfit4)
 
-lfit5 <- lm(pEffectiveComp ~ pcService+ I(pcService^2)+ pRnD+ sqrt(pRnD)+ pAir+ pWnA+ pIDV+ log(TotalValue)+ avSize+ log(avSize), data=subset(MCClist, rownames(MCClist)!=26))
+lfit5 <- lm(pEffectiveComp ~ pcService+ I(pcService^2)+ pRnD+ sqrt(pRnD)+ pAir+ pWnA+ pIDV+ log(TotalValue)+ log(avSize), data=subset(MCClist, rownames(MCClist)!=26))
 summary(lfit5)
 plot(lfit5)
 
 
-lfit6 <- lm(pEffectiveComp ~ pcService+ I(pcService^2)+ pRnD+ sqrt(pRnD)+ pAir+ pWnA+ pIDV+ log(TotalValue)+ avSize+ log(avSize)+ pVessel, data=subset(MCClist, rownames(MCClist)!=26&rownames(MCClist)!=59))
+lfit6 <- lm(pEffectiveComp ~ pcService+ I(pcService^2)+ pRnD+ sqrt(pRnD)+ pAir+ pWnA+ pIDV+ log(TotalValue)+ log(avSize)+ pVessel, data=subset(MCClist, rownames(MCClist)!=26&rownames(MCClist)!=59))
 summary(lfit6)
 plot(lfit6)
 
 
-lfit7 <- lm(pEffectiveComp ~ pcService+ I(pcService^2)+ pRnD+ sqrt(pRnD)+ pAir+ pWnA+ log(TotalValue)+ avSize+ log(avSize)+ pVessel+ pIDV:I(pcService^2), data=MCClist)
+lfit7 <- lm(pEffectiveComp ~ pcService+ I(pcService^2)+ pRnD+ sqrt(pRnD)+ pAir+ pWnA+ log(TotalValue)+ log(avSize)+ pVessel+ pIDV:I(pcService^2), data=MCClist)
 summary(lfit7) 
 plot(lfit7)
 
 
-lfit8 <- lm(pEffectiveComp ~ pcService+ I(pcService^2)+ pRnD+ sqrt(pRnD)+ pAir+ pWnA+ log(TotalValue)+ avSize+ log(avSize)+ pVessel + pIDV:I(pcService^2)+ pIDV:pcService, data=MCClist)
+lfit8 <- lm(pEffectiveComp ~ pcService+ I(pcService^2)+ pRnD+ sqrt(pRnD)+ pAir+ pWnA+ log(TotalValue)+ log(avSize)+ pVessel + pIDV:I(pcService^2)+ pIDV:pcService, data=MCClist)
 summary(lfit8) 
 plot(lfit8)
 screenreg(list(lfit1, lfit2, lfit3, lfit4, lfit5, lfit6, lfit7, lfit8))
@@ -547,10 +547,10 @@ screenreg(list(lfit1, lfit2, lfit3, lfit4, lfit5, lfit6, lfit7, lfit8))
 Observations:
 
 1. adding average size as no impact on the model and itself is not significant
-2.  Adding log(avSize) decreases the coefficient on pcService^2 by .04 and increases r^2 by .01.  It itself is not significant.
+2.  Adding log(avSize) increases the coefficient on pcService^2 by .01 and and doesn't affect r^2.  It itself is not significant.
 3. The rest of the additions/modifications do not contribute in a way that merits further inclusion.
-4. Because log(avSize) does not change the r^2, is itself not significant and only changes the coefficient of pcService^2 by .04 I do not think it should continue.  However, it is possible that the .04 change merits inclusion if one were to argue that conceptually this variable definitely contributes to effective competition.  
-
+4. Because log(avSize) does not change the r^2, is itself not significant and only changes the coefficient of pcService^2 by .04 I do not think it should continue.   
+5. Model 6 decreases r^2 by .08 and decreases the significance and value of pWnA by .23.  This model adds I(pcService^2):pIDV
 
 ```{r StateValidation}
 mfit1 <- lm(pEffectiveComp ~ pcService+ I(pcService^2)+ pRnD+ sqrt(pRnD)+ pAir + pWnA + pIDV+ log(TotalValue), data=MCClist)
