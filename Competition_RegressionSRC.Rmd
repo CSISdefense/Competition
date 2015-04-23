@@ -2,7 +2,9 @@
 title: "Competition_RegressionSRC"
 author: "SRC"
 date: "Thursday, April 16, 2015"
-output: html_document
+output: 
+  html_document
+    keep_md: yes
 ---
 
 ```{r hiddensetup, echo = FALSE}
@@ -84,9 +86,10 @@ ggplot(data=MCClist,aes(x=log1p(pAir)))+geom_bar(bin=0.01)
 ggplot(data=MCClist,aes(x=pService,y=pEffectiveComp))+geom_point()
 fita <- lm(pEffectiveComp ~ pService, data=MCClist)
 summary(fita)    
-plot(fita)
 MCClist$pcService<-MCClist$pService-0.5
 
+summary(MCClist$pcService)
+plot(MCClist$pcService)
 
 ggplot(data=MCClist,aes(x=pcService,y=pEffectiveComp))+geom_point()
 fitb <- lm(pEffectiveComp ~ pcService + I(pcService^2), data = MCClist)
@@ -99,16 +102,17 @@ fitc <- lm(pEffectiveComp ~ pProduct, data=MCClist)
 summary(fitc)   
 plot(fitc)
 
-
+fite <- lm(pEffectiveComp ~ pcService + I(pcService^2) +pRnD, data=MCClist)
 ggplot(data=MCClist,aes(x=pRnD,y=pEffectiveComp))+geom_point()
 MCClist$pRnD[MCClist$pRnD<0]<-0
-
+plot(MCClist$pRnD)
+##pRnD somewhat looks like a squareroot relationship And as can be seen in fitd, it impacts the mdoel significantly it merits inclusion. 
 
 ggplot(data=MCClist,aes(x=log1p(pRnD),y=pEffectiveComp))+geom_point()
-fitd <- lm(pEffectiveComp ~ pcService + I(pcService^2) + pRnD+ sqrt(pRnD), data=MCClist)
+fitd <- lm(pEffectiveComp ~ pcService + I(pcService^2) + pRnD + sqrt(pRnD), data=MCClist)
 summary(fitd)  
 plot(fitd)
-screenreg(list(fita, fitb, fitc, fitd))
+screenreg(list(fita, fitb, fitc, fite, fitd))
 
 ```
 
