@@ -91,6 +91,8 @@ MCClist$pcService<-MCClist$pService-0.5
 summary(MCClist$pcService)
 plot(MCClist$pcService)
 
+plot(MCClist$pcService)
+
 ggplot(data=MCClist,aes(x=pcService,y=pEffectiveComp))+geom_point()
 fitb <- lm(pEffectiveComp ~ pcService + I(pcService^2), data = MCClist)
 summary(fitb)  
@@ -103,10 +105,10 @@ summary(fitc)
 plot(fitc)
 
 fite <- lm(pEffectiveComp ~ pcService + I(pcService^2) +pRnD, data=MCClist)
+summary(fite)
 ggplot(data=MCClist,aes(x=pRnD,y=pEffectiveComp))+geom_point()
 MCClist$pRnD[MCClist$pRnD<0]<-0
 plot(MCClist$pRnD)
-##pRnD somewhat looks like a squareroot relationship And as can be seen in fitd, it impacts the mdoel significantly it merits inclusion. 
 
 ggplot(data=MCClist,aes(x=log1p(pRnD),y=pEffectiveComp))+geom_point()
 fitd <- lm(pEffectiveComp ~ pcService + I(pcService^2) + pRnD + sqrt(pRnD), data=MCClist)
@@ -120,10 +122,11 @@ Observations:
 
 1. pService is not statistically significant, and explains only 1% of the variation in pEffectiveComp
 2. pcService is significant at the 5% level, explains 25% of the variation in pEffectiveComp and with a one unit increase increases pEffectiveComp by .15.
-3. pcService^2 is significant at the .001 level and with pcService explains 25% of the variation in pEffectiveComp.  It istimates that an increase in pcService will result in a 1.25 increase in pEffectiveComp
+3. The plot of pcService mildly resembles a quadratic function. pcService^2 is significant at the .001 level and with pcService explains 25% of the variation in pEffectiveComp.  It istimates that an increase in pcService will result in a 1.25 increase in pEffectiveComp
 4. pProduct is not statistically significant nor does it explain any of the variation in pEffectiveComp.  
 5. pRnD is not statistically significant 
-6. sqrt(pRnD) is significant at the .05 level and the addition of these two variables increases r^2 from .25 to .35.  However, the standard error for sqrt(pRnD) is quite large (.32)
+6.pRnD somewhat looks like a squareroot relationship And as can be seen in fitd, it impacts the model significantly thus it merits inclusion. 
+7. sqrt(pRnD) is significant at the .05 level and the addition of these two variables increases r^2 from .25 to .35.  However, the standard error for sqrt(pRnD) is quite large (.32)
 
 ```{r Platform}
 
@@ -139,9 +142,8 @@ fitb <- lm(pEffectiveComp ~ pcService + I(pcService^2), data=MCClist)
 fitd <- lm(pEffectiveComp ~ pcService + I(pcService^2) + pRnD, data=MCClist)
 fite <- lm(pEffectiveComp ~ pcService + I(pcService^2) + pRnD+ sqrt(pRnD), data=MCClist)
 afit <- lm(pEffectiveComp ~ pcService+I(pcService^2)+ pRnD+ sqrt(pRnD)+ pAir, data=MCClist)
+plot(MCClist$pAir)
 bfit <- lm(pEffectiveComp ~ pcService+I(pcService^2)+ pRnD+ sqrt(pRnD)+ pAir+sqrt(pAir), data=MCClist) 
-summary(fite)
-summary(afit) 
 plot(afit)
 summary(bfit) 
 plot(bfit)
@@ -151,7 +153,8 @@ screenreg(list(fita, fitb, fitd, fite, afit, bfit))
 
 Obersvations
 1. pAir increases R^s by .02 and increases the coefficient of pcService^2 by .04 and also increases its significant to the 1% level.  PAir itself is not significant.  
-2. sqrt(pAir) increases pcService^2 by .05, is not statistically significant and increases r^2 by .01
+2.the plot of pAir does not resemble a squareroot function.
+3. sqrt(pAir) increases pcService^2 by .05, is not statistically significant and increases r^2 by .01.  Thus between these descriptive statistics and the plot of pAir, it should not be included further in the model. 
 
 ```{r pVessel with pProduct}
 ggplot(data=MCClist,aes(x=pVessel,y=pEffectiveComp))+geom_point()
@@ -181,6 +184,7 @@ Observations:
 afit <- lm(pEffectiveComp ~ pcService+ I(pcService^2)+ pRnD+ sqrt(pRnD)+ pAir, data=MCClist) 
 fit2 <- lm(pEffectiveComp ~ pcService+ I(pcService^2)+ pRnD+ sqrt(pRnD)+ pAir+ pVessel, data=MCClist)
 fit8 <- lm(pEffectiveComp ~ pcService+ I(pcService^2)+ pRnD+ sqrt(pRnD)+ pAir+ pVessel+ sqrt(pVessel), data=MCClist)
+plot(MCClist$pVessel)
 fit4 <- lm(pEffectiveComp ~ pcService+ I(pcService^2)+ pRnD+ sqrt(pRnD)+ pAir+ pVessel+ sqrt(pVessel), data=MCClist[rownames(MCClist)!=58,])
 summary(afit)
 summary(fit2)
@@ -192,7 +196,7 @@ screenreg(list(afit, fit2, fit8, fit4))
 
 Observations
 1. pVessel does not change the r^2, the value or significance of pcService^2 nor is it significant
-2. sqrt(pVessel) does not change r^2, increases pcService by .09, and is not significant.
+2. The plot of pVessel barely resembles a squareroot function.  sqrt(pVessel) does not change r^2, increases pcService by .09, and is not significant.
 3. removing outliers decreases the value of sqrt(pVessel) by .78, does not increase significance, nor does it increase r^2 and it decreases pcService by .03.  It also has avery high standard error of .79
 
 
@@ -210,6 +214,7 @@ summary(afit1)
 plot(afit1)
 screenreg(list(bfit, afit1))
 
+plot(MCClist$pLand)
 afit2 <- lm(pEffectiveComp ~ pcService+ I(pcService^2)+ pRnD+ sqrt(pRnD)+ pAir+ sqrt(pAir)+ pLand+ sqrt(pLand), data=MCClist)
 summary(afit2) 
 plot(afit2)
@@ -220,7 +225,7 @@ screenreg(list(bfit, afit1, afit2))
 Observations
 
 1. Adding pLand does not change any coefficients or descriptive statistics and pair is not statistically significant 
-2. sqrt(pLand) does not change any descriptive statistics and is not statistically significant
+2. pLand only very slightly resembles a square root function but since sqrt(pLand) increases r^2 by .02 and increases the coefficient of pcService^2 by .05 it should not be furhter described as one. 
 
 
 ```{r MnS}
@@ -647,7 +652,7 @@ mfit13 <- lm(pEffectiveComp ~ pcService+ I(pcService^2)+ pRnD+ sqrt(pRnD)+ pAir 
 
 mfit14 <- lm(pEffectiveComp ~ pcService+ I(pcService^2)+ pRnD+ sqrt(pRnD)+ pAir + pWnA + pIDV+ log(TotalValue), data=StateList)
 
-mfit15 <- lm(pEffectiveComp ~ pcService+ I(pcService^2)+ pRnD+ sqrt(pRnD)+ pAir + pWnA + pIDV+ log(TotalValue)+ avSize+ log(avSize), data=StateList)
+mfit15 <- lm(pEffectiveComp ~ pcService+ I(pcService^2)+ pRnD+ sqrt(pRnD)+ pAir + pWnA + pIDV+ log(TotalValue)+ log(avSize), data=StateList)
 
 screenreg(list(mfit1, mfit2, mfit3, mfit4, mfit5, mfit6, mfit7, mfit8, mfit9, mfit10, mfit11, mfit12, mfit13, mfit14, mfit15))
 
