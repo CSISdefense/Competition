@@ -152,6 +152,7 @@ screenreg(list(fita, fitb, fitd, fite, afit, bfit))
 ```
 
 Obersvations
+
 1. pAir increases R^s by .02 and increases the coefficient of pcService^2 by .04 and also increases its significant to the 1% level.  PAir itself is not significant.  
 2.the plot of pAir does not resemble a squareroot function.
 3. sqrt(pAir) increases pcService^2 by .05, is not statistically significant and increases r^2 by .01.  Thus between these descriptive statistics and the plot of pAir, it should not be included further in the model. 
@@ -176,7 +177,8 @@ summary(fit1)
 screenreg(list(fitc, fit5, fit6, fit7, fit1))
 ```
 
-Observations: 
+Observations:
+
 1. pproduct is not significant in any of these models and in model 5 has p value of .7
 2. r^2 increases from .05 to .27 when sqrt(pRnD) is added but doesn't fluctuate much after that.  
 
@@ -195,6 +197,7 @@ screenreg(list(afit, fit2, fit8, fit4))
 ```
 
 Observations
+
 1. pVessel does not change the r^2, the value or significance of pcService^2 nor is it significant
 2. The plot of pVessel barely resembles a squareroot function.  sqrt(pVessel) does not change r^2, increases pcService by .09, and is not significant.
 3. removing outliers decreases the value of sqrt(pVessel) by .78, does not increase significance, nor does it increase r^2 and it decreases pcService by .03.  It also has avery high standard error of .79
@@ -282,6 +285,7 @@ screenreg(list(cfit1, cfit3, cfit2))
 ```
 
 Observations:
+
 1. Adding pWnA decreases the significance of pMnS.  Also, adding pWnA increases r^2 by .07.  Thus, including pMnS from now on should be discussed.  For now, I'm goign to not include it but it can always be added in if this logic is not sufficient. 
 2. pWnA is statistically significant, increases r^2, decreases pcService^2 by .15.  Thus is should be continued further in the model.
 3. pWnA is very siginificant (p=.005) and increases the r^2 of the model (.39->.46).  pMnS is kept in the first two models here to see if it changes at all with the addition of pWnA, since it doesn't, it will still be removed.  
