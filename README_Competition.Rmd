@@ -21,7 +21,7 @@ The primary focuses of this study are Major Contracting Commands and U.S. states
 
 - **Contracting Methods:** Contract Pricing, Contract Size, and Contract Vehicle.
 
-Here, the team studies these characteristics' interaction by developing regression models that use the unites of analyses: major commands and states.  For each organizational and geographical unit, the team calculated the percentage of obligations that aligned with each contract characteristic using a denominator of constant oblications from FY2000 to FY2013.  By using github to store this information, data and models, CSIS promotes reproducable research that can be fully reporducible by future researchers who seek to cross-validate and build upon our results.
+Here, the team studies these characteristics' interaction by developing regression models that use the units of analyses: major commands and states.  For each organizational and geographical unit, the team calculated the percentage of obligations that aligned with each contract characteristic using a denominator of constant oblications from FY2000 to FY2013.  By using github to store this information, data and models, CSIS promotes reproducable research that can be fully reporducible by future researchers who seek to cross-validate and build upon our results.
 
 
 
