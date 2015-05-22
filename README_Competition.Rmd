@@ -5,7 +5,7 @@ date: "Friday, May 22, 2015"
 output: html_document
 ---
 
-###Competition and Bidding Data as an Indicator of the Health of the U.S. Defense Industrial Base
+#Competition and Bidding Data as an Indicator of the Health of the U.S. Defense Industrial Base
 
 This study uses publicly-avaiable data from the Federal Procurement Data System to build a predictive model of defense contracting, identifying factors that correlate with higher or lower rates of effective competition.  This study also uses data from past years to generate an "expected" rate of competition.  With this model, CSIS digs a step deeper by examining trends in competititon by Place of Performance (states) and by Major Contracting Command.  The findings from this analysis will be used to generate an improved predictive model, which is previewed in this report.  
 
