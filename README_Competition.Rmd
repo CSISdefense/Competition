@@ -1,0 +1,28 @@
+---
+title: "Readme for Competition"
+author: "SRC"
+date: "Friday, May 22, 2015"
+output: html_document
+---
+
+###Competition and Bidding Data as an Indicator of the Health of the U.S. Defense Industrial Base
+
+This study uses publicly-avaiable data from the Federal Procurement Data System to build a predictive model of defense contracting, identifying factors that correlate with higher or lower rates of effective competition.  This study also uses data from past years to generate an "expected" rate of competition.  With this model, CSIS digs a step deeper by examining trends in competititon by Place of Performance (states) and by Major Contracting Command.  The findings from this analysis will be used to generate an improved predictive model, which is previewed in this report.  
+
+###Introduction
+
+CSIS believes that effective competition is the best metric to measure whether DoD is successfully promoting competition, as it excludes competitively-sourced contracts that receive only one offer.  The purpose of the model described in this paper is to better understand the extent to which different factors in defense contracting influence effective competition in the bidding process.  This effort is an important addition to the literature on Defense competition, as it quantifies the corelative effects of different factors through a statistically rigorous analysis.  
+
+The primary focuses of this study are Major Contracting Commands and U.S. states.  By aggregating the data at this level, the study team can look for signs of weakness in the industrial base on a geographical nad functional basis.  The intentions of this study are to look at which states and Major Commands are over- or underperforming expectations.  CSIS set a baseline for what to expect by analyzing in isolation the relationship between a variety of contract charateristics and the level of competition through the number of offers. The evaluated characteristics include: 
+
+- **Type of Good Procured:** Products, Services, and Research & Development (R&D)
+
+- **Platform Portfolios:** Land, Air, Vessel, Missiles & Space, Electronics and Communications, and Weaopns and Ammunition.
+
+- **Contracting Methods:** Contract Pricing, Contract Size, and Contract Vehicle.
+
+Here, the team studies these characteristics' interaction by developing regression models that use the unites of analyses: major commands and states.  For each organizational and geographical unit, the team calculated the percentage of obligations that aligned with each contract characteristic using a denominator of constant oblications from FY2000 to FY2013.  By using github to store this information, data and models, CSIS promotes reproducable research that can be fully reporducible by future researchers who seek to cross-validate and build upon our results.
+
+
+
+
