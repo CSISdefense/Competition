@@ -572,6 +572,18 @@ Observations: **another item to discuss**
 4. Because log(avSize) does not change the r^2, is itself not significant and only changes the coefficient of pcService^2 by .04 I do not think it should continue.   
 5. Model 6 decreases r^2 by .08 and decreases the significance and value of pWnA by .23.  This model adds I(pcService^2):pIDV
 
+
+``` {r}
+jfit 1
+
+jfit1 <- lm(pEffectiveComp ~ pcService+ I(pcService^2)+ pAir + pWnA + pEnC + pIDV, data=MCClist)
+
+screenreg(list(jfit1))
+
+```
+
+
+
 ```{r StateValidation}
 mfit1 <- lm(pEffectiveComp ~ pcService, data=MCClist)
 summary(mfit1) 
