@@ -109,9 +109,13 @@ summary(fite)
 ggplot(data=MCClist,aes(x=pRnD,y=pEffectiveComp))+geom_point()
 MCClist$pRnD[MCClist$pRnD<0]<-0
 plot(MCClist$pRnD)
+plot(fite)
+
+fitf <- lm(pEffectiveComp ~ pRnD, data=MCClist)
+plot(fitf)
 
 ggplot(data=MCClist,aes(x=log1p(pRnD),y=pEffectiveComp))+geom_point()
-fitd <- lm(pEffectiveComp ~ pcService + I(pcService^2) + pRnD + sqrt(pRnD), data=MCClist)
+fitd <- lm(pEffectiveComp ~ pcService + I(pcService^2) + pRnD, data=MCClist)
 summary(fitd)  
 plot(fitd)
 screenreg(list(fita, fitb, fitc, fite, fitd))
@@ -125,7 +129,8 @@ Observations:
 3. The plot of pcService mildly resembles a quadratic function. pcService^2 is significant at the .001 level and with pcService explains 25% of the variation in pEffectiveComp.  It istimates that an increase in pcService will result in a 1.25 increase in pEffectiveComp
 4. pProduct is not statistically significant nor does it explain any of the variation in pEffectiveComp.  
 5. pRnD is not statistically significant 
-6.pRnD somewhat looks like a squareroot relationship And as can be seen in fitd, it impacts the model significantly thus it merits inclusion. 
+6.pRnD does not resemble a squareroot relationship and as can be seen in fitd, it impacts the model significantly 
+
 7. sqrt(pRnD) is significant at the .05 level and the addition of these two variables increases r^2 from .25 to .35.  However, the standard error for sqrt(pRnD) is quite large (.32)
 
 ```{r Platform}
@@ -139,21 +144,22 @@ ggplot(data=MCClist,aes(x=sqrt(pAir),y=pEffectiveComp))+geom_point()
 
 fita <- lm(pEffectiveComp ~ pcService, data=MCClist)
 fitb <- lm(pEffectiveComp ~ pcService + I(pcService^2), data=MCClist)
-fitd <- lm(pEffectiveComp ~ pcService + I(pcService^2) + pRnD, data=MCClist)
-fite <- lm(pEffectiveComp ~ pcService + I(pcService^2) + pRnD+ sqrt(pRnD), data=MCClist)
-afit <- lm(pEffectiveComp ~ pcService+I(pcService^2)+ pRnD+ sqrt(pRnD)+ pAir, data=MCClist)
+#fitd <- lm(pEffectiveComp ~ pcService + I(pcService^2) + pRnD, data=MCClist)
+#fite <- lm(pEffectiveComp ~ pcService + I(pcService^2) + pRnD+ sqrt(pRnD), data=MCClist)
+afit <- lm(pEffectiveComp ~ pcService+I(pcService^2)+ pAir, data=MCClist)
 plot(MCClist$pAir)
-bfit <- lm(pEffectiveComp ~ pcService+I(pcService^2)+ pRnD+ sqrt(pRnD)+ pAir+sqrt(pAir), data=MCClist) 
+bfit <- lm(pEffectiveComp ~ pcService+I(pcService^2)+ pAir+sqrt(pAir), data=MCClist) 
 plot(afit)
 summary(bfit) 
 plot(bfit)
-screenreg(list(fita, fitb, fitd, fite, afit, bfit))
+plot(fita)
+screenreg(list(fita, fitb, afit, bfit))
 
 ```
 
 Obersvations
 
-1. pAir increases R^s by .02 and increases the coefficient of pcService^2 by .04 and also increases its significant to the 1% level.  PAir itself is not significant.  
+1. pAir increases R^s by .1 and decreases the coefficient of pcService^2 by .01.  PAir itself is significant.  
 2.the plot of pAir does not resemble a squareroot function.
 3. sqrt(pAir) increases pcService^2 by .05, is not statistically significant and increases r^2 by .01.  Thus between these descriptive statistics and the plot of pAir, it should not be included further in the model. 
 
@@ -166,28 +172,30 @@ ggplot(data=MCClist,aes(x=sqrt(pVessel)))+geom_bar(bin=0.01)
 ggplot(data=MCClist,aes(x=log1p(pVessel)))+geom_bar(bin=0.01)
 
 fitc <- lm(pEffectiveComp ~ pProduct, data=MCClist)
-fit5 <- lm(pEffectiveComp ~ pProduct+ pRnD, data=MCClist)
-fit6 <- lm(pEffectiveComp ~ pProduct+ pRnD+ sqrt(pRnD), data=MCClist)
-fit7 <- lm(pEffectiveComp ~ pProduct+ pRnD+ sqrt(pRnD)+ pAir, data=MCClist)
-fit1 <- lm(pEffectiveComp ~ pProduct+ pRnD+ sqrt(pRnD)+ pAir+ pVessel, data=MCClist)
+fit5 <- lm(pEffectiveComp ~ pProduct+ pAir, data=MCClist)
+fit6 <- lm(pEffectiveComp ~ pProduct+ pAir, data=MCClist)
+#fit7 <- lm(pEffectiveComp ~ pProduct+ pRnD+ sqrt(pRnD)+ pAir, data=MCClist)
+fit1 <- lm(pEffectiveComp ~ pProduct+ pAir+ pVessel, data=MCClist)
 summary(fitc)
 summary(fit6)
 summary(fit7)
 summary(fit1) 
-screenreg(list(fitc, fit5, fit6, fit7, fit1))
+screenreg(list(fitc, fit5, fit6, fit1))
 ```
 
 Observations:
 
 1. pproduct is not significant in any of these models and in model 5 has p value of .7
-2. r^2 increases from .05 to .27 when sqrt(pRnD) is added but doesn't fluctuate much after that.  
+2. The addition of pVessel does not change any of the coefficients or statistics by any meaningful value. 
+
 
 ```{r pVessel with pService}
-afit <- lm(pEffectiveComp ~ pcService+ I(pcService^2)+ pRnD+ sqrt(pRnD)+ pAir, data=MCClist) 
-fit2 <- lm(pEffectiveComp ~ pcService+ I(pcService^2)+ pRnD+ sqrt(pRnD)+ pAir+ pVessel, data=MCClist)
-fit8 <- lm(pEffectiveComp ~ pcService+ I(pcService^2)+ pRnD+ sqrt(pRnD)+ pAir+ pVessel+ sqrt(pVessel), data=MCClist)
+afit <- lm(pEffectiveComp ~ pcService+ I(pcService^2)+ pAir, data=MCClist) 
+fit2 <- lm(pEffectiveComp ~ pcService+ I(pcService^2)+ pAir+ pVessel, data=MCClist)
+plot(fit2)
+fit8 <- lm(pEffectiveComp ~ pcService+ I(pcService^2)+ pAir+ pVessel+ sqrt(pVessel), data=MCClist)
 plot(MCClist$pVessel)
-fit4 <- lm(pEffectiveComp ~ pcService+ I(pcService^2)+ pRnD+ sqrt(pRnD)+ pAir+ pVessel+ sqrt(pVessel), data=MCClist[rownames(MCClist)!=58,])
+fit4 <- lm(pEffectiveComp ~ pcService+ I(pcService^2)+ pAir+ pVessel+ sqrt(pVessel), data=MCClist[rownames(MCClist)!=58,])
 summary(afit)
 summary(fit2)
 summary(fit8)
@@ -200,7 +208,7 @@ Observations
 
 1. pVessel does not change the r^2, the value or significance of pcService^2 nor is it significant
 2. The plot of pVessel barely resembles a squareroot function.  sqrt(pVessel) does not change r^2, increases pcService by .09, and is not significant.
-3. removing outliers decreases the value of sqrt(pVessel) by .78, does not increase significance, nor does it increase r^2 and it decreases pcService by .03.  It also has avery high standard error of .79
+3. removing outliers decreases the value of sqrt(pVessel) by .78, does not increase significance, nor does it increase r^2 and it decreases pcService by .03.  It also has avery high standard error of .77
 
 
 ```{r pLand}
@@ -210,15 +218,15 @@ ggplot(data=MCClist,aes(x=sqrt(pLand),y=pEffectiveComp))+geom_point()
 ggplot(data=MCClist,aes(x=log1p(pLand),y=pEffectiveComp))+geom_point()
 ggplot(data=MCClist,aes(x=pLand,y=pEffectiveComp))+geom_point()
 
-bfit <- lm(pEffectiveComp ~ pcService+ I(pcService^2)+ pRnD+ sqrt(pRnD)+ pAir, data=MCClist)  
-afit1 <- lm(pEffectiveComp ~ pcService+I(pcService^2)+ pRnD+ sqrt(pRnD)+ pAir+ pLand, data=MCClist)
+bfit <- lm(pEffectiveComp ~ pcService+ I(pcService^2)+ pAir, data=MCClist)  
+afit1 <- lm(pEffectiveComp ~ pcService+I(pcService^2)+ pAir+ pLand, data=MCClist)
 summary(bfit)
 summary(afit1) 
 plot(afit1)
 screenreg(list(bfit, afit1))
 
 plot(MCClist$pLand)
-afit2 <- lm(pEffectiveComp ~ pcService+ I(pcService^2)+ pRnD+ sqrt(pRnD)+ pAir+ sqrt(pAir)+ pLand+ sqrt(pLand), data=MCClist)
+afit2 <- lm(pEffectiveComp ~ pcService+ I(pcService^2)+ pLand+ sqrt(pLand), data=MCClist)
 summary(afit2) 
 plot(afit2)
 screenreg(list(bfit, afit1, afit2))
@@ -227,8 +235,8 @@ screenreg(list(bfit, afit1, afit2))
 
 Observations
 
-1. Adding pLand does not change any coefficients or descriptive statistics and pair is not statistically significant 
-2. pLand only very slightly resembles a square root function but since sqrt(pLand) increases r^2 by .02 and increases the coefficient of pcService^2 by .05 it should not be furhter described as one. 
+1. Adding pLand does not change any coefficients or descriptive statistics  
+2. pLand only very slightly resembles a square root function but since sqrt(pLand) increases r^2 by .02 and increases the coefficient of pcService^2 by .05 it should not be further described as one. 
 
 
 ```{r MnS}
@@ -236,34 +244,35 @@ Observations
 ggplot(data=MCClist,aes(x=pMnS,y=pEffectiveComp))+geom_point()
 ggplot(data=MCClist,aes(x=sqrt(pMnS),y=pEffectiveComp))+geom_point()
 
-bfit <- lm(pEffectiveComp ~ pcService+I(pcService^2)+ pRnD+ sqrt(pRnD)+ pAir, data=MCClist)  
+bfit <- lm(pEffectiveComp ~ pcService+I(pcService^2)+ pAir, data=MCClist)  
 
-bfit1 <- lm(pEffectiveComp ~ pcService+I(pcService^2)+ pRnD+ sqrt(pRnD)+ pAir+ pMnS, data=MCClist)
+bfit1 <- lm(pEffectiveComp ~ pcService+I(pcService^2)+ pAir+ pMnS, data=MCClist)
 summary(bfit1) 
 
-bfit2 <- lm(pEffectiveComp ~ pcService+I(pcService^2)+ pRnD+ sqrt(pRnD)+ pAir+ pMnS+ pVessel, data=MCClist)
+bfit2 <- lm(pEffectiveComp ~ pcService+I(pcService^2)+ pAir+ pMnS+ pVessel, data=MCClist)
 summary(bfit)
 summary(bfit1)
 plot(bfit2)
 screenreg(list(bfit, bfit1, bfit2))   
 
-bfit3 <- lm(pEffectiveComp ~ pcService+ I(pcService^2)+ pRnD+ sqrt(pRnD)+ pAir, data=subset(MCClist,                                                                                    rownames(MCClist)!=58))
+bfit3 <- lm(pEffectiveComp ~ pcService+ I(pcService^2)+ pAir, data=subset(MCClist,                                                                                    rownames(MCClist)!=58))
 summary(bfit3) 
 plot(bfit3)
 
-bfit4 <- lm(pEffectiveComp ~ pcService+ I(pcService^2)+ pRnD+ sqrt(pRnD)+ pAir + pMnS, data=subset(MCClist,                                                                                    rownames(MCClist)!=58))
+bfit4 <- lm(pEffectiveComp ~ pcService+ I(pcService^2)+ pAir + pMnS, data=subset(MCClist,                                                                                    rownames(MCClist)!=58))
 summary(bfit4)
-
-bfit5 <- lm(pEffectiveComp ~ pcService+ I(pcService^2)+ pRnD+ sqrt(pRnD)+ pAir+ pMnS+ pVessel, data=subset(MCClist,                                                                                    rownames(MCClist)!=58))
+summary(bfit1)
+bfit5 <- lm(pEffectiveComp ~ pcService+ I(pcService^2)+ pAir+ pMnS+ pVessel, data=subset(MCClist,                                                                                    rownames(MCClist)!=58))
 summary(bfit5)
+summary(bfit4)
 screenreg(list(bfit, bfit1, bfit2, bfit3, bfit4, bfit5))
 
 ```
 
 Observations
 
-1. pMns increases the r^2 from .38 to .41, is significant at the 90% level (p=.0569), increases the p value for pcservice^2 by .003 and increases the significance of pRnD and sqrt(pRnD) to the 90% level
-2. pMnS increases signifiance when pVessel is added when eliminating the outlier.  the coefficient of pcService^2 decreases by .05 when the outlier is removed.  The r^2 between model with outlier and model without does not change.  comparing the models with and without the outlier when pvessel, there is not much difference.  The biggest change to note here is the increase in significance of pMnS when accounting for the outlier and adding pVessel
+1. pMns increases the r^2 from .35 to .39, is significant at the 10% level (p=.092), decreases the p value for pcservice^2 by .13 
+2. pMnS increases signifiance when pVessel is added when eliminating the outlier (p=.07).  the coefficient of pcService^2 decreases by .05 when the outlier is removed.  The r^2 between model with outlier and model without does not change.  comparing the models with and without the outlier when pvessel, the coefficient is the same but with an opposite sign (?). (don't use vessel) The biggest change to note here is the increase in significance of pMnS when accounting for the outlier and adding pVessel
 
 
 ```{r pWnA}
@@ -271,24 +280,26 @@ Observations
 
 ggplot(data=MCClist,aes(x=pWnA,y=pEffectiveComp))+geom_point()
 ggplot(data=MCClist,aes(x=sqrt(pWnA),y=pEffectiveComp))+geom_point()
+cfit7 <- lm(pEffectiveComp ~ pcService+I(pcService^2)+ pAir, data=MCClist) 
 
-cfit1 <- lm(pEffectiveComp ~ pcService+I(pcService^2)+ pRnD+ sqrt(pRnD)+ pAir+ pMnS, data=MCClist) 
+cfit1 <- lm(pEffectiveComp ~ pcService+I(pcService^2)+ pAir+ pMnS, data=MCClist) 
 
-cfit3 <- lm(pEffectiveComp ~ pcService+ I(pcService^2)+ pRnD+ sqrt(pRnD)+ pAir+ pWnA, data=MCClist)
+cfit3 <- lm(pEffectiveComp ~ pcService+ I(pcService^2)+ pAir+ pWnA, data=MCClist)
 
-cfit2 <- lm(pEffectiveComp ~ pcService+ I(pcService^2)+ pRnD+ sqrt(pRnD)+ pAir + pMnS +pWnA, data=MCClist)
+cfit2 <- lm(pEffectiveComp ~ pcService+ I(pcService^2)+ pAir + pMnS +pWnA, data=MCClist)
 summary(cfit1)
 summary(cfit3)
 summary(cfit2)
-screenreg(list(cfit1, cfit3, cfit2))
+screenreg(list(cfit7, cfit1, cfit3, cfit2))
 
 ```
 
 Observations:
-
-1. Adding pWnA decreases the significance of pMnS.  Also, adding pWnA increases r^2 by .07.  Thus, including pMnS from now on should be discussed.  For now, I'm goign to not include it but it can always be added in if this logic is not sufficient. 
-2. pWnA is statistically significant, increases r^2, decreases pcService^2 by .15.  Thus is should be continued further in the model.
-3. pWnA is very siginificant (p=.005) and increases the r^2 of the model (.39->.46).  pMnS is kept in the first two models here to see if it changes at all with the addition of pWnA, since it doesn't, it will still be removed.  
+ keep missiles and space nothing against it..
+1.  pMnS is included because it decreasres the coefficient of pcservice^2 by .13, increases r^2 by .04 and is itself negative, which hteoretically makes sense (missiles and space are an industry with zero competition) 
+2. pWnA is statistically significant, increases r^2, decreases pcService^2 by .28.  Thus is should be continued further in the model.
+3. pWnA is very siginificant (p=.005) and increases the r^2 of the model (.39->.46).  
+4.  pMnS and pWnA will continue in the model. 
 
 
 ```{r ElectronicAndCommunications}
@@ -297,22 +308,22 @@ ggplot(data=MCClist,aes(x=pEnC,y=pEffectiveComp))+geom_point()
 ggplot(data=MCClist,aes(x=sqrt(pEnC),y=pEffectiveComp))+geom_point()
 ggplot(data=MCClist,aes(x=log1p(pEnC),y=pEffectiveComp))+geom_point()
 
-dfit1 <- lm(pEffectiveComp ~ pcService+ I(pcService^2)+ pAir+ pRnD+ sqrt(pRnD)+ pWnA, data=MCClist)
+dfit1 <- lm(pEffectiveComp ~ pcService+ I(pcService^2)+ pAir+ pMnS+ pWnA, data=MCClist)
 summary(dfit1) 
 plot(dfit1)
 
-dfit2 <- lm(pEffectiveComp ~ pcService+ I(pcService^2)+ pAir+ pRnD+ sqrt(pRnD)+ pWnA+ pEnC, data=MCClist)
+dfit2 <- lm(pEffectiveComp ~ pcService+ I(pcService^2)+ pAir+ pMnS+ pWnA+ pEnC, data=MCClist)
 summary(dfit2) 
 plot(dfit2)
 screenreg(list(dfit1, dfit2))
 
-dfit3 <- lm(pEffectiveComp ~ pcService+ I(pcService^2)+ pAir+ pRnD+ sqrt(pRnD)+ pWnA +pEnC +pVessel, data=subset(MCClist, rownames(MCClist)!=58 ))
+dfit3 <- lm(pEffectiveComp ~ pcService+ I(pcService^2)+ pAir+ pMnS+ pWnA +pEnC +pVessel, data=subset(MCClist, rownames(MCClist)!=58 ))
 summary(dfit3) 
 plot(dfit3)
 screenreg(list(dfit1, dfit2, dfit3))
  
 ```
-
+**stopped analyze this***
 Observations
 
 1. Adding pEnC does not influence r^2 significantly and it decreases the significance of pcService^2.  It is also not significant.
