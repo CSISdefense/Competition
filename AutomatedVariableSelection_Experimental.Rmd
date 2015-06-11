@@ -1,0 +1,64 @@
+---
+title: "Automated Variable Selection Experimental"
+author: "SRC"
+date: "Wednesday, June 10, 2015"
+output: html_document
+---
+
+
+
+###Variable Selection Process
+
+What we have done so far is **Forward Selection** which means we add each variable and check the descriptive statistics as each variable is added as well as check how it affects the other variables. 
+
+This yields the model:
+
+```{r echo=TRUE}
+
+jfit1 <- lm(pEffectiveComp ~ pcService+ I(pcService^2)+ pAir + pWnA + pEnC + pIDV, data=MCClist)
+
+summary(jfit1)
+```
+
+**Criterion-based procedures**
+
+The Akaike Information Criterion (AIC) and the Bayes Information Criterion (BIC) are criteria that avoid fitting all the models and instead only evaluate likely candidates.  
+
+The criteria:
+
+AIC = -2log - likelihood +2p
+
+BIC = -2log - likelihood + plog*n
+
+The AIC function does not evaluate the AIC for all possible models but uses a search method that compares models sequentially.  
+
+Here I 
+
+1.model the equation using about all the possible independent variables.
+
+2. Use the AIC to select different models and show which has the lowest AIC. 
+```{r echo=TRUE}
+zfit <- lm(pEffectiveComp ~ pcService+ I(pcService^2)+ pRnD+ pAir+ pVessel+ pLand+ pMnS+ pWnA+ pEnC+ pFnC+ pIDV+ pFixed+ pCostPlus+ pIncentFee+ log(TotalCount)+ log(TotalValue), data=MCClist) 
+
+
+AIC(zfit)
+
+```
+
+This model that yielded the lowest AIC and here is a comparison of the three models: 
+
+1. zfit = all possible variables
+2. yfit = the model suggested by AIC
+3. jfit = the model we found using forward selection
+
+``` {r echo=TRUE}
+yfit <- lm(pEffectiveComp ~ pcService+ I(pcService^2) + pAir + pLand + pWnA + pFnC + pIDV + pFixed, data=MCClist)
+
+
+screenreg(list(zfit, yfit, jfit1))
+
+```
+
+[reference]{http://www.biostat.jhsph.edu/~iruczins/teaching/jf/ch10.pdf}
+
+check this out: http://www.palgrave-journals.com/jt/journal/v18/n1/full/jt200926a.html 
