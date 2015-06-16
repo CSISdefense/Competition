@@ -465,6 +465,18 @@ competition.statistics.pt3<-function(VAR.Path
                               , lavSize=(sum(log1p(abs(Obligation.2014)))/sum(CountOfPIID))
   )
   
+    competition.combined<-plyr::join(competition.combined,
+                                     ddply(ddply(competition.DF
+                                                 , c(VAR.UnitOfAnalysis,"Fiscal.Year")
+                                                 , summarise
+                                                 , AnnualValue=sum(Obligation.2014)
+                                     ),
+                                     VAR.UnitOfAnalysis,
+                                     summarise,
+                                     MaxAnnualValue=max(AnnualValue)
+                                     )
+    )
+
   #   competition.combined<-ddply(competition.DF
   #                         , VAR.UnitOfAnalysis
   #   , transform

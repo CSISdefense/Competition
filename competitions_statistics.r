@@ -10,6 +10,64 @@ options(warn=1)
 
 
 
+
+office.competition.combined<-competition.statistics(
+    "",
+    "data\\defense_Office_SP_DefenseCompetitionHistoryBucketPlatformSubCustomerOffice.csv",
+    "ContractingOfficeID"
+)
+# debug(competition.statistics.pt2)
+
+# debug(competition.statistics.pt2)
+office.competition.combined<-plyr::join(office.competition.combined,competition.statistics.pt2(
+    "",
+    "data\\defense_Office_SP_DefenseCompetitionPricingVehicleHistoryOffice.csv",
+    "ContractingOfficeID"
+)
+)
+
+
+office.competition.combined<-plyr::join(office.competition.combined,competition.statistics.pt3(""
+                                                                                         ,"data\\Defense_Contract_SP_ContractSizeforCompetitionStudyOffice.csv"
+                                                                                         ,"ContractingOfficeID"
+)
+)
+
+summary(office.competition.combined)
+
+office.competition.combined$TotalThreshold<- cut2(office.competition.combined$TotalValue,cuts=c(0,1000000,5000000,100000000))
+office.competition.combined$AnnualThreshold<- cut2(office.competition.combined$MaxAnnualValue,cuts=c(0,1000000,5000000,100000000))
+ggplot(data=office.competition.combined,
+       aes(x=TotalValue,fill=TotalThreshold))+geom_bar()+scale_x_log10(labels = comma)#bin=0.01))
+
+
+ggplot(data=office.competition.combined,
+       aes(x=MaxAnnualValue,fill=AnnualThreshold))+geom_bar()+scale_x_log10(labels = comma)+#bin=0.01))+
+    facet_wrap(~TotalThreshold,ncol=1)
+
+
+
+office.competition.combined$Exclude[office.competition.combined$MaxAnnualValue<1000000 | 
+                                        office.competition.combined$TotalValue<5000000]<-TRUE
+office.competition.combined$Exclude[office.competition.combined$MaxAnnualValue>=1000000 & 
+                                        office.competition.combined$TotalValue>=5000000]<-FALSE
+
+
+tapply(office.competition.combined$TotalValue, office.competition.combined$TotalThreshold, sum)
+tapply(office.competition.combined$TotalValue, office.competition.combined$TotalThreshold, length)
+
+write.table(subset(office.competition.combined,select=-c(Threshold))office.competition.combined
+            ,file="data\\defense_office_competition_combined.csv"
+            #   ,header=TRUE
+            , sep=","
+            , row.names=FALSE
+            , append=FALSE
+)
+
+
+
+
+
 mcc.competition.combined<-competition.statistics(
     "",
     "data\\defense_Office_SP_DefenseCompetitionHistoryBucketPlatformSubCustomerMajorCommand.csv",
@@ -28,6 +86,51 @@ mcc.competition.combined<-plyr::join(mcc.competition.combined,competition.statis
                                                                                    ,"MajorCommandID"
 )
 )
+
+
+mcc.competition.combined$TotalThreshold<- cut2(mcc.competition.combined$TotalValue,cuts=c(1000000,10000000,100000000))
+mcc.competition.combined$AnnualThreshold<- cut2(mcc.competition.combined$MaxAnnualValue,cuts=c(1000000,10000000,100000000))
+mcc.competition.combined$Exclude[mcc.competition.combined$MajorCommandID %in% c("ORG-2841",
+                                                                                "ORG-2776",
+                                                                                "ORG-4793",
+                                                                                "ORG-2849",
+                                                                                "ORG-2762",
+                                                                                "ORG-4020",
+                                                                                "ORG-2840",
+                                                                                "ORG-2757"
+)]<-TRUE
+
+
+
+
+summary(mcc.competition.combined$Threshold)
+summary(mcc.competition.combined[mcc.competition.combined$MajorCommandID %in% c("ORG-2841",
+                                               "ORG-2776",
+                                               "ORG-4793",
+                                               "ORG-2849",
+                                               "ORG-2762",
+                                               "ORG-4020",
+                                               "ORG-2840",
+                                               "ORG-2757"),c("TotalValue","MaxAnnualValue")]
+)
+summary(mcc.competition.combined[!mcc.competition.combined$MajorCommandID %in% c("ORG-2841",
+                                                                                "ORG-2776",
+                                                                                "ORG-4793",
+                                                                                "ORG-2849",
+                                                                                "ORG-2762",
+                                                                                "ORG-4020",
+                                                                                "ORG-2840",
+                                                                                "ORG-2757"),c("TotalValue","MaxAnnualValue")]
+)
+
+ggplot(data=mcc.competition.combined,
+       aes(x=MaxAnnualValue,fill=Threshold))+geom_bar()+scale_x_log10(labels = comma)+#bin=0.01))+
+       facet_wrap(~Exclude,ncol=1)
+
+
+ggplot(data=mcc.competition.combined,
+       aes(x=TotalValue,fill=Threshold))+geom_bar()+scale_x_log10(labels = comma)+#bin=0.01))+
+    facet_wrap(~Exclude,ncol=1)
 
 
 MCCshortList<-subset(mcc.competition.combined,!MajorCommandID %in% c("ORG-2841",
