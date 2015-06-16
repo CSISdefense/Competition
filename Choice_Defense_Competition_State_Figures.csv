@@ -1,0 +1,188 @@
+figure number,figure title,legend name,form,order,section.variable,x.variable,y.variable,y.series,facet.primary,facet.secondary,x.axis.title,y.axis.title,data file,file type,subset.variable,subset.criteria,Layout Name,wide.section.variable,lookup.series.variable,subset.agency.variable,use.all.agencies
+,Competition,Competition,Lattice_Line,1,StateCode,Fiscal.Year,Obligation.2014,Competition.sum,,,Fiscal Year,% of $ Oblig.,location_SP_DefenseCompetitionPoPstateHistoryBucketPlatformSubCustomer.csv,SQL output,,,,,,Customer,FALSE
+,Competition,Competition,Lattice_Line,2,StateCode,Fiscal.Year,Obligation.2014,Competition.multisum,,,Fiscal Year,% of $ Oblig.,location_SP_DefenseCompetitionPoPstateHistoryBucketPlatformSubCustomer.csv,SQL output,,,,,,Customer,FALSE
+,Competition,Competition,Lattice_Line,2,StateCode,Fiscal.Year,Obligation.2014,Competition.effective.only,,,Fiscal Year,% of $ Oblig.,location_SP_DefenseCompetitionPoPstateHistoryBucketPlatformSubCustomer.csv,SQL output,Competition.effective.only,Effective Comp,,,,Customer,FALSE
+,"Percent Services vs. Effective Competition by Place of Performance State",,scatterplot,2,Overall,pService,pEffectiveComp,,,,% Services Contracts (2013 $-weighted),% Multioffer Competition ($-weighted),state_competition_combined.csv,SQL output,,,,,,Customer,FALSE
+,"Percent R&D vs. Effective Competition by Place of Performance State",,scatterplot,2,Overall,pRnD,pEffectiveComp,,,,% R&D Contracts (2013 $-weighted),% Multioffer Competition ($-weighted),state_competition_combined.csv,SQL output,,,,,,Customer,FALSE
+,"Percent Products vs. Effective Competition by Place of Performance State",,scatterplot,2,Overall,pProduct,pEffectiveComp,,,,% Products Contracts (2013 $-weighted),% Multioffer Competition ($-weighted),state_competition_combined.csv,SQL output,,,,,,Customer,FALSE
+,"Percent Land vs. Effective Competition by Place of Performance State",,scatterplot,2,Overall,pLand,pEffectiveComp,,,,% Land Contracts (2013 $-weighted),% Multioffer Competition ($-weighted),state_competition_combined.csv,SQL output,,,,,,Customer,FALSE
+,"Percent Air vs. Effective Competition by Place of Performance State",,scatterplot,2,Overall,pAir,pEffectiveComp,,,,% Air Contracts (2013 $-weighted),% Multioffer Competition ($-weighted),state_competition_combined.csv,SQL output,,,,,,Customer,FALSE
+,"Percent Vessel vs. Effective Competition by Place of Performance State",,scatterplot,2,Overall,pVessel,pEffectiveComp,,,,% Vessel Contracts (2013 $-weighted),% Multioffer Competition ($-weighted),state_competition_combined.csv,SQL output,,,,,,Customer,FALSE
+,"Percent Missile & Space vs. Effective Competition by Place of Performance State",,scatterplot,2,Overall,pMnS,pEffectiveComp,,,,% Missiles & Space Contracts (2013 $-weighted),% Multioffer Competition ($-weighted),state_competition_combined.csv,SQL output,,,,,,Customer,FALSE
+,"Percent Electronics & Communcations vs. Effective Competition by Place of Performance State",,scatterplot,2,Overall,pEnC,pEffectiveComp,,,,% Electronics & Communications Contracts (2013 $-weighted),% Multioffer Competition ($-weighted),state_competition_combined.csv,SQL output,,,,,,Customer,FALSE
+2.01,"Percent Weapons & Ammunition vs. Effective Competition by Place of Performance State",,scatterplot,2,Overall,pWnA,pEffectiveComp,,,,% Weapons & Ammunition Contracts (2013 $-weighted),% Multioffer Competition ($-weighted),state_competition_combined.csv,SQL output,,,,,,Customer,FALSE
+2.02,"Percent Cost Plus vs. Effective Competition by Place of Performance State",,scatterplot,2,Overall,pCostPlus,pEffectiveComp,,,,% Cost Plus Contracts (2013 $-weighted),% Multioffer Competition ($-weighted),state_competition_combined.csv,SQL output,,,,,,Customer,FALSE
+2.03,"Percent Fixed Price vs. Effective Competition by Place of Performance State",,scatterplot,2,Overall,pFixed,pEffectiveComp,,,,% Fixed Price Contracts (2013 $-weighted),% Multioffer Competition ($-weighted),state_competition_combined.csv,SQL output,,,,,,Customer,FALSE
+2.04,"Percent Incentive Fee vs. Effective Competition by Place of Performance State",,scatterplot,2,Overall,pIncentFee,pEffectiveComp,,,,% Incentive Fee Contracts (2013 $-weighted),% Multioffer Competition ($-weighted),state_competition_combined.csv,SQL output,,,,,,Customer,FALSE
+2.05,"Average Contract Size vs. Effective Competition by Place of Performance State",,scatterplot,2,Overall,avSize,pEffectiveComp,,,,Average Size of Contracts (2013 $),% Multioffer Competition ($-weighted),state_competition_combined.csv,SQL output,,,,,,Customer,FALSE
+2.06,"Average Contract Size vs. Effective Competition by Place of Performance State",,scatterplot,2,Overall,lavSize,pEffectiveComp,,,,Log of Average Size of Contracts (2013 $s),% Multioffer Competition ($-weighted),state_competition_combined.csv,SQL output,,,,,,Customer,FALSE
+2.07,"Percent 25M or Less vs. Effective Competition by Place of Performance State",,scatterplot,2,,p25orLess,pEffectiveComp,,,,% 25M or Less Contracts (2013 $-weighted),% Multioffer Competition ($-weighted),state_competition_combined.csv,SQL output,,,,,,Customer,FALSE
+2.08,"Percent 25M to 100M vs. Effective Competition by Place of Performance State",,scatterplot,2,,p25to100,pEffectiveComp,,,,% 25M to 100M Contracts (2013 $-weighted),% Multioffer Competition ($-weighted),state_competition_combined.csv,SQL output,,,,,,Customer,FALSE
+2.09,"Percent 100M to 500M vs. Effective Competition by Place of Performance State",,scatterplot,2,,p100to500,pEffectiveComp,,,,% 100M to 500M Contracts (2013 $-weighted),% Multioffer Competition ($-weighted),state_competition_combined.csv,SQL output,,,,,,Customer,FALSE
+2.1,"Percent 500M or Over vs. Effective Competition by Place of Performance State",,scatterplot,2,,p500orMore,pEffectiveComp,,,,% 500M or More Contracts (2013 $-weighted),% Multioffer Competition ($-weighted),state_competition_combined.csv,SQL output,,,,,,Customer,FALSE
+,"Percent Award Contract Vehicle vs. Effective Competition by Place of Performance State",,scatterplot,2,,pAward,pEffectiveComp,,,,% Award Contract Vehicles (2013 $-weighted),% Multioffer Competition ($-weighted),state_competition_combined.csv,SQL output,,,,,,Customer,FALSE
+3.01,"Percent IDV Contract Vehicle vs. Effective Competition by Place of Performance State",,scatterplot,2,Overall,pIDV,pEffectiveComp,,,,% IDV Contract Vehicles (2013 $-weighted),% Multioffer Competition ($-weighted),state_competition_combined.csv,SQL output,,,,,,Customer,FALSE
+3.02,"Percent Single IDV Contract Vehicle vs. Effective Competition by Place of Performance State",,scatterplot,2,,pSingleIDV,pEffectiveComp,,,,% Single IDV Contract Vehicles (2013 $-weighted),% Multioffer Competition ($-weighted),state_competition_combined.csv,SQL output,,,,,,Customer,FALSE
+3.03,"Percent Multiple IDV Contract Vehicle vs. Effective Competition by Place of Performance State",,scatterplot,2,,pMultipleIDV,pEffectiveComp,,,,% Multiple IDV Contract Vehicles (2013 $-weighted),% Multioffer Competition ($-weighted),state_competition_combined.csv,SQL output,,,,,,Customer,FALSE
+3.04,"Percent Services vs. Number of Offers Received by Place of Performance State",,scatterplot,2,Overall,pService,lwavOffers,,,,% Services Contracts (2013 $-weighted),Log of Average Number of Offers Received ($-weighted),state_competition_combined.csv,SQL output,,,,,,Customer,FALSE
+3.05,"Percent R&D vs. Number of Offers Received by Place of Performance State",,scatterplot,2,Overall,pRnD,lwavOffers,,,,% R&D Contracts (2013 $-weighted),Log of Average Number of Offers Received ($-weighted),state_competition_combined.csv,SQL output,,,,,,Customer,FALSE
+3.06,"Percent Products vs. Number of Offers Received by Place of Performance State",,scatterplot,2,Overall,pProduct,lwavOffers,,,,% Products Contracts (2013 $-weighted),Log of Average Number of Offers Received ($-weighted),state_competition_combined.csv,SQL output,,,,,,Customer,FALSE
+3.07,"Percent Land vs. Number of Offers Received by Place of Performance State",,scatterplot,2,Overall,pLand,lwavOffers,,,,% Land Contracts (2013 $-weighted),Log of Average Number of Offers Received ($-weighted),state_competition_combined.csv,SQL output,,,,,,Customer,FALSE
+3.08,"Percent Air vs. Number of Offers Received by Place of Performance State",,scatterplot,2,Overall,pAir,lwavOffers,,,,% Air Contracts (2013 $-weighted),Log of Average Number of Offers Received ($-weighted),state_competition_combined.csv,SQL output,,,,,,Customer,FALSE
+3.09,"Percent Vessel vs. Number of Offers Received by Place of Performance State",,scatterplot,2,Overall,pVessel,lwavOffers,,,,% Vessel Contracts (2013 $-weighted),Log of Average Number of Offers Received ($-weighted),state_competition_combined.csv,SQL output,,,,,,Customer,FALSE
+3.1,"Percent Missile & Space vs. Number of Offers Received by Place of Performance State",,scatterplot,2,Overall,pMnS,lwavOffers,,,,% Missiles & Space Contracts (2013 $-weighted),Log of Average Number of Offers Received ($-weighted),state_competition_combined.csv,SQL output,,,,,,Customer,FALSE
+,"Percent Electronics & Communcations vs. Number of Offers Received by Place of Performance State",,scatterplot,2,Overall,pEnC,lwavOffers,,,,% Electronics & Communications Contracts (2013 $-weighted),Log of Average Number of Offers Received ($-weighted),state_competition_combined.csv,SQL output,,,,,,Customer,FALSE
+3.11,"Percent Weapons & Ammunition vs. Number of Offers Received by Place of Performance State",,scatterplot,2,Overall,pWnA,lwavOffers,,,,% Weapons & Ammunition Contracts (2013 $-weighted),Log of Average Number of Offers Received ($-weighted),state_competition_combined.csv,SQL output,,,,,,Customer,FALSE
+3.12,"Percent Cost Plus vs. Number of Offers Received by Place of Performance State",,scatterplot,2,Overall,pCostPlus,lwavOffers,,,,% Cost Plus Contracts (2013 $-weighted),Log of Average Number of Offers Received ($-weighted),state_competition_combined.csv,SQL output,,,,,,Customer,FALSE
+3.13,"Percent Fixed Price vs. Number of Offers Received by Place of Performance State",,scatterplot,2,Overall,pFixed,lwavOffers,,,,% Fixed Price Contracts (2013 $-weighted),Log of Average Number of Offers Received ($-weighted),state_competition_combined.csv,SQL output,,,,,,Customer,FALSE
+3.14,"Percent Incentive Fee vs. Number of Offers Received by Place of Performance State",,scatterplot,2,Overall,pIncentFee,lwavOffers,,,,% Incentive Fee Contracts (2013 $-weighted),Log of Average Number of Offers Received ($-weighted),state_competition_combined.csv,SQL output,,,,,,Customer,FALSE
+3.15,"Average Contract Size vs. Number of Offers Received by Place of Performance State",,scatterplot,2,Overall,avSize,lwavOffers,,,,Average Size of Contracts (2013 $),Log of Average Number of Offers Received ($-weighted),state_competition_combined.csv,SQL output,,,,,,Customer,FALSE
+3.16,"Average Contract Size vs. Number of Offers Received by Place of Performance State",,scatterplot,2,Overall,lavSize,lwavOffers,,,,Log of Average Size of Contracts (2013 $s),Log of Average Number of Offers Received ($-weighted),state_competition_combined.csv,SQL output,,,,,,Customer,FALSE
+3.17,"Percent 25M or Less vs. Number of Offers Received by Place of Performance State",,scatterplot,2,,p25orLess,lwavOffers,,,,% 25M or Less Contracts (2013 $-weighted),Log of Average Number of Offers Received ($-weighted),state_competition_combined.csv,SQL output,,,,,,Customer,FALSE
+3.18,"Percent 25M to 100M vs. Number of Offers Received by Place of Performance State",,scatterplot,2,,p25to100,lwavOffers,,,,% 25M to 100M Contracts (2013 $-weighted),Log of Average Number of Offers Received ($-weighted),state_competition_combined.csv,SQL output,,,,,,Customer,FALSE
+3.19,"Percent 100M to 500M vs. Number of Offers Received by Place of Performance State",,scatterplot,2,,p100to500,lwavOffers,,,,% 100M to 500M Contracts (2013 $-weighted),Log of Average Number of Offers Received ($-weighted),state_competition_combined.csv,SQL output,,,,,,Customer,FALSE
+3.2,"Percent 500M or Over vs. Number of Offers Received by Place of Performance State",,scatterplot,2,,p500orMore,lwavOffers,,,,% 500M or More Contracts (2013 $-weighted),Log of Average Number of Offers Received ($-weighted),state_competition_combined.csv,SQL output,,,,,,Customer,FALSE
+,"Percent Award Contract Vehicle vs. Number of Offers Received by Place of Performance State",,scatterplot,2,,pAward,lwavOffers,,,,% Award Contract Vehicles (2013 $-weighted),Log of Average Number of Offers Received ($-weighted),state_competition_combined.csv,SQL output,,,,,,Customer,FALSE
+3.21,"Percent IDV Contract Vehicle vs. Number of Offers Received by Place of Performance State",,scatterplot,2,Overall,pIDV,lwavOffers,,,,% IDV Contract Vehicles (2013 $),Log of Average Number of Offers Received ($-weighted),state_competition_combined.csv,SQL output,,,,,,Customer,FALSE
+3.22,"Percent Single IDV Contract Vehicle vs. Number of Offers Received by Place of Performance State",,scatterplot,2,,pSingleIDV,lwavOffers,,,,% Single IDV Contract Vehicles (2013 $-weighted),Log of Average Number of Offers Received ($-weighted),state_competition_combined.csv,SQL output,,,,,,Customer,FALSE
+3.23,"Percent Multiple IDV Contract Vehicle vs.Number of Offers Received by Place of Performance State",,scatterplot,2,,pMultipleIDV,lwavOffers,,,,% Multiple IDV Contract Vehicles (2013 $-weighted),Log of Average Number of Offers Received ($-weighted),state_competition_combined.csv,SQL output,,,,,,Customer,FALSE
+3.24,Effective Competition by Platform Portfolio,Competition,Lattice_Line,,Overall,Fiscal.Year,Obligation.2013,Competition.effective.only,PlatformPortfolio.AnD,,Fiscal Year,Percent of Effective Competition by Dollars Obligated,Office_SP_DefenseCompetitionHistoryBucketPlatformSubCustomerMajorCommand.csv,SQL output,Competition.effective.only,Effective Comp.,,,,Customer,FALSE
+3.25,,,,,,,,,,,,,,,,,,,,,
+3.26,,,,,,,,,,,,,,,,,,,,,
+3.27,,,,,,,,,,,,,,,,,,,,,
+3.28,,,,,,,,,,,,,,,,,,,,,
+3.29,,,,,,,,,,,,,,,,,,,,,
+3.3,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,
+3.31,,,,,,,,,,,,,,,,,,,,,
+3.32,,,,,,,,,,,,,,,,,,,,,
+3.33,,,,,,,,,,,,,,,,,,,,,
+3.34,,,,,,,,,,,,,,,,,,,,,
+3.35,,,,,,,,,,,,,,,,,,,,,
+3.36,,,,,,,,,,,,,,,,,,,,,
+3.37,,,,,,,,,,,,,,,,,,,,,
+3.38,,,,,,,,,,,,,,,,,,,,,
+3.39,,,,,,,,,,,,,,,,,,,,,
+3.4,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,
+3.41,,,,,,,,,,,,,,,,,,,,,
+3.42,,,,,,,,,,,,,,,,,,,,,
+3.43,,,,,,,,,,,,,,,,,,,,,
+3.44,,,,,,,,,,,,,,,,,,,,,
+3.45,,,,,,,,,,,,,,,,,,,,,
+3.46,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,
+3.47,,,,,,,,,,,,,,,,,,,,,
+3.48,,,,,,,,,,,,,,,,,,,,,
+3.49,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,
+3.5,,,,,,,,,,,,,,,,,,,,,
+3.51,,,,,,,,,,,,,,,,,,,,,
+3.52,,,,,,,,,,,,,,,,,,,,,
+3.53,,,,,,,,,,,,,,,,,,,,,
+3.54,,,,,,,,,,,,,,,,,,,,,
+3.55,,,,,,,,,,,,,,,,,,,,,
+3.56,,,,,,,,,,,,,,,,,,,,,
+3.57,,,,,,,,,,,,,,,,,,,,,
+3.58,,,,,,,,,,,,,,,,,,,,,
+3.59,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,
+4.01,,,,,,,,,,,,,,,,,,,,,
+4.02,,,,,,,,,,,,,,,,,,,,,
+4.03,,,,,,,,,,,,,,,,,,,,,
+4.04,,,,,,,,,,,,,,,,,,,,,
+4.05,,,,,,,,,,,,,,,,,,,,,
+4.06,,,,,,,,,,,,,,,,,,,,,
+4.07,,,,,,,,,,,,,,,,,,,,,
+4.08,,,,,,,,,,,,,,,,,,,,,
+4.09,,,,,,,,,,,,,,,,,,,,,
+4.1,,,,,,,,,,,,,,,,,,,,,
+4.11,,,,,,,,,,,,,,,,,,,,,
