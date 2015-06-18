@@ -534,6 +534,8 @@ summary(kfit5)
 plot(kfit5)
 
 
+
+
 screenreg(list(kfit1, kfit2, kfit3, kfit4, kfit5))
 ##log(Total value) decrease the coefficient of pcService^2 by .06, is not statistically significant and does not change the r^2 value significantly.  I(pcService^2):log(TotalValue) decreases the significance of service coefficients, does not change r^2 and itself is not significant.  Subsetting the data frame in models 4 and 5 do not change r^2, significances of other coefficient nor does it change any coefficients in either direction.  Thus, out of these models, kfit2 (including log(TotalValue)) should be continued as the base model.  
 ```

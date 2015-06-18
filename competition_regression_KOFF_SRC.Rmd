@@ -36,6 +36,213 @@ KOfflist <- KOfflist[KOfflist$Exclude == "FALSE", ]
 
 names(KOfflist)
 
+KOfflist$pcService<-KOfflist$pService-0.5
+
+
+
+ggplot(data=KOfflist,aes(x=pEffectiveComp))+geom_bar()
+ggplot(data=KOfflist,aes(x=log1p(pEffectiveComp)))+geom_bar()
+
+
+names(KOfflist)
+
+LMsummaryLine<-function(fit,Unit=NULL){
+    data.frame(  Equation=as.character(summary(fit)$call)[2],
+        Source=as.character(summary(fit)$call)[3],
+           Slope=coefficients(fit)[2:length(coefficients(fit))],
+           SlopeStdError=summary(fit)$coefficients[2:length(coefficients(fit)),2],
+           Intercept=coefficients(fit)[1],         
+           AdjRsquared=summary(fit)$adj.r.squared,
+            Pvalue=coef(summary(fit))[2:length(coefficients(fit)),4]
+           #anova(fit)$'Pr(>F)'[1]
+
+
+           )
+    #Source: http://stackoverflow.com/questions/5587676/pull-out-p-values-and-r-squared-from-a-linear-regression
+    #http://stackoverflow.com/questions/23838937/extract-pvalue-from-glm
+}
+
+```
+
+
+
+ Multiple Linear Regression Example 
+ 
+```{r PSR}
+#
+# fit <- lm(y ~ x1 + x2 + x3, data=mydata)
+
+rcorr(as.matrix(subset(KOfflist,select=c(pProduct,pService,pRnD))))
+
+# ggplot(data=KOfflist,aes(x=pAir))+geom_bar(bin=0.01)
+# ggplot(data=KOfflist,aes(x=sqrt(pAir)))+geom_bar(bin=0.01)
+# ggplot(data=KOfflist,aes(x=log1p(pAir)))+geom_bar(bin=0.01)
+
+
+
+ggplot(data=KOfflist,aes(x=pService,y=pEffectiveComp))+geom_point()
+
+fita <- lm(pEffectiveComp ~ pService, data=KOfflist)
+summary(fita) 
+dfPSR<-LMsummaryLine(fita)   
+plot(fita)
+KOfflist$pcService<-KOfflist$pService-0.5
+
+
+ggplot(data=KOfflist,aes(x=pcService,y=pEffectiveComp))+geom_point()
+
+
+
+fitb1 <- lm(pEffectiveComp ~ pcService + I(pcService^2), data = KOfflist)
+summary(fitb) 
+dfPSR<-LMsummaryLine(fitb1)   
+plot(fitb1)
+
+
+fitb2 <- lm(pEffectiveComp ~ pService + I(pService^2), data = KOfflist)
+summary(fitb) 
+dfPSR<-LMsummaryLine(fitb2)   
+plot(fitb2)
+
+
+ggplot(data=KOfflist,aes(x=pProduct,y=pEffectiveComp))+geom_point()
+fitc <- lm(pEffectiveComp ~ pProduct, data=KOfflist)
+summary(fitc) 
+sqdfPSR<-LMsummaryLine(fitc)   
+plot(fitc)
+
+ggplot(data=KOfflist,aes(x=pProduct,y=pEffectiveComp))+geom_point()
+fitd <- lm(pEffectiveComp ~ pProduct + I(pProduct^2), data=KOfflist)
+summary(fitd) 
+# sqdfPSR<-LMsummaryLine(fitd)   
+plot(fitd)
+
+
+ggplot(data=KOfflist,aes(x=pRnD,y=pEffectiveComp))+geom_point()
+KOfflist$pRnD[KOfflist$pRnD<0]<-0
+
+
+ggplot(data=KOfflist,aes(x=log1p(pRnD),y=pEffectiveComp))+geom_point()
+fite1 <- lm(pEffectiveComp ~ pcService + I(pcService^2) + pRnD, data=KOfflist)
+summary(fite1) 
+dfPSR<-LMsummaryLine(fite1)   
+plot(fite1)
+
+fite2 <- lm(pEffectiveComp ~ pService + I(pService^2) + pRnD, data=KOfflist)
+summary(fite2) 
+dfPSR<-LMsummaryLine(fite2)   
+plot(fite2)
+
+
+
+fitf <- lm(pEffectiveComp ~ pProduct + I(pProduct^2) + pRnD, data=KOfflist)
+summary(fitf) 
+dfPSR<-LMsummaryLine(fitf)   
+plot(fitf)
+
+screenreg(list(fita, fitb1,fitb2, fitc, fitd, fite1, fite2, fitf))
+
+
+View(dfPSR)
+```
+
+Because pProduct, pService, PRnD, and unlabeled data are mutually exhaustive
+
+
+The minimum p-value is for the linear modpRnD but `r dfPSR$Pvalue[rownames(dfPSR)=="pRnD"]`. That's far too high to use, but worth a quick closer look in case theres something going on there we're missing.
+
+Switching over to log of RnD is significantly more promising, but still doesn't reach significance. The log of pProduct and pService were also checked, but were not promising enough to merit further inclusion.
+
+
+```{r Platform}
+
+rcorr(as.matrix(subset(KOfflist,select=c(pProduct,pRnD,pFnC,pAir,pVessel,pLand,pWnA,pMnS,pEnC))))
+rcorr(cbind(KOfflist$pFnC,KOfflist$pProduct^2))
+#Missiles and Space is highly correlated with RnD
+
+
+#
+# fit <- lm(y ~ x1 + x2 + x3, data=mydata)
+ggplot(data=KOfflist,aes(x=pAir,y=pEffectiveComp))+geom_point()
+ggplot(data=KOfflist,aes(x=log1p(pAir),y=pEffectiveComp))+geom_point()
+ggplot(data=KOfflist,aes(x=sqrt(pAir),y=pEffectiveComp))+geom_point()
+##EFFECTIVECOMP~SERVICE
+fita <- lm(pEffectiveComp ~ pProduct, data=KOfflist)
+fitb <- lm(pEffectiveComp ~ pProduct + I(pProduct^2), data=KOfflist)
+fitd <- lm(pEffectiveComp ~ pProduct + I(pProduct^2) + pRnD, data=KOfflist)
+afit <- lm(pEffectiveComp ~ pProduct+I(pProduct^2)+ pRnD + pAir, data=KOfflist)
+summary(fitd)
+summary(afit) 
+dfMCC<-LMsummaryLine(afit)
+plot(afit)
+screenreg(list(fita, fitb, fitd, afit))
+##sqrt(pRnD) increases R^2 and the significance of pProduct
+##pAir increases R^2, decreases significance of pProduct but increases value and significance of pProduct^2 pvalue(.0114 to .0082)
+
+# bfit <- lm(pEffectiveComp ~ pProduct+I(pProduct^2)+ pRnD+ pAir+(pAir), data=KOfflist)  
+# summary(bfit) 
+# dfMCC<-LMsummaryLine(bfit)
+# plot(bfit)
+
+screenreg(list(fita, fitb, fitd, afit))
+##adding sqrt(pAir) does not change any of the descirptive statistics, it decreases the coefficient on psdrvice^2 by .003. R^2 does not change.  Thus it should not be further included 
+
+```
+
+
+```{r pVessel}
+ggplot(data=KOfflist,aes(x=pVessel,y=pEffectiveComp))+geom_point()
+ggplot(data=KOfflist,aes(x=sqrt(pVessel),y=pEffectiveComp))+geom_point()
+ggplot(data=KOfflist,aes(x=log1p(pVessel),y=pEffectiveComp))+geom_point()
+
+ggplot(data=KOfflist,aes(x=pVessel))+geom_bar(bin=0.01)
+ggplot(data=KOfflist,aes(x=sqrt(pVessel)))+geom_bar(bin=0.01)
+ggplot(data=KOfflist,aes(x=log1p(pVessel)))+geom_bar(bin=0.01)
+
+##EFFECTIVECOMP~Product +vessel
+#Sqrt doesn't seem to illuminate much
+fitc <- lm(pEffectiveComp ~ pProduct, data=KOfflist)
+fit5 <- lm(pEffectiveComp ~ pProduct+ pRnD, data=KOfflist)
+# fit6 <- lm(pEffectiveComp ~ pProduct+ pRnD+ sqrt(pRnD), data=KOfflist)
+# fit7 <- lm(pEffectiveComp ~ pProduct+ pRnD+  pAir, data=KOfflist)
+fit1 <- lm(pEffectiveComp ~ pProduct+ pRnD+  pAir+ pVessel, data=KOfflist)
+summary(fitc)
+summary(fit6)
+# summary(fit7)
+summary(fit1) 
+dfMCC<-rbind(dfMCC,LMsummaryLine(fit1))
+screenreg(list(fitc, fit5, fit6, fit7, fit1))
+##air and vessel do not do not change descriptive statistics to any meaningful extent and are not significant. 
+
+##effectivecomp ~service + vessel
+afit <- lm(pEffectiveComp ~ pProduct+ I(pProduct^2)+ pRnD+  pAir, data=KOfflist) 
+fit2 <- lm(pEffectiveComp ~ pProduct+ I(pProduct^2)+ pRnD+  pAir+ pVessel, data=KOfflist)
+# fit8 <- lm(pEffectiveComp ~ pProduct+ I(pProduct^2)+ pRnD+  pAir+ pVessel+ sqrt(pVessel), data=KOfflist)
+# fit4 <- lm(pEffectiveComp ~ pProduct+ I(pProduct^2)+ pRnD+  pAir+ pVessel+ sqrt(pVessel), data=KOfflist[rownames(KOfflist)!=58,])
+summary(afit)
+summary(fit2)
+summary(fit8)
+# summary(fit4)
+screenreg(list(afit, fit2, fit8))
+##vessel is not significant, nor sqrt(vessel) nor when outliers are removed, and doesn't affect descriptive statistics of the model or other variables, thus it should not be included.  
+
+summary(fit2) 
+dfMCC<-LMsummaryLine(fit2)
+plot(fit2)
+
+# #fit3 <- lm(pEffectiveComp ~ pProduct+I(pProduct^2)+  pAir +pVessel, data=KOfflist)
+# summary(fit3) 
+# dfMCC<-LMsummaryLine(fit3)
+# plot(fit3)
+# screenreg(list(fit1, fit2, fit3))
+
+##fit4 <- lm(pEffectiveComp ~ pProduct+I(pProduct^2)+  pAir +pVessel,
+          #data=KOfflist[rownames(KOfflist)!=58,])
+summary(fit4) 
+dfMCC<-LMsummaryLine(fit4)
+plot(fit4)
+#screenreg(list(fit1, fit2, fit3, fit4))
+
 
 ```
 
