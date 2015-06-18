@@ -40,6 +40,7 @@ Here I
 ```{r echo=TRUE}
 zfit <- lm(pEffectiveComp ~ pcService+ I(pcService^2)+ pRnD+ pAir+ pVessel+ pLand+ pMnS+ pWnA+ pEnC+ pFnC+ pIDV+ pFixed+ pCostPlus+ pIncentFee+ log(TotalCount)+ log(TotalValue), data=MCClist) 
 
+step(zfit)
 
 AIC(zfit)
 

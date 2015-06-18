@@ -94,7 +94,7 @@ ggplot(data=KOfflist,aes(x=pcService,y=pEffectiveComp))+geom_point()
 
 
 fitb1 <- lm(pEffectiveComp ~ pcService + I(pcService^2), data = KOfflist)
-summary(fitb) 
+summary(fitb1) 
 dfPSR<-LMsummaryLine(fitb1)   
 plot(fitb1)
 
@@ -243,6 +243,35 @@ dfMCC<-LMsummaryLine(fit4)
 plot(fit4)
 #screenreg(list(fit1, fit2, fit3, fit4))
 
+
+```
+
+Automated Variable Selection Resutls
+```{r echo=TRUE}
+
+fitA <- lm(pEffectiveComp ~ pProduct+ I(pProduct^2)+ pRnD+ pAir+ pFnC+ TotalValue+ Exclude+ pEnC+ pFixed+ TotalCount+ pLand+ wavOffers+ pCostPlus+ avSize+ pProduct+ pMnS+ pIncentFee+ pWnA+ pIDV+ MaxAnnualValue, data=KOfflist) 
+
+step(fitA)
+
+AIC(fitA) 
+
+###what the the selection told us: (the lowest AIC) (for products)
+
+fitB <- lm(pEffectiveComp ~ pProduct+ I(pProduct^2)+ pAir+ pFnC+ TotalCount+ pWnA+ avSize+ pFixed+ wavOffers+ pMnS+ pIDV, data=KOfflist)
+summary(fitB)
+
+screenreg(list(fitA, fitB))
+
+##for Service
+
+fitC <- lm(pEffectiveComp ~ pcService+ I(pcService^2)+ pRnD+ pAir+ Exclude+ TotalValue+ pEnC+ pFixed+ pLand+ pCostPlus+ avSize+ pMnS+ pIncentFee+ pWnA+ pIDV, data=KOfflist) 
+
+step(fitC)
+
+fitD <- lm(pEffectiveComp ~ pcService + I(pcService^2)+ pAir+ pRnD+ pFixed+ pMnS+ pWnA+ avSize+ pIDV, data=KOfflist)
+summary(fitD)
+
+screenreg(list(fitA, fitB, fitC, fitD))
 
 ```
 
