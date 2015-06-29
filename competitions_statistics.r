@@ -9,6 +9,56 @@ options(error=recover)
 options(warn=1)
 
 
+office.competition.combined<-statistics.pivot(
+    VAR.Path="",
+    competition.file.name="data\\defense_Office_SP_DefenseCompetitionHistoryBucketPlatformSubCustomerOffice.csv",
+    VAR.Attribute="Competition.effective.only",
+    VAR.UnitOfAnalysis="ContractingOfficeID",
+    UnlabeledValue="Unlabeled"
+)
+
+office.competition.combined<-plyr::join(office.competition.combined,statistics.pivot(
+    VAR.Path="",
+    competition.file.name="data\\defense_Office_SP_DefenseCompetitionHistoryBucketPlatformSubCustomerMajorCommand.csv",
+    VAR.Attribute="PlatformPortfolio",
+    VAR.UnitOfAnalysis="ContractingOfficeID",
+    UnlabeledValue=NA
+))
+
+office.competition.combined<-plyr::join(office.competition.combined,statistics.pivot(
+    VAR.Path="",
+    competition.file.name="data\\defense_Office_SP_DefenseCompetitionHistoryBucketPlatformSubCustomerMajorCommand.csv",
+    VAR.Attribute="Simple",
+    VAR.UnitOfAnalysis="ContractingOfficeID",
+    UnlabeledValue=NA
+))
+
+office.competition.combined<-plyr::join(office.competition.combined,statistics.pivot(
+    VAR.Path="",
+    competition.file.name="data\\defense_Office_SP_DefenseCompetitionHistoryBucketPlatformSubCustomerMajorCommand.csv",
+    VAR.Attribute="ProductOrServiceArea",
+    VAR.UnitOfAnalysis="ContractingOfficeID",
+    UnlabeledValue=NA
+))
+
+office.competition.combined<-plyr::join(office.competition.combined,statistics.pivot(
+    VAR.Path="",
+    competition.file.name="data\\defense_Office_SP_DefenseCompetitionPricingVehicleHistoryMajorCommand.csv",
+    VAR.Attribute="TypeofContractPricingtext",
+    VAR.UnitOfAnalysis="ContractingOfficeID",
+    UnlabeledValue=NA
+))
+
+office.competition.combined<-plyr::join(office.competition.combined,statistics.pivot(
+    VAR.Path="",
+    competition.file.name="data\\defense_Office_SP_DefenseCompetitionPricingVehicleHistoryMajorCommand.csv",
+    VAR.Attribute="VehicleClassification",
+    VAR.UnitOfAnalysis="ContractingOfficeID",
+    UnlabeledValue=NA
+))
+
+
+
 
 
 office.competition.combined<-competition.statistics(
@@ -51,12 +101,12 @@ office.competition.combined$Exclude[office.competition.combined$MaxAnnualValue<1
                                         office.competition.combined$TotalValue<5000000]<-TRUE
 office.competition.combined$Exclude[office.competition.combined$MaxAnnualValue>=1000000 & 
                                         office.competition.combined$TotalValue>=5000000]<-FALSE
-
+summary(office.competition.combined$Exclude)
 
 tapply(office.competition.combined$TotalValue, office.competition.combined$TotalThreshold, sum)
 tapply(office.competition.combined$TotalValue, office.competition.combined$TotalThreshold, length)
 
-write.table(subset(office.competition.combined,select=-c(Threshold))office.competition.combined
+write.table(subset(office.competition.combined,select=-c(TotalThreshold,AnnualThreshold))
             ,file="data\\defense_office_competition_combined.csv"
             #   ,header=TRUE
             , sep=","
