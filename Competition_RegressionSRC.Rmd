@@ -577,7 +577,7 @@ Observations: **another item to discuss**
 jfit 1
 
 jfit1 <- lm(pEffectiveComp ~ pcService+ I(pcService^2)+ pAir + pWnA + pEnC + pIDV, data=MCClist)
-
+summary(jfit1)
 screenreg(list(jfit1))
 
 ```
