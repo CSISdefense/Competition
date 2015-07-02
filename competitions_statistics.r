@@ -10,63 +10,90 @@ options(warn=1)
 
 
 office.competition.combined<-statistics.pivot(
-    VAR.Path="",
+    VAR.Path=Path,
     competition.file.name="data\\defense_Office_SP_DefenseCompetitionHistoryBucketPlatformSubCustomerOffice.csv",
     VAR.Attribute="Competition.effective.only",
     VAR.UnitOfAnalysis="ContractingOfficeID",
-    UnlabeledValue="Unlabeled"
+    UnlabeledValue="Unlabeled",
+    ColumnPrefix="pCEff"
 )
 
 office.competition.combined<-plyr::join(office.competition.combined,statistics.pivot(
-    VAR.Path="",
-    competition.file.name="data\\defense_Office_SP_DefenseCompetitionHistoryBucketPlatformSubCustomerMajorCommand.csv",
-    VAR.Attribute="PlatformPortfolio",
+    VAR.Path=Path,
+    competition.file.name="data\\defense_Office_SP_DefenseCompetitionHistoryBucketPlatformSubCustomerOffice.csv",
+    VAR.Attribute="PlatformPortfolio.sum",
     VAR.UnitOfAnalysis="ContractingOfficeID",
-    UnlabeledValue=NA
+    UnlabeledValue="Unlabeled",
+    ColumnPrefix="pPlat"
 ))
 
-office.competition.combined<-plyr::join(office.competition.combined,statistics.pivot(
-    VAR.Path="",
-    competition.file.name="data\\defense_Office_SP_DefenseCompetitionHistoryBucketPlatformSubCustomerMajorCommand.csv",
-    VAR.Attribute="Simple",
-    VAR.UnitOfAnalysis="ContractingOfficeID",
-    UnlabeledValue=NA
-))
 
 office.competition.combined<-plyr::join(office.competition.combined,statistics.pivot(
-    VAR.Path="",
-    competition.file.name="data\\defense_Office_SP_DefenseCompetitionHistoryBucketPlatformSubCustomerMajorCommand.csv",
+    VAR.Path=Path,
+    competition.file.name="data\\defense_Office_SP_DefenseCompetitionHistoryBucketPlatformSubCustomerOffice.csv",
+    VAR.Attribute="ServicesCategory.sum",
+    VAR.UnitOfAnalysis="ContractingOfficeID",
+    UnlabeledValue="Unlabeled",
+    ColumnPrefix="pPSR"
+))
+
+
+office.competition.combined<-plyr::join(office.competition.combined,statistics.pivot(
+    VAR.Path=Path,
+    competition.file.name="data\\defense_Office_SP_DefenseCompetitionHistoryBucketPlatformSubCustomerOffice.csv",
     VAR.Attribute="ProductOrServiceArea",
     VAR.UnitOfAnalysis="ContractingOfficeID",
-    UnlabeledValue=NA
+    UnlabeledValue="Unlabeled",
+    ColumnPrefix="pPsc"
 ))
+
 
 office.competition.combined<-plyr::join(office.competition.combined,statistics.pivot(
-    VAR.Path="",
-    competition.file.name="data\\defense_Office_SP_DefenseCompetitionPricingVehicleHistoryMajorCommand.csv",
-    VAR.Attribute="TypeofContractPricingtext",
+    VAR.Path=Path,
+    competition.file.name="data\\defense_Office_SP_DefenseCompetitionPricingVehicleHistoryOffice.csv",
+    VAR.Attribute="Pricing.Mechanism.hypothesis.detail",
     VAR.UnitOfAnalysis="ContractingOfficeID",
-    UnlabeledValue=NA
+    UnlabeledValue="Unlabeled",
+    ColumnPrefix="pPrice"
 ))
+
 
 office.competition.combined<-plyr::join(office.competition.combined,statistics.pivot(
-    VAR.Path="",
-    competition.file.name="data\\defense_Office_SP_DefenseCompetitionPricingVehicleHistoryMajorCommand.csv",
-    VAR.Attribute="VehicleClassification",
+    VAR.Path=Path,
+    competition.file.name="data\\defense_Office_SP_DefenseCompetitionPricingVehicleHistoryOffice.csv",
+    VAR.Attribute="Pricing.Mechanism.Fee",
     VAR.UnitOfAnalysis="ContractingOfficeID",
-    UnlabeledValue=NA
+    UnlabeledValue="Unlabeled",
+    ColumnPrefix="pFee"
 ))
 
 
+office.competition.combined<-plyr::join(office.competition.combined,statistics.pivot(
+    VAR.Path=Path,
+    competition.file.name="data\\defense_Office_SP_DefenseCompetitionPricingVehicleHistoryOffice.csv",
+    VAR.Attribute="Vehicle.detail",
+    VAR.UnitOfAnalysis="ContractingOfficeID",
+    UnlabeledValue=NA,
+    ColumnPrefix="pVeh"
+))
 
+debug(statistics.pivot)
+office.competition.combined<-plyr::join(office.competition.combined,statistics.pivot(
+    VAR.Path=Path,
+    competition.file.name="data\\defense_Office_SP_DefenseCompetitionPricingVehicleHistoryOffice.csv",
+    VAR.Attribute="Competition.detail",
+    VAR.UnitOfAnalysis="ContractingOfficeID",
+    UnlabeledValue="Unlabeled",
+    ColumnPrefix="pComp"
+))
 
-
-office.competition.combined<-competition.statistics(
-    "",
-    "data\\defense_Office_SP_DefenseCompetitionHistoryBucketPlatformSubCustomerOffice.csv",
-    "ContractingOfficeID"
-)
-# debug(competition.statistics.pt2)
+# 
+# office.competition.combined<-competition.statistics(
+#     "",
+#     "data\\defense_Office_SP_DefenseCompetitionHistoryBucketPlatformSubCustomerOffice.csv",
+#     "ContractingOfficeID"
+# )
+# # debug(competition.statistics.pt2)
 
 # debug(competition.statistics.pt2)
 office.competition.combined<-plyr::join(office.competition.combined,competition.statistics.pt2(
