@@ -597,31 +597,31 @@ boxplot(MCClist$pEffectiveComp, col=(c("orange", "orange")), main = "Effective C
 
 ##pcService
 
-boxplot(MCClist$pcService, col=(c("light blue", "light blue")), main = "Type of Good Procured: Service", xlab = "dollars spent on services", horizontal = TRUE)
+boxplot(MCClist$pcService, col=(c("light blue", "light blue")), main = "Type of Good Procured: Service", xlab = "percent of contract obligations spent on Services", horizontal = TRUE)
 
 qplot(MCClist$pcService, geom = "histogram", binwidth = .03, main = "Distribution of Service", xlab = "Type of Good Procured: Service", fill = I("light blue"), col = I("red"), aplpha = .2, xlim = c(0, 1))
 
 ##pAir
 
-boxplot(MCClist$pAir, col=(c("yellow", "yellow")), main = "Platform Portfolio: Air", xlab = "dollars spent on Air", horizontal = TRUE)
+boxplot(MCClist$pAir, col=(c("yellow", "yellow")), main = "Platform Portfolio: Air", xlab = "percent of contract obligations spent on Air", horizontal = TRUE)
 
 qplot(MCClist$pAir, geom = "histogram", binwidth = .03, main = "Distribution of Air", xlab = "Type of Product Procured: Air", fill = I("light blue"), col = I("red"), aplpha = .2, xlim = c(0, 1))
 
 ##PWnA
 
-boxplot(MCClist$pWnA, col=(c("green", "green")), main = "Platform Portfolio: Weapons and Ammunition", xlab = "dollars spent on Weapons and Ammunition", horizontal = TRUE)
+boxplot(MCClist$pWnA, col=(c("green", "green")), main = "Platform Portfolio: Weapons and Ammunition", xlab = "percent of contract obligations spent on Weapons and Ammunition", horizontal = TRUE)
 
-qplot(MCClist$pWnA, geom = "histogram", binwidth = .03, main = "Distribution of Weapons and Ammunition", xlab = "Platfor Portfolio: Weapons and Ammunition", fill = I("light blue"), col = I("red"), aplpha = .2, xlim = c(0, 1))
+qplot(MCClist$pWnA, geom = "histogram", binwidth = .03, main = "Distribution of Weapons and Ammunition", xlab = "Platform Portfolio: Weapons and Ammunition", fill = I("light blue"), col = I("red"), aplpha = .2, xlim = c(0, 1))
 
 ##pEnC
 
-boxplot(MCClist$pEnC, col=(c("pink", "pink")), main = "Platform Portfolio: Electronics and Communication", xlab = "dollars spent on Electronics and Communication", horizontal = TRUE)
+boxplot(MCClist$pEnC, col=(c("pink", "pink")), main = "Platform Portfolio: Electronics and Communication", xlab = "percent of contract obligations spent on Electronics and Communication", horizontal = TRUE)
 
 qplot(MCClist$pEnC, geom = "histogram", binwidth = .03, main = "Distribution of Electronics and Communication", xlab = "Platform Portfolio: Electronics and Communications", fill = I("light blue"), col = I("red"), aplpha = .2, xlim = c(0, 1))
 
 ##pIDV
 
-boxplot(MCClist$pIDV, col=(c("light purple", "light purple")), main = "Contracting Methods: Contract Vehicle", xlab = "dolalrs spent on Contract Vehicle", horizontal = TRUE)
+boxplot(MCClist$pIDV, col=(c("light purple", "light purple")), main = "Contracting Methods: Contract Vehicle", xlab = "percent of contract obligations spent on Contract Vehicle", horizontal = TRUE)
 
 qplot(MCClist$pIDV, geom = "histogram", binwidth = .03, main = "Distribution of Contract  Vehicle", xlab = "Contracting Method: Contract Vehicle", fill = I("light blue"), col = I("red"), aplpha = .2, xlim = c(0, 1))
 
@@ -633,22 +633,33 @@ qplot(MCClist$pIDV, geom = "histogram", binwidth = .03, main = "Distribution of 
 
 jfit1 <- lm(pEffectiveComp ~ pcService+ I(pcService^2)+ pAir + pWnA + pEnC + pIDV, data=MCClist)
 
-##look at this
-##http://www.r-bloggers.com/ggplot2-version-of-figures-in-%E2%80%9C25-recipes-for-getting-started-with-r%E2%80%9D/
+plot(jfit1)
 
 ##residual plot
-jfit1.res <- resid(jfit1)
+##http://www.r-bloggers.com/ggplot2-version-of-figures-in-%E2%80%9C25-recipes-for-getting-started-with-r%E2%80%9D/
 
-jfit1.yhat <- predict(jfit11)
 
-plot1 <- scatterplot(jfit1.yhat, jfit1.res, title = "Residuals vs. Fitted", xlab = "Fitted Values", ylab = "Residuals")
+ggplotRegression <- function (fit) {
 
-plot(MCClist$pEffectiveComp, jfit1.res, ylab = "Residuals", xlab = "Effective Competition",  main = "Residuals")
-abline(0, 0)
+require(ggplot2)
+
+ggplot(fit$model, aes_string(x = names(fit$model)[2], y = names(fit$model)[1])) + 
+  geom_point() +
+  stat_smooth(method = "lm", col = "green") +
+  labs(title = paste("Adj R2 = ",signif(summary(fit)$adj.r.squared, 5),
+                     "Intercept =",signif(fit$coef[[1]],5 ),
+                     " Slope =",signif(fit$coef[[2]], 5),
+                     " P =",signif(summary(fit)$coef[2,4], 5)))
+}
+
+ggplotRegression(jfit1)
+
 
 
 ```
 
+
+###State Level
 ```{r StateValidation}
 mfit1 <- lm(pEffectiveComp ~ pcService, data=MCClist)
 summary(mfit1) 
@@ -662,6 +673,7 @@ StateList  <- read.csv(
     stringsAsFactors = TRUE
     )
 names(StateList)
+
 
 StateList <-subset(StateList ,!PoPstateCode %in% c("VI",
 "AS",
@@ -859,7 +871,6 @@ mfit10 <- lm(pEffectiveComp ~ pcService+ I(pcService^2)+ pRnD+ pAir+ pLand + pFi
 summary(mfit10)
 
 
-
 screenreg(list(mfit1, mfit2, mfit3, mfit4, mfit6, mfit10))
 
 
@@ -868,4 +879,79 @@ screenreg(list(mfit1, mfit2, mfit3, mfit4, mfit6, mfit10))
 ```
 
 
+###data exploration
+``` {r echo=TRUE}
+
+ECmean1 <- mean(StateList$pEffectiveComp)
+
+##effective competition
+hist(StateList$pEffectiveComp, probability=T, breaks = 30, main="Distribution of Effective Competition", col = "light blue", xlim=c(0, 1), xlab="Effective Competition", ylab = "Frequency")
+abline(v = ECmean1, col = "blue", lwd = 3)
+
+qplot(StateList$pEffectiveComp, geom = "histogram", binwidth = .03, main = "Distribution of Effective Competition", xlab = "Effective Competition", fill = I("light blue"), col = I("red"), aplpha = .2, xlim = c(0, 1))
+
+boxplot(StateList$pEffectiveComp, col=(c("orange", "orange")), main = "Effective Competition", xlab = "percent of contract value out of total obligation", horizontal = TRUE)
+
+##pcService
+
+boxplot(StateList$pcService, col=(c("light blue", "light blue")), main = "Type of Good Procured: Service", xlab = "dollars spent on services", horizontal = TRUE)
+
+qplot(StateList$pcService, geom = "histogram", binwidth = .03, main = "Distribution of Service", xlab = "Type of Good Procured: Service", fill = I("light blue"), col = I("red"), aplpha = .2, xlim = c(0, 1))
+
+##pAir
+
+boxplot(StateList$pAir, col=(c("yellow", "yellow")), main = "Platform Portfolio: Air", xlab = "percent of contract obligations spent on Air", horizontal = TRUE)
+
+qplot(StateList$pAir, geom = "histogram", binwidth = .03, main = "Distribution of Air", xlab = "Type of Product Procured: Air", fill = I("light blue"), col = I("red"), aplpha = .2, xlim = c(0, 1))
+
+##PRnD
+
+boxplot(StateList$pRnD, col=(c("green", "green")), main = "Type of Good Procured: Research and Development (R&D)", xlab = "percent of contract obligations spent on R&D", horizontal = TRUE)
+
+qplot(StateList$pRnD, geom = "histogram", binwidth = .03, main = "Distribution of Research and Development (R&D)", xlab = "Type of Good Procured: R&D", fill = I("light blue"), col = I("red"), aplpha = .2, xlim = c(0, 1))
+
+##pLand
+
+boxplot(StateList$pLand, col=(c("pink", "pink")), main = "Platform Portfolio: Land Vehicles", xlab = "percent of contract obligations spent on Land Vehicles", horizontal = TRUE)
+
+qplot(StateList$pLand, geom = "histogram", binwidth = .03, main = "Distribution of Land Vehicles", xlab = "Platform Portfolio: Land", fill = I("light blue"), col = I("red"), aplpha = .2, xlim = c(0, 1))
+
+##Fixed
+
+boxplot(StateList$pFixed, col=(c("violet", "violet")), main = "Contracting Methods: Fixed Price", xlab = "percent of contract obligations spent on Fixed Price", horizontal = TRUE)
+
+qplot(StateList$pFixed, geom = "histogram", binwidth = .03, main = "Distribution of Fixed Price", xlab = "Contracting Method: Fixed Price", fill = I("violet"), col = I("red"), aplpha = .2, xlim = c(0, 1))
+
+
+```
+
+###final model exploration:
+``` {r echo = TRUE}
+
+mfit10 <- lm(pEffectiveComp ~ pcService+ I(pcService^2)+ pRnD+ pAir+ pLand + pFixed, data=StateList)
+
+summary(mfit10)
+
+##residual plot
+##http://www.r-bloggers.com/ggplot2-version-of-figures-in-%E2%80%9C25-recipes-for-getting-started-with-r%E2%80%9D/
+
+
+ggplotRegression <- function (fit) {
+
+require(ggplot2)
+
+ggplot(fit$model, aes_string(x = names(fit$model)[2], y = names(fit$model)[1])) + 
+  geom_point() +
+  stat_smooth(method = "lm", col = "green") +
+  labs(title = paste("Adj R2 = ",signif(summary(fit)$adj.r.squared, 5),
+                     "Intercept =",signif(fit$coef[[1]],5 ),
+                     " Slope =",signif(fit$coef[[2]], 5),
+                     " P =",signif(summary(fit)$coef[2,4], 5)))
+}
+
+ggplotRegression(mfit10)
+
+
+
+```
 
