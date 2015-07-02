@@ -582,7 +582,72 @@ screenreg(list(jfit1))
 
 ```
 
+###data exploration
+``` {r echo=TRUE}
 
+ECmean <- mean(MCClist$pEffectiveComp)
+
+##effective competition
+hist(MCClist$pEffectiveComp, probability=T, breaks = 30, main="Distribution of Effective Competition", col = "light blue", xlim=c(0, 1), xlab="Effective Competition", ylab = "Frequency")
+abline(v = ECmean, col = "blue", lwd = 3)
+
+qplot(MCClist$pEffectiveComp, geom = "histogram", binwidth = .03, main = "Distribution of Effective Competition", xlab = "Effective Competition", fill = I("light blue"), col = I("red"), aplpha = .2, xlim = c(0, 1))
+
+boxplot(MCClist$pEffectiveComp, col=(c("orange", "orange")), main = "Effective Competition", xlab = "percent of contract value out of total obligation", horizontal = TRUE)
+
+##pcService
+
+boxplot(MCClist$pcService, col=(c("light blue", "light blue")), main = "Type of Good Procured: Service", xlab = "dollars spent on services", horizontal = TRUE)
+
+qplot(MCClist$pcService, geom = "histogram", binwidth = .03, main = "Distribution of Service", xlab = "Type of Good Procured: Service", fill = I("light blue"), col = I("red"), aplpha = .2, xlim = c(0, 1))
+
+##pAir
+
+boxplot(MCClist$pAir, col=(c("yellow", "yellow")), main = "Platform Portfolio: Air", xlab = "dollars spent on Air", horizontal = TRUE)
+
+qplot(MCClist$pAir, geom = "histogram", binwidth = .03, main = "Distribution of Air", xlab = "Type of Product Procured: Air", fill = I("light blue"), col = I("red"), aplpha = .2, xlim = c(0, 1))
+
+##PWnA
+
+boxplot(MCClist$pWnA, col=(c("green", "green")), main = "Platform Portfolio: Weapons and Ammunition", xlab = "dollars spent on Weapons and Ammunition", horizontal = TRUE)
+
+qplot(MCClist$pWnA, geom = "histogram", binwidth = .03, main = "Distribution of Weapons and Ammunition", xlab = "Platfor Portfolio: Weapons and Ammunition", fill = I("light blue"), col = I("red"), aplpha = .2, xlim = c(0, 1))
+
+##pEnC
+
+boxplot(MCClist$pEnC, col=(c("pink", "pink")), main = "Platform Portfolio: Electronics and Communication", xlab = "dollars spent on Electronics and Communication", horizontal = TRUE)
+
+qplot(MCClist$pEnC, geom = "histogram", binwidth = .03, main = "Distribution of Electronics and Communication", xlab = "Platform Portfolio: Electronics and Communications", fill = I("light blue"), col = I("red"), aplpha = .2, xlim = c(0, 1))
+
+##pIDV
+
+boxplot(MCClist$pIDV, col=(c("light purple", "light purple")), main = "Contracting Methods: Contract Vehicle", xlab = "dolalrs spent on Contract Vehicle", horizontal = TRUE)
+
+qplot(MCClist$pIDV, geom = "histogram", binwidth = .03, main = "Distribution of Contract  Vehicle", xlab = "Contracting Method: Contract Vehicle", fill = I("light blue"), col = I("red"), aplpha = .2, xlim = c(0, 1))
+
+
+```
+
+###final model exploration:
+``` {r echo = TRUE}
+
+jfit1 <- lm(pEffectiveComp ~ pcService+ I(pcService^2)+ pAir + pWnA + pEnC + pIDV, data=MCClist)
+
+##look at this
+##http://www.r-bloggers.com/ggplot2-version-of-figures-in-%E2%80%9C25-recipes-for-getting-started-with-r%E2%80%9D/
+
+##residual plot
+jfit1.res <- resid(jfit1)
+
+jfit1.yhat <- predict(jfit11)
+
+plot1 <- scatterplot(jfit1.yhat, jfit1.res, title = "Residuals vs. Fitted", xlab = "Fitted Values", ylab = "Residuals")
+
+plot(MCClist$pEffectiveComp, jfit1.res, ylab = "Residuals", xlab = "Effective Competition",  main = "Residuals")
+abline(0, 0)
+
+
+```
 
 ```{r StateValidation}
 mfit1 <- lm(pEffectiveComp ~ pcService, data=MCClist)
