@@ -866,14 +866,16 @@ not significant
 
 
 
-mfit10 <- lm(pEffectiveComp ~ pcService+ I(pcService^2)+ pRnD+ pAir+ pLand + pFixed, data=StateList)
+#mfit10 <- lm(pEffectiveComp ~ pcService+ I(pcService^2)+ pRnD+ pAir+ pLand + pFixed, data=StateList)
+
+mfit10 <- lm(pEffectiveComp ~ pcService+ pRnD+ pAir+ pLand + pFixed, data=StateList)
 
 summary(mfit10)
 
 
 screenreg(list(mfit1, mfit2, mfit3, mfit4, mfit6, mfit10))
 
-
+screenreg(mfit10)
 
 
 ```
