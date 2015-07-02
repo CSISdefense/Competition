@@ -5,7 +5,29 @@ date: "Wednesday, June 10, 2015"
 output: html_document
 ---
 
+```{r ReadInFiles, echo=FALSE}
+require(ggplot2)
+require(stringr)
+require(plyr)
+require(Hmisc)
+require(texreg)
+options(error=recover)
+# setwd("K:\\Development\\Competition")
+setwd("C:\\Users\\Greg Sanders\\Documents\\Development\\Competition")
+#setwd("C:/Users/scohen/My Documents/Competition/Competition/")
+# Path<-"K:\\2007-01 PROFESSIONAL SERVICES\\R scripts and data\\"
+Path<-"C:\\Users\\Greg Sanders\\SkyDrive\\Documents\\R Scripts and Data SkyDrive\\"
+#path <- "C:/Users/scohen/My Documents/Competition/Competition/"
 
+KOfflist  <- read.csv(
+    paste("data\\defense_office_competition_combined.csv", sep = ""),
+    header = TRUE, sep = ",", dec = ".", strip.white = TRUE, 
+    na.strings = c("NULL","NA",""),
+    stringsAsFactors = TRUE
+    )
+
+KOfflist <- KOfflist[KOfflist$Exclude == "FALSE", ] 
+```
 
 ###Variable Selection Process
 
@@ -15,7 +37,7 @@ This yields the model:
 
 ```{r echo=TRUE}
 
-jfit1 <- lm(pEffectiveComp ~ pcService+ I(pcService^2)+ pAir + pWnA + pEnC + pIDV, data=MCClist)
+jfit1 <- lm(pEffectiveComp ~ pcService+ I(pcService^2)+ pAir + pWnA + pEnC + pIDV, data=KOfflist)
 
 summary(jfit1)
 ```
@@ -38,7 +60,7 @@ Here I
 
 2. Use the AIC to select different models and show which has the lowest AIC. 
 ```{r echo=TRUE}
-zfit <- lm(pEffectiveComp ~ pcService+ I(pcService^2)+ pRnD+ pAir+ pVessel+ pLand+ pMnS+ pWnA+ pEnC+ pFnC+ pIDV+ pFixed+ pCostPlus+ pIncentFee+ log(TotalCount)+ log(TotalValue), data=MCClist) 
+zfit <- lm(pEffectiveComp ~ pcService+ I(pcService^2)+ pRnD+ pAir+ pVessel+ pLand+ pMnS+ pWnA+ pEnC+ pFnC+ pIDV+ pFixed+ pCostPlus+ pIncentFee+ log(TotalCount)+ log(TotalValue), data=KOfflist) 
 
 step(zfit)
 
@@ -53,7 +75,7 @@ This model that yielded the lowest AIC and here is a comparison of the three mod
 3. jfit = the model we found using forward selection
 
 ``` {r echo=TRUE}
-yfit <- lm(pEffectiveComp ~ pcService+ I(pcService^2) + pAir + pLand + pWnA + pFnC + pIDV + pFixed, data=MCClist)
+yfit <- lm(pEffectiveComp ~ pcService+ I(pcService^2) + pAir + pLand + pWnA + pFnC + pIDV + pFixed, data=KOfflist)
 
 
 screenreg(list(zfit, yfit, jfit1))
