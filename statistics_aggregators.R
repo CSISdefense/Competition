@@ -246,7 +246,7 @@ wavg<-function(x,wt) x %*% wt/sum(wt)
 
 
 
-competition.statistics.pt2<-function(VAR.Path
+competition.statistics.offers<-function(VAR.Path
                                      ,competition.file.name
                                      ,VAR.UnitOfAnalysis
                                      
@@ -276,56 +276,65 @@ competition.statistics.pt2<-function(VAR.Path
     , lavOffers=mean(log1p(NumberOfOffersReceived))
     )
     
-    
-    
-    pricing.DF<-ddply(subset(competition.DF
-                             ,competition.DF$Pricing.Mechanism.hypothesis !="Unlabeled"
-    )
-    , VAR.UnitOfAnalysis
-    , transform
-    , percent=Obligation.2014/sum(Obligation.2014)
-    )
+#     
+#     competition.combined<-plyr::join(competition.combined,ddply(competition.DF
+#                                                                 , VAR.UnitOfAnalysis
+#                                                                 ,summarise
+#                                                                 , TotalValue=sum(Obligation.2014,na.rm=TRUE)
+#                                                                 #     , TotalCount=sum(CountOfPIID)
+#                                                                 #     , avSize=sum(Obligation.2014)/sum(CountOfPIID)
+#                                                                 #     , lavSize=(sum(log1p(abs(Obligation.2014)))/sum(CountOfPIID))
+#     )
+#     )
+#     
+#     pricing.DF<-ddply(subset(competition.DF
+#                              ,competition.DF$Pricing.Mechanism.hypothesis !="Unlabeled"
+#     )
+#     , VAR.UnitOfAnalysis
+#     , transform
+#     , percent=Obligation.2014/sum(Obligation.2014)
+#     )
     #                            .(Fiscal.Year)
     #                            , transform, p=Obligation.2014/sum(Obligation.2014))
     # attach(mcc.competition.massive)
-    competition.combined<-plyr::join(competition.combined
-                                     ,ddply(subset(pricing.DF
-                                                   ,Pricing.Mechanism.hypothesis =="Fixed")
-                                            ,VAR.UnitOfAnalysis
-                                            ,summarise
-                                            ,pFixed=sum(percent)
-                                     )
-    )
-    competition.combined$pFixed[is.na(competition.combined$pFixed)]<-0
-    competition.combined<-plyr::join(competition.combined
-                                     ,ddply(subset(pricing.DF
-                                                   ,Pricing.Mechanism.hypothesis =="Cost+")
-                                            ,VAR.UnitOfAnalysis
-                                            ,summarise
-                                            ,pCostPlus=sum(percent)
-                                     )
-    )
-    competition.combined$pCostPlus[is.na(competition.combined$pCostPlus)]<-0
-    competition.combined<-plyr::join(competition.combined
-                                     ,ddply(subset(pricing.DF
-                                                   ,Pricing.Mechanism.Incentive =="TRUE")
-                                            ,VAR.UnitOfAnalysis
-                                            ,summarise
-                                            ,pIncentFee=sum(percent)
-                                     )
-    )
-    competition.combined$pIncentFee[is.na(competition.combined$pIncentFee)]<-0
-    
-    rm(pricing.DF)
-    
-    
-    comp.vehicle<-ddply(subset(competition.DF
-                               ,Vehicle.sum!="Unlabeled"
-    )
-    , VAR.UnitOfAnalysis
-    , transform
-    , percent=Obligation.2014/sum(Obligation.2014)
-    )
+#     competition.combined<-plyr::join(competition.combined
+#                                      ,ddply(subset(pricing.DF
+#                                                    ,Pricing.Mechanism.hypothesis =="Fixed")
+#                                             ,VAR.UnitOfAnalysis
+#                                             ,summarise
+#                                             ,pFixed=sum(percent)
+#                                      )
+#     )
+#     competition.combined$pFixed[is.na(competition.combined$pFixed)]<-0
+#     competition.combined<-plyr::join(competition.combined
+#                                      ,ddply(subset(pricing.DF
+#                                                    ,Pricing.Mechanism.hypothesis =="Cost+")
+#                                             ,VAR.UnitOfAnalysis
+#                                             ,summarise
+#                                             ,pCostPlus=sum(percent)
+#                                      )
+#     )
+#     competition.combined$pCostPlus[is.na(competition.combined$pCostPlus)]<-0
+#     competition.combined<-plyr::join(competition.combined
+#                                      ,ddply(subset(pricing.DF
+#                                                    ,Pricing.Mechanism.Incentive =="TRUE")
+#                                             ,VAR.UnitOfAnalysis
+#                                             ,summarise
+#                                             ,pIncentFee=sum(percent)
+#                                      )
+#     )
+#     competition.combined$pIncentFee[is.na(competition.combined$pIncentFee)]<-0
+#     
+#     rm(pricing.DF)
+#     
+#     
+#     comp.vehicle<-ddply(subset(competition.DF
+#                                ,Vehicle.sum!="Unlabeled"
+#     )
+#     , VAR.UnitOfAnalysis
+#     , transform
+#     , percent=Obligation.2014/sum(Obligation.2014)
+#     )
     #                            .(Fiscal.Year)
     #                            , transform, p=Obligation.2014/sum(Obligation.2014))
     # attach(mcc.competition.massive)
@@ -346,75 +355,75 @@ competition.statistics.pt2<-function(VAR.Path
     #                              )
     #   )
     #   competition.combined$pIDV[is.na(competition.combined$pIDV)]<-0
-    competition.combined<-plyr::join(competition.combined
-                                     ,ddply(subset(comp.vehicle
-                                                   ,Vehicle.IDVorAward=="IDV")
-                                            ,VAR.UnitOfAnalysis
-                                            ,summarise
-                                            ,pIDV=sum(percent)
-                                     )
-    )
-    competition.combined$pIDV[is.na(competition.combined$pIDV)]<-0
-    
-    rm(comp.vehicle)
+#     competition.combined<-plyr::join(competition.combined
+#                                      ,ddply(subset(comp.vehicle
+#                                                    ,Vehicle.IDVorAward=="IDV")
+#                                             ,VAR.UnitOfAnalysis
+#                                             ,summarise
+#                                             ,pIDV=sum(percent)
+#                                      )
+#     )
+#     competition.combined$pIDV[is.na(competition.combined$pIDV)]<-0
+#     
+#     rm(comp.vehicle)
     competition.combined
 }
 
-
-competition.statistics.pt2a<-function(VAR.Path
-                                      ,competition.file.name
-                                      ,VAR.UnitOfAnalysis
-                                      ,LimitFiscalYear=NULL
-                                      
-                                      
-){
-    
-    
-    competition.DF <-read.csv(
-        competition.file.name,
-        header=TRUE, sep=",", dec=".", strip.white=TRUE, 
-        na.strings="NULL",
-        stringsAsFactors=TRUE
-    )
-    
-    if(!is.null(LimitFiscalYear)){
-        competition.DF<-subset(competition.DF,fiscal_year==LimitFiscalYear)
-    }
-    
-    
-    
-    
-    
-    competition.DF<-apply_lookups(VAR.Path,competition.DF)
-    
-    
-    
-    competition.combined<-ddply(subset(competition.DF
-                                       ,!Competition.sum %in% c("Unlabeled","No Comp.")&
-                                           NumberOfOffersReceived>0
-    )
-    , VAR.UnitOfAnalysis
-    , summarise
-    , wavOffers=wavg(NumberOfOffersReceived,abs(Obligation.2014))
-    , avOffers=mean(NumberOfOffersReceived)
-    , lwavOffers=wavg(log1p(NumberOfOffersReceived),abs(Obligation.2014))
-    , lavOffers=mean(log1p(NumberOfOffersReceived)))
-    #     , TotalCount=sum(CountOfPIID)
-    #     , avSize=sum(Obligation.2014)/sum(CountOfPIID)
+# 
+# competition.statistics.pt2a<-function(VAR.Path
+#                                       ,competition.file.name
+#                                       ,VAR.UnitOfAnalysis
+#                                       ,LimitFiscalYear=NULL
+#                                       
+#                                       
+# ){
+#     
+#     
+#     competition.DF <-read.csv(
+#         competition.file.name,
+#         header=TRUE, sep=",", dec=".", strip.white=TRUE, 
+#         na.strings="NULL",
+#         stringsAsFactors=TRUE
+#     )
+#     
+#     if(!is.null(LimitFiscalYear)){
+#         competition.DF<-subset(competition.DF,fiscal_year==LimitFiscalYear)
+#     }
+#     
+#     
+#     
+#     
+#     
+#     competition.DF<-apply_lookups(VAR.Path,competition.DF)
+#     
+#     
+#     
+#     competition.combined<-ddply(subset(competition.DF
+#                                        ,!Competition.sum %in% c("Unlabeled","No Comp.")&
+#                                            NumberOfOffersReceived>0
+#     )
+#     , VAR.UnitOfAnalysis
+#     , summarise
+#     , wavOffers=wavg(NumberOfOffersReceived,abs(Obligation.2014))
+#     , avOffers=mean(NumberOfOffersReceived)
+#     , lwavOffers=wavg(log1p(NumberOfOffersReceived),abs(Obligation.2014))
+#     , lavOffers=mean(log1p(NumberOfOffersReceived)))
+#     #     , TotalCount=sum(CountOfPIID)
+#     #     , avSize=sum(Obligation.2014)/sum(CountOfPIID)
     #     , lavSize=(sum(log1p(abs(Obligation.2014)))/sum(CountOfPIID))
     #     )
     
-    
-    competition.combined<-plyr::join(competition.combined,ddply(competition.DF
-                                                                , VAR.UnitOfAnalysis
-                                                                ,summarise
-                                                                , TotalValue=sum(Obligation.2014,na.rm=TRUE)
-                                                                #     , TotalCount=sum(CountOfPIID)
-                                                                #     , avSize=sum(Obligation.2014)/sum(CountOfPIID)
-                                                                #     , lavSize=(sum(log1p(abs(Obligation.2014)))/sum(CountOfPIID))
-    )
-    )
-    
+#     
+#     competition.combined<-plyr::join(competition.combined,ddply(competition.DF
+#                                                                 , VAR.UnitOfAnalysis
+#                                                                 ,summarise
+#                                                                 , TotalValue=sum(Obligation.2014,na.rm=TRUE)
+#                                                                 #     , TotalCount=sum(CountOfPIID)
+#                                                                 #     , avSize=sum(Obligation.2014)/sum(CountOfPIID)
+#                                                                 #     , lavSize=(sum(log1p(abs(Obligation.2014)))/sum(CountOfPIID))
+#     )
+#     )
+#     
     
     #     
     #     
@@ -458,14 +467,14 @@ competition.statistics.pt2a<-function(VAR.Path
     #     
     #     rm(pricing.DF)
     #     
-    
-    comp.vehicle<-ddply(subset(competition.DF
-                               ,Vehicle.sum!="Unlabeled"
-    )
-    , VAR.UnitOfAnalysis
-    , transform
-    , percent=Obligation.2014/sum(Obligation.2014)
-    )
+#     
+#     comp.vehicle<-ddply(subset(competition.DF
+#                                ,Vehicle.sum!="Unlabeled"
+#     )
+#     , VAR.UnitOfAnalysis
+#     , transform
+#     , percent=Obligation.2014/sum(Obligation.2014)
+#     )
     #                            .(Fiscal.Year)
     #                            , transform, p=Obligation.2014/sum(Obligation.2014))
     # attach(mcc.competition.massive)
@@ -486,22 +495,22 @@ competition.statistics.pt2a<-function(VAR.Path
     #                              )
     #   )
     #   competition.combined$pIDV[is.na(competition.combined$pIDV)]<-0
-    competition.combined<-plyr::join(competition.combined
-                                     ,ddply(subset(comp.vehicle
-                                                   ,Vehicle.IDVorAward=="IDV")
-                                            ,VAR.UnitOfAnalysis
-                                            ,summarise
-                                            ,pIDV=sum(percent)
-                                     )
-    )
-    competition.combined$pIDV[is.na(competition.combined$pIDV)]<-0
-    
-    rm(comp.vehicle)
-    competition.combined
-}
+#     competition.combined<-plyr::join(competition.combined
+#                                      ,ddply(subset(comp.vehicle
+#                                                    ,Vehicle.IDVorAward=="IDV")
+#                                             ,VAR.UnitOfAnalysis
+#                                             ,summarise
+#                                             ,pIDV=sum(percent)
+#                                      )
+#     )
+#     competition.combined$pIDV[is.na(competition.combined$pIDV)]<-0
+#     
+#     rm(comp.vehicle)
+#     competition.combined
+# }
 
 
-competition.statistics.pt3<-function(VAR.Path
+competition.statistics.size<-function(VAR.Path
                                      ,competition.file.name
                                      ,VAR.UnitOfAnalysis
                                      
@@ -509,7 +518,7 @@ competition.statistics.pt3<-function(VAR.Path
     
     
     competition.DF <-read.csv(
-        paste(VAR.Path,competition.file.name,sep="")
+        competition.file.name
         ,header=TRUE
         , sep=","
         , dec="."

@@ -57,7 +57,6 @@ office.competition.combined<-plyr::join(office.competition.combined,statistics.p
     ColumnPrefix="pPrice"
 ))
 
-
 office.competition.combined<-plyr::join(office.competition.combined,statistics.pivot(
     VAR.Path=Path,
     competition.file.name="data\\defense_Office_SP_DefenseCompetitionPricingVehicleHistoryOffice.csv",
@@ -71,13 +70,21 @@ office.competition.combined<-plyr::join(office.competition.combined,statistics.p
 office.competition.combined<-plyr::join(office.competition.combined,statistics.pivot(
     VAR.Path=Path,
     competition.file.name="data\\defense_Office_SP_DefenseCompetitionPricingVehicleHistoryOffice.csv",
-    VAR.Attribute="Vehicle.detail",
+    VAR.Attribute="Vehicle.IDVorAward",,
     VAR.UnitOfAnalysis="ContractingOfficeID",
-    UnlabeledValue=NA,
+    UnlabeledValue="Unlabeled",
+    ColumnPrefix="pIDV"
+))
+
+office.competition.combined<-plyr::join(office.competition.combined,statistics.pivot(
+    VAR.Path=Path,
+    competition.file.name="data\\defense_Office_SP_DefenseCompetitionPricingVehicleHistoryOffice.csv",
+    VAR.Attribute="Vehicle.hypothesis",
+    VAR.UnitOfAnalysis="ContractingOfficeID",
+    UnlabeledValue="Unlabeled",
     ColumnPrefix="pVeh"
 ))
 
-debug(statistics.pivot)
 office.competition.combined<-plyr::join(office.competition.combined,statistics.pivot(
     VAR.Path=Path,
     competition.file.name="data\\defense_Office_SP_DefenseCompetitionPricingVehicleHistoryOffice.csv",
@@ -93,21 +100,22 @@ office.competition.combined<-plyr::join(office.competition.combined,statistics.p
 #     "data\\defense_Office_SP_DefenseCompetitionHistoryBucketPlatformSubCustomerOffice.csv",
 #     "ContractingOfficeID"
 # )
-# # debug(competition.statistics.pt2)
+# # debug(competition.statistics.offers)
 
-# debug(competition.statistics.pt2)
-office.competition.combined<-plyr::join(office.competition.combined,competition.statistics.pt2(
-    "",
+# debug(competition.statistics.offers)
+office.competition.combined<-plyr::join(office.competition.combined,competition.statistics.offers(
+    Path,
     "data\\defense_Office_SP_DefenseCompetitionPricingVehicleHistoryOffice.csv",
     "ContractingOfficeID"
 )
 )
 
 
-office.competition.combined<-plyr::join(office.competition.combined,competition.statistics.pt3(""
-                                                                                         ,"data\\Defense_Contract_SP_ContractSizeforCompetitionStudyOffice.csv"
-                                                                                         ,"ContractingOfficeID"
-)
+office.competition.combined<-plyr::join(office.competition.combined,
+                                        competition.statistics.size(Path
+                                                                    ,"data\\Defense_Contract_SP_ContractSizeforCompetitionStudyOffice.csv"
+                                                                    ,"ContractingOfficeID"
+                                        )
 )
 
 summary(office.competition.combined)
@@ -149,18 +157,18 @@ mcc.competition.combined<-competition.statistics(
     "",
     "data\\defense_Office_SP_DefenseCompetitionHistoryBucketPlatformSubCustomerMajorCommand.csv",
     "MajorCommandID"
-  )
-# debug(competition.statistics.pt2)
-mcc.competition.combined<-plyr::join(mcc.competition.combined,competition.statistics.pt2(
+)
+# debug(competition.statistics.offers)
+mcc.competition.combined<-plyr::join(mcc.competition.combined,competition.statistics.offers(
     "",
     "data\\defense_Office_SP_DefenseCompetitionPricingVehicleHistoryMajorCommand.csv",
     "MajorCommandID"
 )
 )
-  
-mcc.competition.combined<-plyr::join(mcc.competition.combined,competition.statistics.pt3(""
-                                                                                   ,"data\\Defense_Office_SP_ContractSizeforCompetitionStudy.csv"
-                                                                                   ,"MajorCommandID"
+
+mcc.competition.combined<-plyr::join(mcc.competition.combined,competition.statistics.size(""
+                                                                                          ,"data\\Defense_Office_SP_ContractSizeforCompetitionStudy.csv"
+                                                                                          ,"MajorCommandID"
 )
 )
 
@@ -182,15 +190,6 @@ mcc.competition.combined$Exclude[mcc.competition.combined$MajorCommandID %in% c(
 
 summary(mcc.competition.combined$Threshold)
 summary(mcc.competition.combined[mcc.competition.combined$MajorCommandID %in% c("ORG-2841",
-                                               "ORG-2776",
-                                               "ORG-4793",
-                                               "ORG-2849",
-                                               "ORG-2762",
-                                               "ORG-4020",
-                                               "ORG-2840",
-                                               "ORG-2757"),c("TotalValue","MaxAnnualValue")]
-)
-summary(mcc.competition.combined[!mcc.competition.combined$MajorCommandID %in% c("ORG-2841",
                                                                                 "ORG-2776",
                                                                                 "ORG-4793",
                                                                                 "ORG-2849",
@@ -199,10 +198,19 @@ summary(mcc.competition.combined[!mcc.competition.combined$MajorCommandID %in% c
                                                                                 "ORG-2840",
                                                                                 "ORG-2757"),c("TotalValue","MaxAnnualValue")]
 )
+summary(mcc.competition.combined[!mcc.competition.combined$MajorCommandID %in% c("ORG-2841",
+                                                                                 "ORG-2776",
+                                                                                 "ORG-4793",
+                                                                                 "ORG-2849",
+                                                                                 "ORG-2762",
+                                                                                 "ORG-4020",
+                                                                                 "ORG-2840",
+                                                                                 "ORG-2757"),c("TotalValue","MaxAnnualValue")]
+)
 
 ggplot(data=mcc.competition.combined,
        aes(x=MaxAnnualValue,fill=Threshold))+geom_bar()+scale_x_log10(labels = comma)+#bin=0.01))+
-       facet_wrap(~Exclude,ncol=1)
+    facet_wrap(~Exclude,ncol=1)
 
 
 ggplot(data=mcc.competition.combined,
@@ -211,13 +219,13 @@ ggplot(data=mcc.competition.combined,
 
 
 MCCshortList<-subset(mcc.competition.combined,!MajorCommandID %in% c("ORG-2841",
-                                               "ORG-2776",
-                                               "ORG-4793",
-                                               "ORG-2849",
-                                               "ORG-2762",
-                                               "ORG-4020",
-                                               "ORG-2840",
-                                               "ORG-2757")
+                                                                     "ORG-2776",
+                                                                     "ORG-4793",
+                                                                     "ORG-2849",
+                                                                     "ORG-2762",
+                                                                     "ORG-4020",
+                                                                     "ORG-2840",
+                                                                     "ORG-2757")
 )
 
 MCC.fit <- lm(pEffectiveComp ~ 
@@ -240,12 +248,12 @@ subset(mcc.competition.combined,lwr>pEffectiveComp|upr<pEffectiveComp)$MajorComm
 
 
 write.table(mcc.competition.combined
-  ,file="data\\defense_mcc_competition_combined.csv"
-#   ,header=TRUE
-  , sep=","
-  , row.names=FALSE
-  , append=FALSE
-         )
+            ,file="data\\defense_mcc_competition_combined.csv"
+            #   ,header=TRUE
+            , sep=","
+            , row.names=FALSE
+            , append=FALSE
+)
 
 
 
@@ -257,7 +265,7 @@ mcc.competition.2014<-competition.statistics(
 )
 
 
-mcc.competition.2014<-plyr::join(mcc.competition.2014,competition.statistics.pt2a(
+mcc.competition.2014<-plyr::join(mcc.competition.2014,competition.statistics.offers(
     "",
     "data\\2014DefenseCompetitionVehicleByPlatformAreaMajorCommand.csv",
     "MajorCommandID",
@@ -266,10 +274,10 @@ mcc.competition.2014<-plyr::join(mcc.competition.2014,competition.statistics.pt2
 )
 
 mcc.competition.2014<-cbind(mcc.competition.2014,
-                              predict(MCC.fit,
-                                      mcc.competition.2014,
-                                      interval="prediction",
-                                      level=0.95)
+                            predict(MCC.fit,
+                                    mcc.competition.2014,
+                                    interval="prediction",
+                                    level=0.95)
 )
 subset(mcc.competition.2014,lwr>pEffectiveComp|upr<pEffectiveComp)$MajorCommandID
 
@@ -296,38 +304,38 @@ write.table(mcc.competition.combined
 
 
 state.competition.combined<-competition.statistics(""
-                                       ,"data\\defense_Location_SP_DefenseCompetitionStatePoPHistoryBucketPlatform.csv"
-                                       ,"PoPstateCode"
+                                                   ,"data\\defense_Location_SP_DefenseCompetitionStatePoPHistoryBucketPlatform.csv"
+                                                   ,"PoPstateCode"
 )
-# debug(competition.statistics.pt2)
-state.competition.combined<-plyr::join(state.competition.combined,competition.statistics.pt2(""
-                                                                                   ,"data\\defense_Location_SP_DefenseCompetitionPricingVehiclePoPstateHistory.csv"
-                                                                                   ,"PoPstateCode"
+# debug(competition.statistics.offers)
+state.competition.combined<-plyr::join(state.competition.combined,competition.statistics.offers(""
+                                                                                                ,"data\\defense_Location_SP_DefenseCompetitionPricingVehiclePoPstateHistory.csv"
+                                                                                                ,"PoPstateCode"
 )
 )
 
-state.competition.combined<-plyr::join(state.competition.combined,competition.statistics.pt3(""
-                                                                                       ,"data\\Defense_Location_SP_ContractSizeforCompetitionStudy.csv"
-                                                                                       ,"PoPstateCode"
+state.competition.combined<-plyr::join(state.competition.combined,competition.statistics.size(""
+                                                                                              ,"data\\Defense_Location_SP_ContractSizeforCompetitionStudy.csv"
+                                                                                              ,"PoPstateCode"
 )
 )
 
 
 
 ShortStateList <-subset(state.competition.combined ,!PoPstateCode %in% c("VI",
-                                                   "AS",
-                                                   "MP",
-                                                   "AE",
-                                                   "PW",
-                                                   "US",
-                                                   "UK",
-                                                   "GM",
-                                                   "GB",
-                                                   "JA",
-                                                   "ON",
-                                                   "QC",
-                                                   "   ",
-                                                   "BC"))
+                                                                         "AS",
+                                                                         "MP",
+                                                                         "AE",
+                                                                         "PW",
+                                                                         "US",
+                                                                         "UK",
+                                                                         "GM",
+                                                                         "GB",
+                                                                         "JA",
+                                                                         "ON",
+                                                                         "QC",
+                                                                         "   ",
+                                                                         "BC"))
 
 
 
@@ -366,10 +374,10 @@ state.competition.2014<-competition.statistics(
 )
 
 
-state.competition.2014<-plyr::join(state.competition.2014,competition.statistics.pt2a(""
-                                                                                             ,"data\\2014DefenseCompetitionVehicleByPlatformAreaPoP.csv"
-                                                                                             ,"PoPstateCode"
-                                                                                             ,2014
+state.competition.2014<-plyr::join(state.competition.2014,competition.statistics.offers(""
+                                                                                        ,"data\\2014DefenseCompetitionVehicleByPlatformAreaPoP.csv"
+                                                                                        ,"PoPstateCode"
+                                                                                        ,2014
 )
 )
 
@@ -378,7 +386,7 @@ state.competition.2014<-cbind(state.competition.2014,
                                       state.competition.2014,
                                       interval="prediction",
                                       level=0.95)
-                              )
+)
 subset(state.competition.2014,lwr>pEffectiveComp|upr<pEffectiveComp)$PoPstateCode
 
 
