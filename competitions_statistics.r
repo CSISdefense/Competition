@@ -47,7 +47,7 @@ office.competition.combined<-plyr::join(office.competition.combined,statistics.p
     ColumnPrefix="pPsc"
 ))
 
-
+# debug(statistics.pivot)
 office.competition.combined<-plyr::join(office.competition.combined,statistics.pivot(
     VAR.Path=Path,
     competition.file.name="data\\defense_Office_SP_DefenseCompetitionPricingVehicleHistoryOffice.csv",
@@ -75,7 +75,7 @@ office.competition.combined<-plyr::join(office.competition.combined,statistics.p
     UnlabeledValue="Unlabeled",
     ColumnPrefix="pIDV"
 ))
-
+# debug(statistics.pivot)
 office.competition.combined<-plyr::join(office.competition.combined,statistics.pivot(
     VAR.Path=Path,
     competition.file.name="data\\defense_Office_SP_DefenseCompetitionPricingVehicleHistoryOffice.csv",
@@ -120,8 +120,8 @@ office.competition.combined<-plyr::join(office.competition.combined,
 
 summary(office.competition.combined)
 
-office.competition.combined$TotalThreshold<- cut2(office.competition.combined$TotalValue,cuts=c(0,1000000,5000000,100000000))
-office.competition.combined$AnnualThreshold<- cut2(office.competition.combined$MaxAnnualValue,cuts=c(0,1000000,5000000,100000000))
+office.competition.combined$TotalThreshold<- cut2(office.competition.combined$TotalValue,cuts=c(0,1000000,5000000,100000000,1000000000))
+office.competition.combined$AnnualThreshold<- cut2(office.competition.combined$MaxAnnualValue,cuts=c(0,1000000,5000000,50000000,100000000))
 ggplot(data=office.competition.combined,
        aes(x=TotalValue,fill=TotalThreshold))+geom_bar()+scale_x_log10(labels = comma)#bin=0.01))
 
@@ -132,14 +132,26 @@ ggplot(data=office.competition.combined,
 
 
 
-office.competition.combined$Exclude[office.competition.combined$MaxAnnualValue<1000000 | 
+office.competition.combined$ExcludeLow[office.competition.combined$MaxAnnualValue<1000000 | 
                                         office.competition.combined$TotalValue<5000000]<-TRUE
-office.competition.combined$Exclude[office.competition.combined$MaxAnnualValue>=1000000 & 
+office.competition.combined$ExcludeLow[office.competition.combined$MaxAnnualValue>=1000000 & 
                                         office.competition.combined$TotalValue>=5000000]<-FALSE
-summary(office.competition.combined$Exclude)
+summary(office.competition.combined$ExcludeLow)
 
-tapply(office.competition.combined$TotalValue, office.competition.combined$TotalThreshold, sum)
-tapply(office.competition.combined$TotalValue, office.competition.combined$TotalThreshold, length)
+office.competition.combined$ExcludeHigh[office.competition.combined$MaxAnnualValue<50000000 &
+                                           office.competition.combined$TotalValue<1000000000]<-TRUE
+office.competition.combined$ExcludeHigh[office.competition.combined$MaxAnnualValue>=50000000 |
+                                           office.competition.combined$TotalValue>=1000000000]<-FALSE
+summary(office.competition.combined$ExcludeHigh)
+
+ecdf(office.competition.combined$TotalValue)(c(1000000,10000000,1000000000))
+tapply(office.competition.combined$TotalValue/1000000000, office.competition.combined$TotalThreshold, sum)
+tapply(office.competition.combined$TotalValue/1000000000, office.competition.combined$TotalThreshold, length)
+tapply(office.competition.combined$TotalValue/1000000000, office.competition.combined$AnnualThreshold, sum)
+tapply(office.competition.combined$TotalValue/1000000000, office.competition.combined$AnnualThreshold, length)
+tapply(office.competition.combined$TotalValue/1000000000, office.competition.combined$ExcludeHigh, sum)
+tapply(office.competition.combined$TotalValue/1000000000, office.competition.combined$ExcludeHigh, length)
+
 
 write.table(subset(office.competition.combined,select=-c(TotalThreshold,AnnualThreshold))
             ,file="data\\defense_office_competition_combined.csv"

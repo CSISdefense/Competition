@@ -12,11 +12,11 @@ require(plyr)
 require(Hmisc)
 require(texreg)
 options(error=recover)
-# setwd("K:\\Development\\Competition")
-setwd("C:\\Users\\Greg Sanders\\Documents\\Development\\Competition")
+setwd("K:\\Development\\Competition")
+# setwd("C:\\Users\\Greg Sanders\\Documents\\Development\\Competition")
 #setwd("C:/Users/scohen/My Documents/Competition/Competition/")
-# Path<-"K:\\2007-01 PROFESSIONAL SERVICES\\R scripts and data\\"
-Path<-"C:\\Users\\Greg Sanders\\SkyDrive\\Documents\\R Scripts and Data SkyDrive\\"
+Path<-"K:\\2007-01 PROFESSIONAL SERVICES\\R scripts and data\\"
+# Path<-"C:\\Users\\Greg Sanders\\SkyDrive\\Documents\\R Scripts and Data SkyDrive\\"
 #path <- "C:/Users/scohen/My Documents/Competition/Competition/"
 
 KOfflist  <- read.csv(
@@ -26,7 +26,19 @@ KOfflist  <- read.csv(
     stringsAsFactors = TRUE
     )
 
-KOfflist <- KOfflist[KOfflist$Exclude == "FALSE", ] 
+KOfflist <- KOfflist[KOfflist$ExcludeHigh == "FALSE", ] 
+KOfflist <- KOfflist[KOfflist$ExcludeLow == "FALSE", ] 
+
+
+MCClist  <- read.csv(
+    paste("data\\defense_mcc_competition_combined.csv", sep = ""),
+    header = TRUE, sep = ",", dec = ".", strip.white = TRUE, 
+    na.strings = c("NULL","NA",""),
+    stringsAsFactors = TRUE
+    )
+
+
+MCClist<-subset(MCClist,Exclude==FALSE)
 ```
 
 ###Variable Selection Process
@@ -37,7 +49,7 @@ This yields the model:
 
 ```{r echo=TRUE}
 
-jfit1 <- lm(pEffectiveComp ~ pcService+ I(pcService^2)+ pAir + pWnA + pEnC + pIDV, data=KOfflist)
+jfit1 <- lm(pEffectiveComp ~ pcService+ I(pcService^2)+ pAir + pWnA + pEnC + pIDV, data=MCClist)
 
 summary(jfit1)
 ```
@@ -60,12 +72,175 @@ Here I
 
 2. Use the AIC to select different models and show which has the lowest AIC. 
 ```{r echo=TRUE}
-zfit <- lm(pEffectiveComp ~ pcService+ I(pcService^2)+ pRnD+ pAir+ pVessel+ pLand+ pMnS+ pWnA+ pEnC+ pFnC+ pIDV+ pFixed+ pCostPlus+ pIncentFee+ log(TotalCount)+ log(TotalValue), data=KOfflist) 
+MCCzfit <- lm(pEffectiveComp ~ pcService+ I(pcService^2)+ pRnD+ pAir+ pVessel+ pLand+ pMnS+ pWnA+ pEnC+ pFnC+ pIDV+ pFixed+ pCostPlus+ pIncentFee+ log(TotalCount)+ log(TotalValue), data=KOfflist) 
 
-step(zfit)
+step(MCCzfit)
 
-AIC(zfit)
+AIC(MCCzfit)
 
+
+MCCzfit <- lm(pEffComp   ~     pPlatEnC+
+    pPlatFnC+    
+    	pPlatLand+
+    pPlatWnA+
+    pPaltMnS+
+    pPlatAir+
+    pPlatVessel+
+    #pPlatOther=
+# pProducts	+
+#     pServices+
+#     pRnD+
+    pPscEnC	+
+    pPscFuels+
+    pPscICT+
+    pPscFRSnC+
+    pPscPAMS+	
+    pPscERS+
+    pPscEngines+
+    pPscLnM+
+    pPscMED+
+    pPscMnS+
+    pPscAir+
+    pPscLand+
+    pPscRnD+
+    pPscShips+
+ pPscCloth+
+    #     pPscOther+    			
+    pPriceFixed+
+    pPriceTime+
+    pPriceCost+
+#Fix Priceother
+    	pFeeNone+
+    pFeeRedermination+	
+    pFeeEPA+
+    pFeeFixed+
+    pFeeAward+
+    pFeeIncentive+
+    pFeeEffort+
+    pVehFSS+
+    pVehSAC+
+    pVehBPA+
+    pVehPur+
+    pVehDef+
+    pVehMAC+
+    pVehOIDV+
+#     pIDV+
+#     pAward+
+    log(TotalValue)+
+#     TotalCount+
+#     avSize+
+    lavSize
+#     MaxAnnualValue+
+, data=KOfflist) 
+
+step(KOFzfit)
+
+AIC(KOFzfit)
+
+summary(lm(formula = pEffComp ~ pPlatEnC + pPlatLand + pPlatWnA + pPlatAir + 
+    pPscEnC + pPscICT + pPscFRSnC + pPscPAMS + pPscERS + pPscEngines + 
+    pPscLnM + pPscMED + pPscMnS + pPscAir + pPscLand + pPscRnD + 
+    pPscShips + pPriceFixed + pPriceTime + pFeeNone + pFeeEPA + 
+    pFeeFixed + pFeeIncentive + pVehSAC + pVehPur + pVehDef + 
+    pVehMAC + lavSize, data = KOfflist))
+
+
+KOFzfit <- lm(pEffComp   ~     pPlatEnC+
+    pPlatFnC+	
+    	pPlatLand+
+    pPlatWnA+
+    pPaltMnS+
+    pPlatAir+
+    pPlatVessel+
+    #pPlatOther=
+# pProducts	+
+#     pServices+
+#     pRnD+
+    pPscEnC	+
+    pPscFuels+
+    pPscICT+
+    pPscFRSnC+
+    pPscPAMS+	
+    pPscERS+
+    pPscEngines+
+    pPscLnM+
+    pPscMED+
+    pPscMnS+
+    pPscAir+
+    pPscLand+
+    pPscRnD+
+    pPscShips+
+ pPscCloth+
+    #     pPscOther+    			
+    pPriceFixed+
+    pPriceTime+
+    pPriceCost+
+#Fix Priceother
+    	pFeeNone+
+    pFeeRedermination+	
+    pFeeEPA+
+    pFeeFixed+
+    pFeeAward+
+    pFeeIncentive+
+    pFeeEffort+
+    pVehFSS+
+    pVehSAC+
+    pVehBPA+
+    pVehPur+
+    pVehDef+
+    pVehMAC+
+    pVehOIDV+
+#     pIDV+
+#     pAward+
+    log(TotalValue)+
+#     TotalCount+
+#     avSize+
+    lavSize
+#     MaxAnnualValue+
+, data=KOfflist) 
+
+step(KOFzfit)
+
+AIC(KOFzfit)
+
+#Exclude Low
+summary(lm(formula = pEffComp ~ pPlatEnC + pPlatLand + pPlatWnA + pPlatAir + 
+    pPscEnC + pPscICT + pPscFRSnC + pPscPAMS + pPscERS + pPscEngines + 
+    pPscLnM + pPscMED + pPscMnS + pPscAir + pPscLand + pPscRnD + 
+    pPscShips + pPriceFixed + pPriceTime + pFeeNone + pFeeEPA + 
+    pFeeFixed + pFeeIncentive + pVehSAC + pVehPur + pVehDef + 
+    pVehMAC + lavSize, data = KOfflist))
+
+#10M
+summary(lm(formula = pEffComp ~ pPlatEnC + pPlatFnC + pPlatLand + pPlatWnA + 
+    pPlatAir + pPscEnC + pPscFuels + pPscFRSnC + pPscERS + pPscEngines + 
+    pPscLnM + pPscMED + pPscMnS + pPscAir + pPscRnD + pPscShips + 
+    pPscCloth + pPriceFixed + pFeeNone + pFeeEPA + pFeeFixed + 
+    pFeeIncentive + pVehSAC + pVehBPA + pVehPur + pVehDef + pVehMAC + 
+    log(TotalValue) + lavSize, data = KOfflist))
+
+#100M
+summary(lm(formula = pEffComp ~ pPlatEnC + pPlatFnC + pPlatLand + pPlatWnA + 
+    pPlatAir + pPscEnC + pPscFuels + pPscFRSnC + pPscERS + pPscEngines + 
+    pPscLnM + pPscMED + pPscMnS + pPscAir + pPscRnD + pPscShips + 
+    pPscCloth + pPriceFixed + pFeeNone + pFeeEPA + pFeeFixed + 
+    pFeeIncentive + pVehSAC + pVehBPA + pVehPur + pVehDef + pVehMAC + 
+    log(TotalValue) + lavSize, data = KOfflist))
+
+#1B
+summary(lm(formula = pEffComp ~ pPlatEnC + pPlatFnC + pPlatWnA + pPlatVessel + 
+    pPscICT + pPscEngines + pPscLnM + pPscMED + pPscMnS + pPscAir + 
+    pPscShips + pPscCloth + pPriceFixed + pPriceTime + pFeeNone + 
+    pFeeRedermination + pFeeFixed + pFeeIncentive + pVehMAC, 
+    data = KOfflist))
+
+
+#500M or 50M annual
+summary(lm(formula = pEffComp ~ pPlatEnC + pPlatFnC + pPlatWnA + pPlatVessel + 
+    pPscICT + pPscEngines + pPscLnM + pPscMED + pPscMnS + pPscAir + 
+    pPscShips + pPscCloth + pPriceFixed + pPriceTime + pFeeNone + 
+    pFeeRedermination + pFeeFixed + pFeeIncentive + pVehMAC, 
+    data = KOfflist))
 ```
 
 This model that yielded the lowest AIC and here is a comparison of the three models: 
