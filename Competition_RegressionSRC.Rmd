@@ -575,25 +575,95 @@ Observations: **another item to discuss**
 ###final model
 ``` {r}
 jfit 1
-
-jfit1 <- lm(pEffectiveComp ~ pcService+ I(pcService^2)+ pAir + pWnA + pEnC + pIDV, data=MCClist)
+ 
+jfit1 <- lm(pEffComp ~ pPSRServices + I(pPSRServices^2)+ pPlatAir + pPlatWnA + pPlatEnC + pIDV, data=MCClist)
 summary(jfit1)
 screenreg(list(jfit1))
 
 ```
 
+###Variable Exploration with single offer competition
+``` {r echo=TRUE}
+
+##Service
+
+qplot(pPSRServices, pComp1Offer, data = MCClist, geom=c('point', 'smooth'), method = 'loess', ylab = "Single Offer Competition", xlab = "Services")
+
+##Air
+
+qplot(pPlatAir, pComp1Offer, data = MCClist, geom=c('point', 'smooth'), method = 'loess', ylab = "Single Offer Competition", xlab = "Platform: Air")
+
+##Weapons and Ammunition
+
+qplot(pPlatWnA, pComp1Offer, data = MCClist, geom=c('point', 'smooth'), method = 'loess', ylab = "Single Offer Competition", xlab = "Platform: Weapons and Ammunition")
+
+##Electronics and  Communication
+
+qplot(pPlatEnC, pComp1Offer, data = MCClist, geom=c('point', 'smooth'), method = 'loess', ylab = "Single Offer Competition", xlab = "Platform: Electronics and Communication")
+
+##Delivery Vehicle
+
+qplot(pIDV, pComp1Offer, data = MCClist, geom=c('point', 'smooth'), method = 'loess', ylab = "Single Offer Competition", xlab = "Delivery Vehicle")
+
+
+
+
+```
+
+
+###Variable Exploration with effective competition
+``` {r echo=TRUE}
+
+##Service
+
+qplot(pPSRServices, pEffComp, data = MCClist, geom=c('point', 'smooth'), method = 'loess', ylab = "Effective Competition", xlab = "Services")
+
+qplot(pPSRServices, pEffComp, data = MCClist, geom=c('point', 'smooth'), method = 'lm', formula= MCClist$pEffComp ~ poly(MCClist$pPSRServices, 2), ylab = "Effective Competition", xlab = "Services")
+
+
+##Air
+
+qplot(pPlatAir, pEffComp, data = MCClist, geom=c('point', 'smooth'), method = 'loess', ylab = "Effective Competition", xlab = "Platform: Air")
+
+##Weapons and Ammunition
+
+qplot(pPlatWnA, pEffComp, data = MCClist, geom=c('point', 'smooth'), method = 'loess', ylab = "Effective Competition", xlab = "Platform: Weapons and Ammunition")
+
+##Electronics and  Communication
+
+qplot(pPlatEnC, pEffComp, data = MCClist, geom=c('point', 'smooth'), method = 'loess', ylab = "Effective Competition", xlab = "Platform: Electronics and Communication")
+
+##Delivery Vehicle
+
+qplot(pIDV, pEffComp, data = MCClist, geom=c('point', 'smooth'), method = 'loess', ylab = "Effective Competition", xlab = "Delivery Vehicle")
+
+
+```
+
+
+
 ###data exploration
 ``` {r echo=TRUE}
 
-ECmean <- mean(MCClist$pEffectiveComp)
+ECmean <- mean(MCClist$pEffComp)
 
 ##effective competition
-hist(MCClist$pEffectiveComp, probability=T, breaks = 30, main="Distribution of Effective Competition", col = "light blue", xlim=c(0, 1), xlab="Effective Competition", ylab = "Frequency")
+hist(MCClist$pEffComp, probability=T, breaks = 30, main="Distribution of Effective Competition", col = "light blue", xlim=c(0, 1), xlab="Effective Competition", ylab = "Frequency")
 abline(v = ECmean, col = "blue", lwd = 3)
 
-qplot(MCClist$pEffectiveComp, geom = "histogram", binwidth = .03, main = "Distribution of Effective Competition", xlab = "Effective Competition", fill = I("light blue"), col = I("red"), aplpha = .2, xlim = c(0, 1))
+qplot(MCClist$pEffComp, geom = "histogram", binwidth = .03, main = "Distribution of Effective Competition", xlab = "Effective Competition", fill = I("light blue"), col = I("red"), alpha = .2, xlim = c(0, 1))
 
-boxplot(MCClist$pEffectiveComp, col=(c("orange", "orange")), main = "Effective Competition", xlab = "percent of contract value out of total obligation", horizontal = TRUE)
+ggplot(MCClist, aes(x=pEffComp)) +
+  geom_histogram(aes(pEffComp="density"),
+                 binwidth = .01,
+                 colour = "red", fill = "light blue", main = "HISTOGRAM") +
+  geom_density(alpha = .2, fill = "#FF6666") +
+  labs(title = "Distribution of Effective Competition") +
+  labs(x = "Effective Competition")
+
+
+boxplot(MCClist$pEffComp, col=(c("orange", "orange")), main = "Effective Competition", xlab = "percent of contract value out of total obligation", horizontal = TRUE)
+
 
 ##pcService
 
@@ -876,6 +946,62 @@ summary(mfit10)
 screenreg(list(mfit1, mfit2, mfit3, mfit4, mfit6, mfit10))
 
 screenreg(mfit10)
+
+
+```
+
+
+###Variable Exploration with effective competition
+``` {r echo=TRUE}
+
+##Service
+
+qplot(pcService, pEffectiveComp, data = StateList, geom=c('point', 'smooth'), method = 'loess', ylab = "Effective Competition", xxlab = "Services")
+
+##Research and Development
+
+qplot(pRnD, pEffectiveComp, data = StateList, geom=c('point', 'smooth'), method = 'loess', ylab = "Effective Competition", xxlab = "Research and Development")
+
+##Air
+
+qplot(pAir, pEffectiveComp, data = StateList, geom=c('point', 'smooth'), method = 'loess', ylab = "Effective Competition", xxlab = "Platform: Air")
+
+##Land
+
+qplot(pLand, pEffectiveComp, data = StateList, geom=c('point', 'smooth'), method = 'loess', ylab = "Effective Competition", xxlab = "Platform: Land")
+
+##Fixed Price
+
+qplot(pFixed, pEffectiveComp, data = StateList, geom=c('point', 'smooth'), method = 'loess', ylab = "Effective Competition", xxlab = "Fixed Price Contracts")
+
+
+
+```
+
+
+###Variable Exploration with single offer competition **need to update data.
+``` {r echo=TRUE}
+
+##Service
+
+qplot(pcService, pEffectiveComp, data = StateList, geom=c('point', 'smooth'), method = 'loess', ylab = "Single Offer Competition", xxlab = "Services")
+
+##Research and Development
+
+qplot(pRnD, pEffectiveComp, data = StateList, geom=c('point', 'smooth'), method = 'lm', ylab = "Effective Competition", xxlab = "Research and Development")
+
+##Air
+
+qplot(pAir, pEffectiveComp, data = StateList, geom=c('point', 'smooth'), method = 'lm', ylab = "Effective Competition", xxlab = "Platform: Air")
+
+##Land
+
+qplot(pLand, pEffectiveComp, data = StateList, geom=c('point', 'smooth'), method = 'lm', ylab = "Effective Competition", xxlab = "Platform: Land")
+
+##Fixed Price
+
+qplot(pFixed, pEffectiveComp, data = StateList, geom=c('point', 'smooth'), method = 'lm', ylab = "Effective Competition", xxlab = "Fixed Price Contracts")
+
 
 
 ```
