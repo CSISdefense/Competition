@@ -648,28 +648,43 @@ qplot(pIDV, pEffComp, data = MCClist, geom=c('point', 'smooth'), method = 'loess
 ECmean <- mean(MCClist$pEffComp)
 
 ##effective competition
-hist(MCClist$pEffComp, probability=T, breaks = 30, main="Distribution of Effective Competition", col = "light blue", xlim=c(0, 1), xlab="Effective Competition", ylab = "Frequency")
-abline(v = ECmean, col = "blue", lwd = 3)
+#hist(MCClist$pEffComp, probability=T, breaks = 30, main="Distribution of Effective Competition", col = "light blue", xlim=c(0, 1), xlab="Effective Competition", ylab = "Frequency")
+#abline(v = ECmean, col = "blue", lwd = 3)
 
-qplot(MCClist$pEffComp, geom = "histogram", binwidth = .03, main = "Distribution of Effective Competition", xlab = "Effective Competition", fill = I("light blue"), col = I("red"), alpha = .2, xlim = c(0, 1))
+#qplot(MCClist$pEffComp, geom = "histogram", binwidth = .03, main = "Distribution of Effective Competition", xlab = "Effective Competition", fill = I("light blue"), col = I("red"), alpha = .2, xlim = c(0, 1))
 
 ggplot(MCClist, aes(x=pEffComp)) +
   geom_histogram(aes(pEffComp="density"),
-                 binwidth = .01,
-                 colour = "red", fill = "light blue", main = "HISTOGRAM") +
+                 binwidth = .02,
+                 color = "red", fill = "light blue", main = "HISTOGRAM") +
   geom_density(alpha = .2, fill = "#FF6666") +
-  labs(title = "Distribution of Effective Competition") +
-  labs(x = "Effective Competition")
+  labs(title = "Distribution of Effective Competition: MCC level") +
+  labs(x = "Effective Competition") +
+  geom_vline(aes(xintercept=ECmean, color="blue"),
+             linetype = "dashed", size = 1)
 
 
-boxplot(MCClist$pEffComp, col=(c("orange", "orange")), main = "Effective Competition", xlab = "percent of contract value out of total obligation", horizontal = TRUE)
+#boxplot(MCClist$pEffComp, col=(c("orange", "orange")), main = "Effective Competition", xlab = "percent of contract value out of total obligation", horizontal = TRUE)
 
 
 ##pcService
 
-boxplot(MCClist$pcService, col=(c("light blue", "light blue")), main = "Type of Good Procured: Service", xlab = "percent of contract obligations spent on Services", horizontal = TRUE)
+#boxplot(MCClist$pcService, col=(c("light blue", "light blue")), main = "Type of Good Procured: Service", xlab = "percent of contract obligations spent on Services", horizontal = TRUE)
 
-qplot(MCClist$pcService, geom = "histogram", binwidth = .03, main = "Distribution of Service", xlab = "Type of Good Procured: Service", fill = I("light blue"), col = I("red"), aplpha = .2, xlim = c(0, 1))
+#qplot(MCClist$pcService, geom = "histogram", binwidth = .03, main = "Distribution of Service", xlab = "Type of Good Procured: Service", fill = I("light blue"), col = I("red"), aplpha = .2, xlim = c(0, 1))
+
+Servmean <- mean(MCClist$pPSRServices)
+
+ggplot(MCClist, aes(x=pPSRServices)) +
+  geom_histogram(aes(pPSRServices="density"),
+                 binwidth = .02,
+                 color = "red", fill = "light blue", main = "HISTOGRAM") +
+  geom_density(alpha = .2, fill = "#FF6666") +
+  labs(title = "Distribution of Services Contracts: MCC level") +
+  labs(x = "Services") +
+  geom_vline(aes(xintercept=Servmean, color="blue"),
+             linetype = "dashed", size = 1)
+
 
 ##pAir
 
@@ -956,7 +971,7 @@ screenreg(mfit10)
 
 ##Service
 
-qplot(pcService, pEffectiveComp, data = StateList, geom=c('point', 'smooth'), method = 'loess', ylab = "Effective Competition", xxlab = "Services")
+qplot(pcService, pEffectiveComp, data = StateList, geom=c('point', 'smooth'), method = 'loess', ylab = "Effective Competition", xlab = "Services")
 
 ##Research and Development
 
@@ -1013,18 +1028,44 @@ qplot(pFixed, pEffectiveComp, data = StateList, geom=c('point', 'smooth'), metho
 ECmean1 <- mean(StateList$pEffectiveComp)
 
 ##effective competition
-hist(StateList$pEffectiveComp, probability=T, breaks = 30, main="Distribution of Effective Competition", col = "light blue", xlim=c(0, 1), xlab="Effective Competition", ylab = "Frequency")
-abline(v = ECmean1, col = "blue", lwd = 3)
+#hist(StateList$pEffectiveComp, probability=T, breaks = 30, main="Distribution of Effective Competition", col = "light blue", xlim=c(0, 1), xlab="Effective Competition", ylab = "Frequency")
+#abline(v = ECmean1, col = "blue", lwd = 3)
 
-qplot(StateList$pEffectiveComp, geom = "histogram", binwidth = .03, main = "Distribution of Effective Competition", xlab = "Effective Competition", fill = I("light blue"), col = I("red"), aplpha = .2, xlim = c(0, 1))
+#qplot(StateList$pEffectiveComp, geom = "histogram", binwidth = .03, main = "Distribution of Effective Competition", xlab = "Effective Competition", fill = I("light blue"), col = I("red"), aplpha = .2, xlim = c(0, 1))
 
-boxplot(StateList$pEffectiveComp, col=(c("orange", "orange")), main = "Effective Competition", xlab = "percent of contract value out of total obligation", horizontal = TRUE)
+#boxplot(StateList$pEffectiveComp, col=(c("orange", "orange")), main = "Effective Competition", xlab = "percent of contract value out of total obligation", horizontal = TRUE)
+
+ECmeanSL <- mean(StateList$pEffectiveComp)
+
+ggplot(StateList, aes(x=pEffectiveComp)) +
+  geom_histogram(aes(pEffectiveComp="density"),
+                 binwidth = .01,
+                 color = "red", fill = "light blue", main = "HISTOGRAM") +
+  geom_density(alpha = .2, fill = "#FF6666") +
+  labs(title = "Distribution of Effective Competition: State Level") +
+  labs(x = "Effective Competition") +
+  geom_vline(aes(xintercept=ECmeanSL, color="blue"),
+             linetype = "dashed", size = 1)
+
 
 ##pcService
 
 boxplot(StateList$pcService, col=(c("light blue", "light blue")), main = "Type of Good Procured: Service", xlab = "dollars spent on services", horizontal = TRUE)
 
 qplot(StateList$pcService, geom = "histogram", binwidth = .03, main = "Distribution of Service", xlab = "Type of Good Procured: Service", fill = I("light blue"), col = I("red"), aplpha = .2, xlim = c(0, 1))
+
+ServmeanSL <- mean(StateList$pService)
+
+ggplot(StateList, aes(x=pService)) +
+  geom_histogram(aes(pService="density"),
+                 binwidth = .02,
+                 color = "red", fill = "light blue", main = "HISTOGRAM") +
+  geom_density(alpha = .2, fill = "#FF6666") +
+  labs(title = "Distribution of Services Contracts: State Level") +
+  labs(x = "Services") +
+  geom_vline(aes(xintercept=ServmeanSL, color="blue"),
+             linetype = "dashed", size = 1)
+
 
 ##pAir
 
