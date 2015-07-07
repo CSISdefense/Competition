@@ -6,6 +6,7 @@ statistics.pivot<-function(VAR.Path
                            ,VAR.Attribute
                            ,VAR.UnitOfAnalysis
                            ,LimitFiscalYear=NA
+                           ,ExcludeFiscalYear=FALSE
                            ,UnlabeledValue=NA
                            ,ColumnPrefix="p"
                            
@@ -19,9 +20,13 @@ statistics.pivot<-function(VAR.Path
         stringsAsFactors=TRUE
     )
     
-    if(!is.na(LimitFiscalYear)){
+    if(!is.na(LimitFiscalYear) & ExcludeFiscalYear==FALSE){
         competition.DF<-subset(competition.DF,fiscal_year==LimitFiscalYear)
     }
+    if(!is.na(LimitFiscalYear) & ExcludeFiscalYear==TRUE){
+        competition.DF<-subset(competition.DF,fiscal_year!=LimitFiscalYear)
+    }
+    
     
     
     competition.DF<-apply_lookups(VAR.Path,competition.DF)
@@ -248,7 +253,9 @@ wavg<-function(x,wt) x %*% wt/sum(wt)
 
 competition.statistics.offers<-function(VAR.Path
                                      ,competition.file.name
-                                     ,VAR.UnitOfAnalysis
+                                     ,VAR.UnitOfAnalysis                           
+                                     ,LimitFiscalYear=NA
+                                     ,ExcludeFiscalYear=FALSE
                                      
 ){
     
@@ -260,6 +267,12 @@ competition.statistics.offers<-function(VAR.Path
         stringsAsFactors=TRUE
     )
     
+    if(!is.na(LimitFiscalYear) & ExcludeFiscalYear==FALSE){
+        competition.DF<-subset(competition.DF,fiscal_year==LimitFiscalYear)
+    }
+    if(!is.na(LimitFiscalYear) & ExcludeFiscalYear==TRUE){
+        competition.DF<-subset(competition.DF,fiscal_year!=LimitFiscalYear)
+    }
     competition.DF<-apply_lookups(VAR.Path,competition.DF)
     
     
@@ -513,6 +526,8 @@ competition.statistics.offers<-function(VAR.Path
 competition.statistics.size<-function(VAR.Path
                                      ,competition.file.name
                                      ,VAR.UnitOfAnalysis
+                                     ,LimitFiscalYear=NA
+                                     ,ExcludeFiscalYear=FALSE
                                      
 ){
     
@@ -527,6 +542,12 @@ competition.statistics.size<-function(VAR.Path
         stringsAsFactors=TRUE
     )
     
+    if(!is.na(LimitFiscalYear) & ExcludeFiscalYear==FALSE){
+        competition.DF<-subset(competition.DF,fiscal_year==LimitFiscalYear)
+    }
+    if(!is.na(LimitFiscalYear) & ExcludeFiscalYear==TRUE){
+        competition.DF<-subset(competition.DF,fiscal_year!=LimitFiscalYear)
+    }
     competition.DF<-apply_lookups(VAR.Path,competition.DF)
     competition.DF$Obligation.2014<-competition.DF$Obligation.2014*1000000000
     competition.combined<-ddply(competition.DF
