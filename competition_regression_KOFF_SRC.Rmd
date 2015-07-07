@@ -64,6 +64,44 @@ LMsummaryLine<-function(fit,Unit=NULL){
 
 ```
 
+###Data exploration
+
+``` {r echo=TRUE}
+
+#land
+
+LandmeanKO <- mean(KOfflist$pPlatLand)
+
+ggplot(KOfflist, aes(x=pPlatLand)) +
+  geom_histogram(aes(pPlatLand="density"),
+                 binwidth = .02,
+                 color = "red", fill = "light blue", main = "HISTOGRAM") +
+  geom_density(alpha = .2, fill = "#FF6666") +
+  labs(title = "Distribution of Land Contracts: Contracting Office Level") +
+  labs(x = "Land") +
+  geom_vline(aes(xintercept=LandmeanKO, color="blue"),
+             linetype = "dashed", size = 1)
+
+#Service
+
+ServmeanKO <- mean(KOfflist$pServices)
+
+ggplot(KOfflist, aes(x=pServices)) +
+  geom_histogram(aes(pServices="density"),
+                 binwidth = .02,
+                 color = "red", fill = "light blue", main = "HISTOGRAM") +
+  geom_density(alpha = .2, fill = "#FF6666") +
+  labs(title = "Distribution of Services Contracts: Contracting Office level") +
+  labs(x = "Services") +
+  geom_vline(aes(xintercept=ServmeanKO, color="blue"),
+             linetype = "dashed", size = 1)
+
+
+
+
+
+
+```
 
 
  Multiple Linear Regression Example 
