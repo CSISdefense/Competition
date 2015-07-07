@@ -624,7 +624,11 @@ plot1 + labs(title = "Services vs Effective Competition: MCC level")
 
 ##Air
 
-qplot(pPlatAir, pEffComp, data = MCClist, geom=c('point', 'smooth'), method = 'loess', ylab = "Effective Competition", xlab = "Platform: Air")
+#qplot(pPlatAir, pEffComp, data = MCClist, geom=c('point', 'smooth'), method = 'loess', ylab = "Effective Competition", xlab = "Platform: Air")
+
+plot6 <- qplot(pPlatAir, pEffComp, data = MCClist, geom=c('point', 'smooth'), method = 'loess', ylab = "Effective Competition", xlab = "Aircraft")
+plot6 + labs(title = "Aircraft Contracts vs Effective Competition: MCC level")
+
 
 ##Weapons and Ammunition
 
@@ -706,9 +710,22 @@ ggplot(MCClist, aes(x=pPSRServices)) +
 
 ##pAir
 
-boxplot(MCClist$pAir, col=(c("yellow", "yellow")), main = "Platform Portfolio: Air", xlab = "percent of contract obligations spent on Air", horizontal = TRUE)
+#boxplot(MCClist$pAir, col=(c("yellow", "yellow")), main = "Platform Portfolio: Air", xlab = "percent of contract obligations spent on Air", horizontal = TRUE)
 
-qplot(MCClist$pAir, geom = "histogram", binwidth = .03, main = "Distribution of Air", xlab = "Type of Product Procured: Air", fill = I("light blue"), col = I("red"), aplpha = .2, xlim = c(0, 1))
+#qplot(MCClist$pAir, geom = "histogram", binwidth = .03, main = "Distribution of Air", xlab = "Type of Product Procured: Air", fill = I("light blue"), col = I("red"), aplpha = .2, xlim = c(0, 1))
+
+Airmean <- mean(MCClist$pPlatAir)
+
+ggplot(MCClist, aes(x=pPlatAir)) +
+  geom_histogram(aes(pPlatAir="density"),
+                 binwidth = .02,
+                 color = "red", fill = "light blue", main = "HISTOGRAM") +
+  geom_density(alpha = .2, fill = "#FF6666") +
+  labs(title = "Distribution of Aircraft Contracts: MCC level") +
+  labs(x = "Aircraft") +
+  geom_vline(aes(xintercept=Airmean, color="blue"),
+             linetype = "dashed", size = 1)
+
 
 ##PWnA
 
@@ -780,6 +797,21 @@ ggplot(MCClist, aes(x=pPlatLand)) +
   labs(x = "Land Vehicle") +
   geom_vline(aes(xintercept=Landmean, color="blue"),
              linetype = "dashed", size = 1)
+
+##pMnS
+
+MnSmean <- mean(MCClist$pPaltMnS)
+
+ggplot(MCClist, aes(x=pPaltMnS)) +
+  geom_histogram(aes(pPaltMnS="density"),
+                 binwidth = .02,
+                 color = "red", fill = "light blue", main = "HISTOGRAM") +
+  geom_density(alpha = .2, fill = "#FF6666") +
+  labs(title = "Distribution of Missile and Space Contracts: MCC level") +
+  labs(x = "Missiles and Space") +
+  geom_vline(aes(xintercept=MnSmean, color="blue"),
+             linetype = "dashed", size = 1)
+
 
 
 
@@ -1043,7 +1075,7 @@ screenreg(mfit10)
 
 ##Service
 
-plota <- qplot(pcService, pEffectiveComp, data = StateList, geom=c('point', 'smooth'), method = 'loess', ylab = "Effective Competition", xlab = "Services")
+plota <- qplot(pService, pEffectiveComp, data = StateList, geom=c('point', 'smooth'), method = 'loess', ylab = "Effective Competition", xlab = "Services")
 plota + labs(title = "Services vs Effective Competition: State Level")
 
 ##Research and Development
@@ -1052,7 +1084,11 @@ qplot(pRnD, pEffectiveComp, data = StateList, geom=c('point', 'smooth'), method 
 
 ##Air
 
-qplot(pAir, pEffectiveComp, data = StateList, geom=c('point', 'smooth'), method = 'loess', ylab = "Effective Competition", xxlab = "Platform: Air")
+#qplot(pAir, pEffectiveComp, data = StateList, geom=c('point', 'smooth'), method = 'loess', ylab = "Effective Competition", xxlab = "Platform: Air")
+
+plotf <- qplot(pAir, pEffectiveComp, data = StateList, geom=c('point', 'smooth'), method = 'loess', ylab = "Effective Competition", xlab = "Aircraft")
+plotf + labs(title = "Aircraft Contracts vs Effective Competition: State Level")
+
 
 ##Land
 
@@ -1158,9 +1194,22 @@ ggplot(StateList, aes(x=pService)) +
 
 ##pAir
 
-boxplot(StateList$pAir, col=(c("yellow", "yellow")), main = "Platform Portfolio: Air", xlab = "percent of contract obligations spent on Air", horizontal = TRUE)
+#boxplot(StateList$pAir, col=(c("yellow", "yellow")), main = "Platform Portfolio: Air", xlab = "percent of contract obligations spent on Air", horizontal = TRUE)
 
-qplot(StateList$pAir, geom = "histogram", binwidth = .03, main = "Distribution of Air", xlab = "Type of Product Procured: Air", fill = I("light blue"), col = I("red"), aplpha = .2, xlim = c(0, 1))
+#qplot(StateList$pAir, geom = "histogram", binwidth = .03, main = "Distribution of Air", xlab = "Type of Product Procured: Air", fill = I("light blue"), col = I("red"), aplpha = .2, xlim = c(0, 1))
+
+Airmeana <- mean(StateList$pAir)
+
+ggplot(StateList, aes(x=pAir)) +
+  geom_histogram(aes(pAirr="density"),
+                 binwidth = .01,
+                 color = "red", fill = "light blue", main = "HISTOGRAM") +
+  geom_density(alpha = .2, fill = "#FF6666") +
+  labs(title = "Distribution of Aircraft Contracts: State level") +
+  labs(x = "Aircraft") +
+  geom_vline(aes(xintercept=Airmeana, color="blue"),
+             linetype = "dashed", size = 1)
+
 
 ##PRnD
 
