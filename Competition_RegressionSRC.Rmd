@@ -616,9 +616,10 @@ qplot(pIDV, pComp1Offer, data = MCClist, geom=c('point', 'smooth'), method = 'lo
 
 ##Service
 
-qplot(pPSRServices, pEffComp, data = MCClist, geom=c('point', 'smooth'), method = 'loess', ylab = "Effective Competition", xlab = "Services")
+plot1 <- qplot(pPSRServices, pEffComp, data = MCClist, geom=c('point', 'smooth'), method = 'loess', ylab = "Effective Competition", xlab = "Services")
+plot1 + labs(title = "Services vs Effective Competition: MCC level")
 
-qplot(pPSRServices, pEffComp, data = MCClist, geom=c('point', 'smooth'), method = 'lm', formula= MCClist$pEffComp ~ poly(MCClist$pPSRServices, 2), ylab = "Effective Competition", xlab = "Services")
+#qplot(pPSRServices, pEffComp, data = MCClist, geom=c('point', 'smooth'), method = 'lm', formula= MCClist$pEffComp ~ poly(MCClist$pPSRServices, 2), ylab = "Effective Competition", xlab = "Services")
 
 
 ##Air
@@ -627,15 +628,32 @@ qplot(pPlatAir, pEffComp, data = MCClist, geom=c('point', 'smooth'), method = 'l
 
 ##Weapons and Ammunition
 
-qplot(pPlatWnA, pEffComp, data = MCClist, geom=c('point', 'smooth'), method = 'loess', ylab = "Effective Competition", xlab = "Platform: Weapons and Ammunition")
+#qplot(pPlatWnA, pEffComp, data = MCClist, geom=c('point', 'smooth'), method = 'loess', ylab = "Effective Competition", xlab = "Platform: Weapons and Ammunition")
+
+plot2 <- qplot(pPlatWnA, pEffComp, data = MCClist, geom=c('point', 'smooth'), method = 'loess', ylab = "Effective Competition", xlab = "Weapons and Ammunition")
+plot2 + labs(title = "Weapons&Ammunition vs Effective Competition: MCC")
+
 
 ##Electronics and  Communication
 
-qplot(pPlatEnC, pEffComp, data = MCClist, geom=c('point', 'smooth'), method = 'loess', ylab = "Effective Competition", xlab = "Platform: Electronics and Communication")
+#qplot(pPlatEnC, pEffComp, data = MCClist, geom=c('point', 'smooth'), method = 'loess', ylab = "Effective Competition", xlab = "Platform: Electronics and Communication")
+
+plot3 <- qplot(pPlatEnC, pEffComp, data = MCClist, geom=c('point', 'smooth'), method = 'loess', ylab = "Effective Competition", xlab = "Electronics and Communication")
+plot3 + labs(title = "Electronics&Communication vs Effective Comp: MCC")
+
 
 ##Delivery Vehicle
 
-qplot(pIDV, pEffComp, data = MCClist, geom=c('point', 'smooth'), method = 'loess', ylab = "Effective Competition", xlab = "Delivery Vehicle")
+#qplot(pIDV, pEffComp, data = MCClist, geom=c('point', 'smooth'), method = 'loess', ylab = "Effective Competition", xlab = "Delivery Vehicle")
+
+plot4 <- qplot(pIDV, pEffComp, data = MCClist, geom=c('point', 'smooth'), method = 'loess', ylab = "Effective Competition", xlab = "IDV")
+plot4 + labs(title = "IDV vs Effective Competition: MCC level")
+
+##Land
+
+plot5 <- qplot(pPlatLand, pEffComp, data = MCClist, geom=c('point', 'smooth'), method = 'loess', ylab = "Effective Competition", xlab = "Land Vehicle Contracts")
+plot5 + labs(title = "Land Vehicle Contracts vs Effective Competition: MCC level")
+
 
 
 ```
@@ -694,21 +712,75 @@ qplot(MCClist$pAir, geom = "histogram", binwidth = .03, main = "Distribution of 
 
 ##PWnA
 
-boxplot(MCClist$pWnA, col=(c("green", "green")), main = "Platform Portfolio: Weapons and Ammunition", xlab = "percent of contract obligations spent on Weapons and Ammunition", horizontal = TRUE)
+#boxplot(MCClist$pWnA, col=(c("green", "green")), main = "Platform Portfolio: Weapons and Ammunition", xlab = "percent of contract obligations spent on Weapons and Ammunition", horizontal = TRUE)
 
-qplot(MCClist$pWnA, geom = "histogram", binwidth = .03, main = "Distribution of Weapons and Ammunition", xlab = "Platform Portfolio: Weapons and Ammunition", fill = I("light blue"), col = I("red"), aplpha = .2, xlim = c(0, 1))
+#qplot(MCClist$pWnA, geom = "histogram", binwidth = .03, main = "Distribution of Weapons and Ammunition", xlab = "Platform Portfolio: Weapons and Ammunition", fill = I("light blue"), col = I("red"), aplpha = .2, xlim = c(0, 1))
+
+WnAmean <- mean(MCClist$pPlatWnA)
+
+ggplot(MCClist, aes(x=pPlatWnA)) +
+  geom_histogram(aes(pPlatWnA="density"),
+                 binwidth = .005,
+                 color = "red", fill = "light blue", main = "HISTOGRAM") +
+  geom_density(alpha = .2, fill = "#FF6666") +
+  labs(title = "Weapons and Ammunition Contracts: MCC level") +
+  labs(x = "Weapons and Ammunition") +
+  geom_vline(aes(xintercept=WnAmean, color="blue"),
+             linetype = "dashed", size = 1)
+
+
 
 ##pEnC
 
-boxplot(MCClist$pEnC, col=(c("pink", "pink")), main = "Platform Portfolio: Electronics and Communication", xlab = "percent of contract obligations spent on Electronics and Communication", horizontal = TRUE)
+#boxplot(MCClist$pEnC, col=(c("pink", "pink")), main = "Platform Portfolio: Electronics and Communication", xlab = "percent of contract obligations spent on Electronics and Communication", horizontal = TRUE)
 
-qplot(MCClist$pEnC, geom = "histogram", binwidth = .03, main = "Distribution of Electronics and Communication", xlab = "Platform Portfolio: Electronics and Communications", fill = I("light blue"), col = I("red"), aplpha = .2, xlim = c(0, 1))
+#qplot(MCClist$pEnC, geom = "histogram", binwidth = .03, main = "Distribution of Electronics and Communication", xlab = "Platform Portfolio: Electronics and Communications", fill = I("light blue"), col = I("red"), aplpha = .2, xlim = c(0, 1))
+
+EnCmean <- mean(MCClist$pPlatEnC)
+
+ggplot(MCClist, aes(x=pPlatEnC)) +
+  geom_histogram(aes(pPlatEnC="density"),
+                 binwidth = .01,
+                 color = "red", fill = "light blue", main = "HISTOGRAM") +
+  geom_density(alpha = .2, fill = "#FF6666") +
+  labs(title = "Electronics and Communication: MCC level") +
+  labs(x = "Electronics and Communication") +
+  geom_vline(aes(xintercept=EnCmean, color="blue"),
+             linetype = "dashed", size = 1)
+
 
 ##pIDV
 
-boxplot(MCClist$pIDV, col=(c("light purple", "light purple")), main = "Contracting Methods: Contract Vehicle", xlab = "percent of contract obligations spent on Contract Vehicle", horizontal = TRUE)
+#boxplot(MCClist$pIDV, col=(c("light purple", "light purple")), main = "Contracting Methods: Contract Vehicle", xlab = "percent of contract obligations spent on Contract Vehicle", horizontal = TRUE)
 
-qplot(MCClist$pIDV, geom = "histogram", binwidth = .03, main = "Distribution of Contract  Vehicle", xlab = "Contracting Method: Contract Vehicle", fill = I("light blue"), col = I("red"), aplpha = .2, xlim = c(0, 1))
+#qplot(MCClist$pIDV, geom = "histogram", binwidth = .03, main = "Distribution of Contract  Vehicle", xlab = "Contracting Method: Contract Vehicle", fill = I("light blue"), col = I("red"), aplpha = .2, xlim = c(0, 1))
+
+IDVmean <- mean(MCClist$pIDV)
+
+ggplot(MCClist, aes(x=pIDV)) +
+  geom_histogram(aes(pIDV="density"),
+                 binwidth = .01,
+                 color = "red", fill = "light blue", main = "HISTOGRAM") +
+  geom_density(alpha = .2, fill = "#FF6666") +
+  labs(title = "IDV: MCC level") +
+  labs(x = "IDV") +
+  geom_vline(aes(xintercept=IDVmean, color="blue"),
+             linetype = "dashed", size = 1)
+
+##pLand
+
+Landmean <- mean(MCClist$pPlatLand)
+
+ggplot(MCClist, aes(x=pPlatLand)) +
+  geom_histogram(aes(pPlatLand="density"),
+                 binwidth = .01,
+                 color = "red", fill = "light blue", main = "HISTOGRAM") +
+  geom_density(alpha = .2, fill = "#FF6666") +
+  labs(title = "Distribution of Land Contracts: MCC level") +
+  labs(x = "Land Vehicle") +
+  geom_vline(aes(xintercept=Landmean, color="blue"),
+             linetype = "dashed", size = 1)
+
 
 
 ```
@@ -971,7 +1043,8 @@ screenreg(mfit10)
 
 ##Service
 
-qplot(pcService, pEffectiveComp, data = StateList, geom=c('point', 'smooth'), method = 'loess', ylab = "Effective Competition", xlab = "Services")
+plota <- qplot(pcService, pEffectiveComp, data = StateList, geom=c('point', 'smooth'), method = 'loess', ylab = "Effective Competition", xlab = "Services")
+plota + labs(title = "Services vs Effective Competition: State Level")
 
 ##Research and Development
 
@@ -983,12 +1056,28 @@ qplot(pAir, pEffectiveComp, data = StateList, geom=c('point', 'smooth'), method 
 
 ##Land
 
-qplot(pLand, pEffectiveComp, data = StateList, geom=c('point', 'smooth'), method = 'loess', ylab = "Effective Competition", xxlab = "Platform: Land")
+#qplot(pLand, pEffectiveComp, data = StateList, geom=c('point', 'smooth'), method = 'loess', ylab = "Effective Competition", xxlab = "Platform: Land")
+
+plote <- qplot(pLand, pEffectiveComp, data = StateList, geom=c('point', 'smooth'), method = 'loess', ylab = "Effective Competition", xlab = "Land Vehicle Contracts")
+plote + labs(title = "Land Vehicle Contracts vs Effective Competition: State level")
 
 ##Fixed Price
 
 qplot(pFixed, pEffectiveComp, data = StateList, geom=c('point', 'smooth'), method = 'loess', ylab = "Effective Competition", xxlab = "Fixed Price Contracts")
 
+#WnA
+
+plotb <- qplot(pWnA, pEffectiveComp, data = StateList, geom=c('point', 'smooth'), method = 'loess', ylab = "Effective Competition", xlab = "Weapons and Ammunition")
+plotb + labs(title = "Weapons&Ammunition vs Effective Competition: State")
+
+#EnC
+plotc <- qplot(pEnC, pEffectiveComp, data = StateList, geom=c('point', 'smooth'), method = 'loess', ylab = "Effective Competition", xlab = "Electronics and Communication")
+plotc + labs(title = "Electronics&Communication vs Effective Comp: State")
+
+#pIDV
+
+plotd <- qplot(pIDV, pEffectiveComp, data = StateList, geom=c('point', 'smooth'), method = 'loess', ylab = "Effective Competition", xlab = "IDV")
+plotd + labs(title = "IDV vs Effective Competition: State level")
 
 
 ```
@@ -1081,15 +1170,73 @@ qplot(StateList$pRnD, geom = "histogram", binwidth = .03, main = "Distribution o
 
 ##pLand
 
-boxplot(StateList$pLand, col=(c("pink", "pink")), main = "Platform Portfolio: Land Vehicles", xlab = "percent of contract obligations spent on Land Vehicles", horizontal = TRUE)
+#boxplot(StateList$pLand, col=(c("pink", "pink")), main = "Platform Portfolio: Land Vehicles", xlab = "percent of contract obligations spent on Land Vehicles", horizontal = TRUE)
 
-qplot(StateList$pLand, geom = "histogram", binwidth = .03, main = "Distribution of Land Vehicles", xlab = "Platform Portfolio: Land", fill = I("light blue"), col = I("red"), aplpha = .2, xlim = c(0, 1))
+#qplot(StateList$pLand, geom = "histogram", binwidth = .03, main = "Distribution of Land Vehicles", xlab = "Platform Portfolio: Land", fill = I("light blue"), col = I("red"), aplpha = .2, xlim = c(0, 1))
+
+LandmeanSL <- mean(StateList$pLand)
+
+ggplot(StateList, aes(x=pLand)) +
+  geom_histogram(aes(pLand="density"),
+                 binwidth = .02,
+                 color = "red", fill = "light blue", main = "HISTOGRAM") +
+  geom_density(alpha = .2, fill = "#FF6666") +
+  labs(title = "Distribution of Land Contracts: State Level") +
+  labs(x = "Land") +
+  geom_vline(aes(xintercept=LandmeanSL, color="blue"),
+             linetype = "dashed", size = 1)
+
+
 
 ##Fixed
 
 boxplot(StateList$pFixed, col=(c("violet", "violet")), main = "Contracting Methods: Fixed Price", xlab = "percent of contract obligations spent on Fixed Price", horizontal = TRUE)
 
 qplot(StateList$pFixed, geom = "histogram", binwidth = .03, main = "Distribution of Fixed Price", xlab = "Contracting Method: Fixed Price", fill = I("violet"), col = I("red"), aplpha = .2, xlim = c(0, 1))
+
+#pWnA
+
+WnAmeanb <- mean(StateList$pWnA)
+
+ggplot(StateList, aes(x=pWnA)) +
+  geom_histogram(aes(pWnA="density"),
+                 binwidth = .005,
+                 color = "red", fill = "light blue", main = "HISTOGRAM") +
+  geom_density(alpha = .2, fill = "#FF6666") +
+  labs(title = "Weapons and Ammunition Contracts: State Level") +
+  labs(x = "Weapons and Ammunition") +
+  geom_vline(aes(xintercept=WnAmeanb, color="blue"),
+             linetype = "dashed", size = 1)
+
+#pEnC
+
+EnCmeanb <- mean(StateList$pEnC)
+
+ggplot(StateList, aes(x=pEnC)) +
+  geom_histogram(aes(pEnC="density"),
+                 binwidth = .01,
+                 color = "red", fill = "light blue", main = "HISTOGRAM") +
+  geom_density(alpha = .2, fill = "#FF6666") +
+  labs(title = "Electronics&Communication: State Level") +
+  labs(x = "Electronics and Communication") +
+  geom_vline(aes(xintercept=EnCmeanb, color="blue"),
+             linetype = "dashed", size = 1)
+
+##pIDV
+
+IDVmeana <- mean(StateList$pIDV)
+
+ggplot(StateList, aes(x=pIDV)) +
+  geom_histogram(aes(pIDV="density"),
+                 binwidth = .01,
+                 color = "red", fill = "light blue", main = "HISTOGRAM") +
+  geom_density(alpha = .2, fill = "#FF6666") +
+  labs(title = "IDV: State level") +
+  labs(x = "IDV") +
+  geom_vline(aes(xintercept=IDVmeana, color="blue"),
+             linetype = "dashed", size = 1)
+
+
 
 
 ```
