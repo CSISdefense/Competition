@@ -519,7 +519,7 @@ state.competition.combined<-plyr::join(state.competition.combined,statistics.piv
 ))
 
 
-state.competition.combined<-plyr::join(mcc.competition.combined,competition.statistics.offers(
+state.competition.combined<-plyr::join(state.competition.combined,competition.statistics.offers(
     Path,
     "data\\defense_Location_SP_DefenseCompetitionPricingVehiclePoPstateHistory.csv",
     "PoPstateCode",
