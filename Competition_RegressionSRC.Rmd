@@ -704,6 +704,33 @@ plot12 + labs(title = "Engines&Power Plants PSC Contract Obligations vs Effectiv
 plot14 <- qplot(pPscOther, pEffComp, data = MCClist, geom=c('point', 'smooth'), method = 'loess', ylab = "Effective Competition", xlab = "Other (PSC) Contract Obligations")
 plot14 + labs(title = "Other (PSC) Contract Obligations vs Effective Competition: MCC level")
 
+#---------------------------------------------------------------
+
+#med
+
+plot15 <- qplot(pPscMED, pEffComp, data = MCClist, geom=c('point', 'smooth'), method = 'loess', ylab = "Effective Competition", xlab = "MED (PSC) Contract Obligations")
+plot15 + labs(title = "MED (PSC) Contract Obligations vs Effective Competition: MCC level")
+
+##FRSnC
+
+plot16 <- qplot(pPscFRSnC, pEffComp, data = MCClist, geom=c('point', 'smooth'), method = 'loess', ylab = "Effective Competition", xlab = "FRSnC (PSC) Contract Obligations")
+plot16 + labs(title = "FRSnC (PSC) Contract Obligations vs Effective Competition: MCC level")
+
+
+#PAMS
+
+plot17 <- qplot(pPscPAMS, pEffComp, data = MCClist, geom=c('point', 'smooth'), method = 'loess', ylab = "Effective Competition", xlab = "PAMS (PSC) Contract Obligations")
+plot17 + labs(title = "PAMS (PSC) Contract Obligations vs Effective Competition: MCC level")
+
+##ICT
+
+plot18 <- qplot(pPscICT, pEffComp, data = MCClist, geom=c('point', 'smooth'), method = 'loess', ylab = "Effective Competition", xlab = "ICT (PSC) Contract Obligations")
+plot18 + labs(title = "ICT (PSC) Contract Obligations vs Effective Competition: MCC level")
+
+##Fuels
+
+plot19 <- qplot(pPscFuels, pEffComp, data = MCClist, geom=c('point', 'smooth'), method = 'loess', ylab = "Effective Competition", xlab = "Fuels (PSC) Contract Obligations")
+plot19 + labs(title = "Fuels (PSC) Contract Obligations vs Effective Competition: MCC level")
 
 
 
@@ -978,7 +1005,77 @@ ggplot(MCClist, aes(x=pPscOther)) +
   geom_vline(aes(xintercept=Othermean, color="blue"),
              linetype = "dashed", size = 1)
 
+#-----------------------------------------------------------
 
+##MED
+
+MEDmean <- mean(MCClist$pPscMED)
+
+ggplot(MCClist, aes(x=pPscMED)) +
+  geom_histogram(aes(pPscMED="density"),
+                 binwidth = .01,
+                 color = "red", fill = "light blue", main = "HISTOGRAM") +
+  geom_density(alpha = .2, fill = "#FF6666") +
+  labs(title = "Distribution of Medical (PSC) Contracts Obligated: MCC level") +
+  labs(x = "Medical (PSC) Contracts Obligated") +
+  geom_vline(aes(xintercept=Othermean, color="blue"),
+             linetype = "dashed", size = 1)
+
+##FRSnC
+
+FRSnCmean <- mean(MCClist$pPscFRSnC)
+
+ggplot(StateList, aes(x=pPscFRSnC)) +
+  geom_histogram(aes(pPscFRSnC="density"),
+                 binwidth = .01,
+                 color = "red", fill = "light blue", main = "HISTOGRAM") +
+  geom_density(alpha = .2, fill = "#FF6666") +
+  labs(title = "Distribution of FRSnC (PSC) Contracts Obligated: MCC level") +
+  labs(x = "FRSnC (PSC) Contracts Obligated") +
+  geom_vline(aes(xintercept=FRSnCmean, color="blue"),
+             linetype = "dashed", size = 1)
+
+#PAMs
+
+
+PAMsmean <- mean(MCClist$pPscPAMS)
+
+ggplot(MCClist, aes(x=pPscPAMS)) +
+  geom_histogram(aes(pPscPAMS="density"),
+                 binwidth = .01,
+                 color = "red", fill = "light blue", main = "HISTOGRAM") +
+  geom_density(alpha = .2, fill = "#FF6666") +
+  labs(title = "Distribution of PAMS (PSC) Contracts Obligated: MCC level") +
+  labs(x = "PAMS (PSC) Contracts Obligated") +
+  geom_vline(aes(xintercept=FRSnCmean, color="blue"),
+             linetype = "dashed", size = 1)
+
+##ICT
+
+ICTmean <- mean(MCClist$pPscICT)
+
+ggplot(MCClist, aes(x=pPscICT)) +
+  geom_histogram(aes(pPscICT="density"),
+                 binwidth = .008,
+                 color = "red", fill = "light blue", main = "HISTOGRAM") +
+  geom_density(alpha = .2, fill = "#FF6666") +
+  labs(title = "Distribution of ICT (PSC) Contracts Obligated: MCC level") +
+  labs(x = "ICT (PSC) Contracts Obligated") +
+  geom_vline(aes(xintercept=ICTmean, color="blue"),
+             linetype = "dashed", size = 1)
+##fuels
+
+Fuelsmean <- mean(MCClist$pPscFuels)
+
+ggplot(MCClist, aes(x=pPscFuels)) +
+  geom_histogram(aes(pPscFuels="density"),
+                 binwidth = .008,
+                 color = "red", fill = "light blue", main = "HISTOGRAM") +
+  geom_density(alpha = .2, fill = "#FF6666") +
+  labs(title = "Distribution of Fuels (PSC) Contracts Obligated: MCC level") +
+  labs(x = "Fuels (PSC) Contracts Obligated") +
+  geom_vline(aes(xintercept=Fuelsmean, color="blue"),
+             linetype = "dashed", size = 1)
 
 ```
 
@@ -1328,6 +1425,33 @@ plotk + labs(title = "Engines&Power Plants PSC Contract Obligations vs Effective
 plotm <- qplot(pPscOther, pEffComp, data = StateList, geom=c('point', 'smooth'), method = 'loess', ylab = "Effective Competition", xlab = "Other (PSC) Contract Obligations")
 plotm + labs(title = "Other (PSC) Contract Obligations vs Effective Competition: State level")
 
+#----------------------------------------------------
+
+#med
+
+plotn <- qplot(pPscMED, pEffComp, data = StateList, geom=c('point', 'smooth'), method = 'loess', ylab = "Effective Competition", xlab = "MED (PSC) Contract Obligations")
+plotn + labs(title = "MED (PSC) Contract Obligations vs Effective Competition: State level")
+
+##FRSnC
+
+ploto <- qplot(pPscFRSnC, pEffComp, data = StateList, geom=c('point', 'smooth'), method = 'loess', ylab = "Effective Competition", xlab = "FRSnC (PSC) Contract Obligations")
+ploto + labs(title = "FRSnC (PSC) Contract Obligations vs Effective Competition: State Level")
+
+
+#PAMS
+
+plotp <- qplot(pPscPAMS, pEffComp, data = StateList, geom=c('point', 'smooth'), method = 'loess', ylab = "Effective Competition", xlab = "PAMS (PSC) Contract Obligations")
+plotp + labs(title = "PAMS (PSC) Contract Obligations vs Effective Competition: State Level")
+
+##ICT
+
+plotq <- qplot(pPscICT, pEffComp, data = StateList, geom=c('point', 'smooth'), method = 'loess', ylab = "Effective Competition", xlab = "ICT (PSC) Contract Obligations")
+plotq + labs(title = "ICT (PSC) Contract Obligations vs Effective Competition: state level")
+
+##Fuels
+
+plotr1 <- qplot(pPscFuels, pEffComp, data = StateList, geom=c('point', 'smooth'), method = 'loess', ylab = "Effective Competition", xlab = "Fuels (PSC) Contract Obligations")
+plotr1 + labs(title = "Fuels (PSC) Contract Obligations vs Effective Competition: State level")
 
 
 ```
@@ -1642,6 +1766,77 @@ ggplot(StateList, aes(x=pPscOther)) +
   geom_vline(aes(xintercept=Othermean1, color="blue"),
              linetype = "dashed", size = 1)
 
+#--------------------checking these to see if they are intersting------
+
+##MED
+
+MEDmean1 <- mean(StateList$pPscMED)
+
+ggplot(StateList, aes(x=pPscMED)) +
+  geom_histogram(aes(pPscMED="density"),
+                 binwidth = .01,
+                 color = "red", fill = "light blue", main = "HISTOGRAM") +
+  geom_density(alpha = .2, fill = "#FF6666") +
+  labs(title = "Distribution of Medical (PSC) Contracts Obligated: State level") +
+  labs(x = "Medical (PSC) Contracts Obligated") +
+  geom_vline(aes(xintercept=Othermean1, color="blue"),
+             linetype = "dashed", size = 1)
+
+##FRSnC
+
+FRSnCmean1 <- mean(StateList$pPscFRSnC)
+
+ggplot(StateList, aes(x=pPscFRSnC)) +
+  geom_histogram(aes(pPscFRSnC="density"),
+                 binwidth = .01,
+                 color = "red", fill = "light blue", main = "HISTOGRAM") +
+  geom_density(alpha = .2, fill = "#FF6666") +
+  labs(title = "Distribution of FRSnC (PSC) Contracts Obligated: State level") +
+  labs(x = "FRSnC (PSC) Contracts Obligated") +
+  geom_vline(aes(xintercept=FRSnCmean1, color="blue"),
+             linetype = "dashed", size = 1)
+
+#PAMs
+
+
+PAMsmean1 <- mean(StateList$pPscPAMS)
+
+ggplot(StateList, aes(x=pPscPAMS)) +
+  geom_histogram(aes(pPscPAMS="density"),
+                 binwidth = .01,
+                 color = "red", fill = "light blue", main = "HISTOGRAM") +
+  geom_density(alpha = .2, fill = "#FF6666") +
+  labs(title = "Distribution of PAMS (PSC) Contracts Obligated: State level") +
+  labs(x = "PAMS (PSC) Contracts Obligated") +
+  geom_vline(aes(xintercept=FRSnCmean1, color="blue"),
+             linetype = "dashed", size = 1)
+
+##ICT
+
+ICTmean1 <- mean(StateList$pPscICT)
+
+ggplot(StateList, aes(x=pPscICT)) +
+  geom_histogram(aes(pPscICT="density"),
+                 binwidth = .008,
+                 color = "red", fill = "light blue", main = "HISTOGRAM") +
+  geom_density(alpha = .2, fill = "#FF6666") +
+  labs(title = "Distribution of ICT (PSC) Contracts Obligated: State level") +
+  labs(x = "ICT (PSC) Contracts Obligated") +
+  geom_vline(aes(xintercept=ICTmean1, color="blue"),
+             linetype = "dashed", size = 1)
+##fuels
+
+Fuelsmean1 <- mean(StateList$pPscFuels)
+
+ggplot(StateList, aes(x=pPscFuels)) +
+  geom_histogram(aes(pPscFuels="density"),
+                 binwidth = .008,
+                 color = "red", fill = "light blue", main = "HISTOGRAM") +
+  geom_density(alpha = .2, fill = "#FF6666") +
+  labs(title = "Distribution of Fuels (PSC) Contracts Obligated: State level") +
+  labs(x = "Fuels (PSC) Contracts Obligated") +
+  geom_vline(aes(xintercept=Fuelsmean1, color="blue"),
+             linetype = "dashed", size = 1)
 
 
 ```
