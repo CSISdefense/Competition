@@ -1077,6 +1077,56 @@ ggplot(MCClist, aes(x=pPscFuels)) +
   geom_vline(aes(xintercept=Fuelsmean, color="blue"),
              linetype = "dashed", size = 1)
 
+##IDV multi
+pVehMAC
+
+vehMACsmean <- mean(MCClist$pVehMAC)
+
+ggplot(MCClist, aes(x=pVehMAC)) +
+  geom_histogram(aes(pVehMAC="density"),
+                 binwidth = .008,
+                 color = "red", fill = "light blue", main = "HISTOGRAM") +
+  geom_density(alpha = .2, fill = "#FF6666") +
+  labs(title = "Distribution of pVehMAC Contracts Obligated: MCC level") +
+  labs(x = "pVehMAC Contracts Obligated") +
+  geom_vline(aes(xintercept=vehMACsmean, color="blue"),
+             linetype = "dashed", size = 1)
+
+
+##IDV single
+pVehSAC
+
+vehSACsmean <- mean(MCClist$pVehSAC)
+
+ggplot(MCClist, aes(x=pVehSAC)) +
+  geom_histogram(aes(pVehSAC="density"),
+                 binwidth = .008,
+                 color = "red", fill = "light blue", main = "HISTOGRAM") +
+  geom_density(alpha = .2, fill = "#FF6666") +
+  labs(title = "Distribution of pSAC Contracts Obligated: MCC level") +
+  labs(x = "pVehSAC Contracts Obligated") +
+  geom_vline(aes(xintercept=vehMACsmean, color="blue"),
+             linetype = "dashed", size = 1)
+
+
+
+##IDV vehpur
+
+
+vehPurmean <- mean(MCClist$pVehPur)
+
+ggplot(MCClist, aes(x=pVehPur)) +
+  geom_histogram(aes(pVehPur="density"),
+                 binwidth = .008,
+                 color = "red", fill = "light blue", main = "HISTOGRAM") +
+  geom_density(alpha = .2, fill = "#FF6666") +
+  labs(title = "Distribution of pVehPur Contracts Obligated: MCC level") +
+  labs(x = "pVehPur Contracts Obligated") +
+  geom_vline(aes(xintercept=vehMACsmean, color="blue"),
+             linetype = "dashed", size = 1)
+
+
+
 ```
 
 ###final model exploration:
@@ -1837,6 +1887,10 @@ ggplot(StateList, aes(x=pPscFuels)) +
   labs(x = "Fuels (PSC) Contracts Obligated") +
   geom_vline(aes(xintercept=Fuelsmean1, color="blue"),
              linetype = "dashed", size = 1)
+
+##IDV
+
+
 
 
 ```
