@@ -1463,12 +1463,28 @@ screenreg(mfit10)
 ```
 
 
+`````` {r AutomatedGraphs echo=TRUE}
+
+# ##Service
+# ListOfVariables<-names(StateList)
+# # subset(ListOfVariables, select=c(pEffComp))
+# 
+# for (var in ListOfVariables){
+#   plota <- qplot(pPSRServices, pEffComp, data = StateList, geom=c('point', 'smooth'), method = 'loess', ylab = "Effective Competition", xlab = "Services")
+#   plota + labs(title = "Services vs Effective Competition: State Level")
+# }
+
+plota <- qplot(pPSRServices, pEffComp, data = StateList, geom=c('point', 'smooth'), method = 'loess', ylab = "Effective Competition", xlab = "Services")
+plota + labs(title = "Services vs Effective Competition: State Level")
+
+```
+
 ###Variable Exploration with effective competition
 ``` {r echo=TRUE}
 
 ##Service
 
-plota <- qplot(pService, pEffectiveComp, data = StateList, geom=c('point', 'smooth'), method = 'loess', ylab = "Effective Competition", xlab = "Services")
+plota <- qplot(pPSRServices, pEffComp, data = StateList, geom=c('point', 'smooth'), method = 'loess', ylab = "Effective Competition", xlab = "Services")
 plota + labs(title = "Services vs Effective Competition: State Level")
 
 ##Research and Development
