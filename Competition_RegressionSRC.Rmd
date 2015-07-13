@@ -732,6 +732,71 @@ plot18 + labs(title = "ICT (PSC) Contract Obligations vs Effective Competition: 
 plot19 <- qplot(pPscFuels, pEffComp, data = MCClist, geom=c('point', 'smooth'), method = 'loess', ylab = "Effective Competition", xlab = "Fuels (PSC) Contract Obligations")
 plot19 + labs(title = "Fuels (PSC) Contract Obligations vs Effective Competition: MCC level")
 
+##IDV MAC
+
+plot20 <- qplot(pVehMAC, pEffComp, data = MCClist, geom=c('point', 'smooth'), method = 'loess', ylab = "Effective Competition", xlab = "IDV MAC Contract Obligations")
+plot20 + labs(title = "IDV MAC Contract Obligations vs Effective Competition: MCC level")
+
+##IDV SAC
+
+plot21 <- qplot(pVehSAC, pEffComp, data = MCClist, geom=c('point', 'smooth'), method = 'loess', ylab = "Effective Competition", xlab = "IDV SAC Contract Obligations")
+plot21 + labs(title = "IDV SAC Contract Obligations vs Effective Competition: MCC level")
+
+##IDV Purch
+
+plot22 <- qplot(pVehPur, pEffComp, data = MCClist, geom=c('point', 'smooth'), method = 'loess', ylab = "Effective Competition", xlab = "IDV Purchase order Contract Obligations")
+plot22 + labs(title = "IDV Purchase Order Contract Obligations vs Effective Competition: MCC level")
+
+##IDV
+
+plot23 <- qplot(pIDV, pEffComp, data = MCClist, geom=c('point', 'smooth'), method = 'loess', ylab = "Effective Competition", xlab = "IDV Contract Obligations")
+plot23 + labs(title = "IDV Contract Obligations vs Effective Competition: MCC level")
+
+
+
+```
+
+
+R&D
+``` {r echo=TRUE}
+
+
+
+plot24 <- qplot(pRnD, pEffComp, data = MCClist, geom=c('point', 'smooth'), method = 'loess', ylab = "Effective Competition", xlab = "RnD Contract Obligations")
+plot24 + labs(title = "RnD Contract Obligations vs Effective Competition: MCC level")
+
+plotw <- qplot(pRnD, pEffComp, data = StateList, geom=c('point', 'smooth'), method = 'loess', ylab = "Effective Competition", xlab = "RnD Contract Obligations")
+plotw + labs(title = "RnD Contract Obligations vs Effective Competition: MCC level")
+
+RnDmean <- mean(MCClist$pRnD)
+
+ggplot(MCClist, aes(x=pRnD)) +
+  geom_histogram(aes(pRnD="density"),
+                 binwidth = .01,
+                 color = "red", fill = "light blue", main = "HISTOGRAM") +
+  geom_density(alpha = .2, fill = "#FF6666") +
+  labs(title = "Distribution of RnD Contracts: MCC level") +
+  labs(x = "RnD Contracts Obligated") +
+  geom_vline(aes(xintercept=RnDmean, color="blue"),
+             linetype = "dashed", size = 1)
+
+
+RnDmean1 <- mean(StateList$pRnD)
+
+ggplot(StateList, aes(x=pRnD)) +
+  geom_histogram(aes(pRnD="density"),
+                 binwidth = .008,
+                 color = "red", fill = "light blue", main = "HISTOGRAM") +
+  geom_density(alpha = .2, fill = "#FF6666") +
+  labs(title = "Distribution of RnD Contracts: State level") +
+  labs(x = "RnD Contracts Obligated") +
+  geom_vline(aes(xintercept=RnDmean1, color="blue"),
+             linetype = "dashed", size = 1)
+
+plot24 <- qplot(pRnD, pEffComp, data = StateList, geom=c('point', 'smooth'), method = 'loess', ylab = "Effective Competition", xlab = "IDV Contract Obligations")
+plot24 + labs(title = "IDV Contract Obligations vs Effective Competition: State level")
+
+
 
 
 ```
@@ -1087,8 +1152,8 @@ ggplot(MCClist, aes(x=pVehMAC)) +
                  binwidth = .008,
                  color = "red", fill = "light blue", main = "HISTOGRAM") +
   geom_density(alpha = .2, fill = "#FF6666") +
-  labs(title = "Distribution of pVehMAC Contracts Obligated: MCC level") +
-  labs(x = "pVehMAC Contracts Obligated") +
+  labs(title = "Distribution of IDV MAC Contracts Obligated: MCC level") +
+  labs(x = "IDV MAC Contracts Obligated") +
   geom_vline(aes(xintercept=vehMACsmean, color="blue"),
              linetype = "dashed", size = 1)
 
@@ -1103,8 +1168,8 @@ ggplot(MCClist, aes(x=pVehSAC)) +
                  binwidth = .008,
                  color = "red", fill = "light blue", main = "HISTOGRAM") +
   geom_density(alpha = .2, fill = "#FF6666") +
-  labs(title = "Distribution of pSAC Contracts Obligated: MCC level") +
-  labs(x = "pVehSAC Contracts Obligated") +
+  labs(title = "Distribution of IDV SAC Contracts Obligated: MCC level") +
+  labs(x = "IDV SAC Contracts Obligated") +
   geom_vline(aes(xintercept=vehMACsmean, color="blue"),
              linetype = "dashed", size = 1)
 
@@ -1120,10 +1185,26 @@ ggplot(MCClist, aes(x=pVehPur)) +
                  binwidth = .008,
                  color = "red", fill = "light blue", main = "HISTOGRAM") +
   geom_density(alpha = .2, fill = "#FF6666") +
-  labs(title = "Distribution of pVehPur Contracts Obligated: MCC level") +
-  labs(x = "pVehPur Contracts Obligated") +
+  labs(title = "Distribution of IDV Purchase Order Contracts Obligated: MCC level") +
+  labs(x = "IDV Purchase Order Contracts Obligated") +
   geom_vline(aes(xintercept=vehMACsmean, color="blue"),
              linetype = "dashed", size = 1)
+
+##IDV 
+
+IDVmean <- mean(MCClist$pIDV)
+
+ggplot(MCClist, aes(x=pIDV)) +
+  geom_histogram(aes(pIDV="density"),
+                 binwidth = .008,
+                 color = "red", fill = "light blue", main = "HISTOGRAM") +
+  geom_density(alpha = .2, fill = "#FF6666") +
+  labs(title = "Distribution of IDV  Contracts Obligated: MCC level") +
+  labs(x = "IDV Contracts Obligated") +
+  geom_vline(aes(xintercept=IDVmean, color="blue"),
+             linetype = "dashed", size = 1)
+
+
 
 
 
@@ -1503,6 +1584,28 @@ plotq + labs(title = "ICT (PSC) Contract Obligations vs Effective Competition: s
 plotr1 <- qplot(pPscFuels, pEffComp, data = StateList, geom=c('point', 'smooth'), method = 'loess', ylab = "Effective Competition", xlab = "Fuels (PSC) Contract Obligations")
 plotr1 + labs(title = "Fuels (PSC) Contract Obligations vs Effective Competition: State level")
 
+##IDV MAC 
+
+plots <- qplot(pVehMAC, pEffComp, data = StateList, geom=c('point', 'smooth'), method = 'loess', ylab = "Effective Competition", xlab = "IDV MAC Contract Obligations")
+plots + labs(title = "IDV MAC Contract Obligations vs Effective Competition: State level")
+
+##IDV SAC
+
+plott <- qplot(pVehSAC, pEffComp, data = StateList, geom=c('point', 'smooth'), method = 'loess', ylab = "Effective Competition", xlab = "IDV SAC Contract Obligations")
+plott + labs(title = "IDV SAC Contract Obligations vs Effective Competition: State level")
+
+##IDV Purchase order
+
+plotu <- qplot(pVehPur, pEffComp, data = StateList, geom=c('point', 'smooth'), method = 'loess', ylab = "Effective Competition", xlab = "IDV Purchase Order Contract Obligations")
+plotu + labs(title = "IDV Purchase Order Contract Obligations vs Effective Competition: State level")
+
+##pIDV
+
+plotv <- qplot(pIDV, pEffComp, data = StateList, geom=c('point', 'smooth'), method = 'loess', ylab = "Effective Competition", xlab = "IDV  Contract Obligations")
+plotv + labs(title = "IDV Contract Obligations vs Effective Competition: State level")
+
+
+
 
 ```
 
@@ -1529,6 +1632,10 @@ qplot(pLand, pEffectiveComp, data = StateList, geom=c('point', 'smooth'), method
 ##Fixed Price
 
 qplot(pFixed, pEffectiveComp, data = StateList, geom=c('point', 'smooth'), method = 'lm', ylab = "Effective Competition", xxlab = "Fixed Price Contracts")
+
+##IDV MAC
+
+
 
 
 
@@ -1889,6 +1996,80 @@ ggplot(StateList, aes(x=pPscFuels)) +
              linetype = "dashed", size = 1)
 
 ##IDV
+
+IDVMACmean1 <- mean(StateList$pVehMAC)
+
+ggplot(StateList, aes(x=pVehMAC)) +
+  geom_histogram(aes(pVehMac="density"),
+                 binwidth = .005,
+                 color = "red", fill = "light blue", main = "HISTOGRAM") +
+  geom_density(alpha = .2, fill = "#FF6666") +
+  labs(title = "Distribution of IDV MAC Contracts Obligated: State level") +
+  labs(x = "Fuels (PSC) Contracts Obligated") +
+  geom_vline(aes(xintercept=IDVMACmean1, color="blue"),
+             linetype = "dashed", size = 1)
+
+##IDV multi
+pVehMAC
+
+vehMACsmean1 <- mean(StateList$pVehMAC)
+
+ggplot(StateList, aes(x=pVehMAC)) +
+  geom_histogram(aes(pVehMAC="density"),
+                 binwidth = .008,
+                 color = "red", fill = "light blue", main = "HISTOGRAM") +
+  geom_density(alpha = .2, fill = "#FF6666") +
+  labs(title = "Distribution of IDV MAC Contracts Obligated: State level") +
+  labs(x = "IDV MAC Contracts Obligated") +
+  geom_vline(aes(xintercept=vehMACsmean1, color="blue"),
+             linetype = "dashed", size = 1)
+
+
+##IDV single
+pVehSAC
+
+vehSACsmean1 <- mean(StateList$pVehSAC)
+
+ggplot(StateList, aes(x=pVehSAC)) +
+  geom_histogram(aes(pVehSAC="density"),
+                 binwidth = .008,
+                 color = "red", fill = "light blue", main = "HISTOGRAM") +
+  geom_density(alpha = .2, fill = "#FF6666") +
+  labs(title = "Distribution of IDV SAC Contracts Obligated: State level") +
+  labs(x = "IDV SAC Contracts Obligated") +
+  geom_vline(aes(xintercept=vehSACsmean1, color="blue"),
+             linetype = "dashed", size = 1)
+
+
+
+##IDV vehpur
+
+
+vehPurmean1 <- mean(StateList$pVehPur)
+
+ggplot(StateList, aes(x=pVehPur)) +
+  geom_histogram(aes(pVehPur="density"),
+                 binwidth = .001,
+                 color = "red", fill = "light blue", main = "HISTOGRAM") +
+  geom_density(alpha = .2, fill = "#FF6666") +
+  labs(title = "Distribution of IDV Purchase Order Contracts Obligated: State Level") +
+  labs(x = "IDV Purchase Order Contracts Obligated") +
+  geom_vline(aes(xintercept=vehMACsmean1, color="blue"),
+             linetype = "dashed", size = 1)
+
+##pIDV
+
+IDVmean1 <- mean(StateList$pIDV)
+
+ggplot(StateList, aes(x=pIDV)) +
+  geom_histogram(aes(pIDV="density"),
+                 binwidth = .008,
+                 color = "red", fill = "light blue", main = "HISTOGRAM") +
+  geom_density(alpha = .2, fill = "#FF6666") +
+  labs(title = "Distribution of IDV  Contracts Obligated: State level") +
+  labs(x = "IDV Contracts Obligated") +
+  geom_vline(aes(xintercept=IDVmean1, color="blue"),
+             linetype = "dashed", size = 1)
 
 
 
