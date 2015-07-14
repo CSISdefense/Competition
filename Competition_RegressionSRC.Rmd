@@ -15,7 +15,7 @@ require(Hmisc)
 require(texreg)
 options(error=recover)
 setwd("K:\\Development\\Competition")
-# setwd("C:\\Users\\Greg Sanders\\Documents\\Development\\Fixed-price")
+# setwd("C:\\Users\\Greg Sanders\\Documents\\Development\\Competition")
 #setwd("C:/Users/scohen/My Documents/Competition/Competition/")
 Path<-"K:\\2007-01 PROFESSIONAL SERVICES\\R scripts and data\\"
 # Path<-"C:\\Users\\Greg Sanders\\SkyDrive\\Documents\\R Scripts and Data SkyDrive\\"
@@ -669,7 +669,7 @@ plot10 + labs(title = "PSC Land Vehicle Contracts vs Effective Competition: MCC 
 
 ##pMnS
 
-plot6 <- qplot(pPaltMnS, pEffComp, data = MCClist, geom=c('point', 'smooth'), method = 'loess', ylab = "Effective Competition", xlab = "Misiles and Space Contract Obligations")
+plot6 <- qplot(pPlatMnS, pEffComp, data = MCClist, geom=c('point', 'smooth'), method = 'loess', ylab = "Effective Competition", xlab = "Misiles and Space Contract Obligations")
 plot6 + labs(title = "Missiles and Space Contract Obligations vs Effective Competition: MCC level")
 
 ##psc MnS
@@ -970,10 +970,10 @@ ggplot(MCClist, aes(x=pPscLand)) +
 
 ##pMnS
 
-MnSmean <- mean(MCClist$pPaltMnS)
+MnSmean <- mean(MCClist$pPlatMnS)
 
-ggplot(MCClist, aes(x=pPaltMnS)) +
-  geom_histogram(aes(pPaltMnS="density"),
+ggplot(MCClist, aes(x=pPlatMnS)) +
+  geom_histogram(aes(pPlatMnS="density"),
                  binwidth = .02,
                  color = "red", fill = "light blue", main = "HISTOGRAM") +
   geom_density(alpha = .2, fill = "#FF6666") +
@@ -1517,7 +1517,7 @@ ploti + labs(title = "PSC Land Vehicle Contracts vs Effective Competition: State
 
 ##Fixed Price
 
-qplot(pFixed, pEffectiveComp, data = StateList, geom=c('point', 'smooth'), method = 'loess', ylab = "Effective Competition", xxlab = "Fixed Price Contracts")
+qplot(pPriceFixed, pEffComp, data = StateList, geom=c('point', 'smooth'), method = 'loess', ylab = "Effective Competition", xxlab = "Fixed Price Contracts")
 
 #WnA
 
@@ -1558,7 +1558,7 @@ plotl + labs(title = "Ships PSC Contract Obligations vs Effective Competition: S
 
 ##fixed price
 
-plotg <- qplot(pFixed, pEffectiveComp, data = StateList, geom=c('point', 'smooth'), method = 'loess', ylab = "Effective Competition", xlab = "Fixed Price Contract Obligations")
+plotg <- qplot(pPriceFixed, pEffComp, data = StateList, geom=c('point', 'smooth'), method = 'loess', ylab = "Effective Competition", xlab = "Fixed Price Contract Obligations")
 plotg + labs(title = "Fixed Price Contract Obligations vs Effective Competition: State level")
 
 ##psc Engines
@@ -1840,10 +1840,10 @@ ggplot(StateList, aes(x=pIDV)) +
 
 #pMnS
 
-MnSmeana <- mean(StateList$pPaltMnS)
+MnSmeana <- mean(StateList$pPlatMnS)
 
-ggplot(StateList, aes(x=pPaltMnS)) +
-  geom_histogram(aes(pPaltMnS="density"),
+ggplot(StateList, aes(x=pPlatMnS)) +
+  geom_histogram(aes(pPlatMnS="density"),
                  binwidth = .005,
                  color = "red", fill = "light blue", main = "HISTOGRAM") +
   geom_density(alpha = .2, fill = "#FF6666") +

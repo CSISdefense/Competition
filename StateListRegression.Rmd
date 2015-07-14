@@ -354,6 +354,19 @@ screenreg(list(model1, model4, model7, model12, model13, model19, model21, model
 ```
 **Observations:** PSC other does not affect model and is not significant. will not be included in the model. 
 
+**without FRSnC**
+
+``` {r echo=TRUE}
+
+model24 <- lm(pEffComp ~ pPSRServices+ pPlatAir+ pIDV+ pPriceFixed+ I(pPriceFixed^2)+ pPscEngines+ pPscPAMS+ pPscOther, data = StateList)
+summary(model24)
+
+screenreg(list(model1, model4, model7, model12, model13, model19, model21, model22, model23, model24))
+
+
+
+```
+
 **Automated Variable Selection: AIC**
 
 ``` {r echo=TRUE}
@@ -363,10 +376,10 @@ step(zfit)
 
 AIC(zfit)
 
-afit <- lm(pEffComp ~ pPSRServices + pPlatEnC + pIDV + pPlatLand +pPlatVessel + pPscAir + pPscMnS + pPscEngines + pPscFRSnC + pPscPAMS, data = StateList)
-summary(afit)
+afit <- lm(pEffComp ~ pPSRServices + pPlatEnC + pIDV + pPlatLand + pPlatVessel + pPscAir + pPscMnS + pPscEngines + pPscFRSnC + pPscPAMS, data = StateList)
 
-screenreg(list(afit, model23))
+
+screenreg(list(afit, model24))
 
 ggplotRegression <- function (fit) {
 
@@ -388,3 +401,9 @@ ggplotRegression(afit)
 
 ```
 
+
+``` {r echo= TRUE}
+
+
+
+```
