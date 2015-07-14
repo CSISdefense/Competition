@@ -363,6 +363,7 @@ summary(model24)
 
 screenreg(list(model1, model4, model7, model12, model13, model19, model21, model22, model23, model24))
 
+screenreg(list(model24))
 
 
 ```
