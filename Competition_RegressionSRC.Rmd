@@ -1517,7 +1517,7 @@ ploti + labs(title = "PSC Land Vehicle Contracts vs Effective Competition: State
 
 ##Fixed Price
 
-qplot(pFixed, pEffectiveComp, data = StateList, geom=c('point', 'smooth'), method = 'loess', ylab = "Effective Competition", xxlab = "Fixed Price Contracts")
+qplot(pPriceFixed, pEffComp, data = StateList, geom=c('point', 'smooth'), method = 'loess', ylab = "Effective Competition", xxlab = "Fixed Price Contracts")
 
 #WnA
 
@@ -1558,7 +1558,7 @@ plotl + labs(title = "Ships PSC Contract Obligations vs Effective Competition: S
 
 ##fixed price
 
-plotg <- qplot(pFixed, pEffectiveComp, data = StateList, geom=c('point', 'smooth'), method = 'loess', ylab = "Effective Competition", xlab = "Fixed Price Contract Obligations")
+plotg <- qplot(pPriceFixed, pEffComp, data = StateList, geom=c('point', 'smooth'), method = 'loess', ylab = "Effective Competition", xlab = "Fixed Price Contract Obligations")
 plotg + labs(title = "Fixed Price Contract Obligations vs Effective Competition: State level")
 
 ##psc Engines
