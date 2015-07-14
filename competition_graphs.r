@@ -24,16 +24,16 @@ options(warn=1)
 Path<-"C:\\Users\\Greg Sanders\\SkyDrive\\Documents\\R Scripts and Data SkyDrive\\"
 # setwd("C:\\Users\\Greg Sanders\\Documents\\Development\\Competition")
 # setwd("K:\\Development\\Competition")
-# axis.text.size<-5
-# strip.text.size<-4
-# legend.text.size<-4
-axis.text.size<-8
-strip.text.size<-8
-legend.text.size<-8
 
-# table.text.size<-5.75
-title.text.size<-10
-geom.text.size<-1.75
+legend.text.size<-5
+axis.text.size<-5
+strip.text.size<-5
+legend.text.size<-5
+
+table.text.size<-5.75
+title.text.size<-6
+title.text.size<-6
+geom.text.size<-1.5
 
 
 source(paste(Path,"helper.r",sep=""))
@@ -43,12 +43,12 @@ source(paste(Path,"create_procedural_graphs.r",sep=""))
 
 
 
-# debug(create_procedural_graphs)
+# undebug(create_procedural_graphs)
 
-create_procedural_graphs("Defense Competition State","Overall")
-create_procedural_graphs("Defense Competition State","StateCode")
-create_procedural_graphs("Defense Competition MCC","Overall")
+create_procedural_graphs("Defense Competition State","Overall",LayoutName="short half page")
+# create_procedural_graphs("Defense Competition State","StateCode")
+create_procedural_graphs("Defense Competition MCC","Overall",LayoutName="short half page")
 # debug(CreateChartOrTable)
-create_procedural_graphs("Defense Competition MCC","MajorCommandCode")
+# create_procedural_graphs("Defense Competition MCC","MajorCommandCode")
 
 
