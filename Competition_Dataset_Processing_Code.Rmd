@@ -558,18 +558,19 @@ state.competition.combined$Exclude[state.competition.combined$PoPstateCode %in% 
                                                                          "BC"))]<-TRUE
 
 
-# 
-# StateFit <- lm(pEffectiveComp ~
-#                    pAir  +
-#                    pMnS +
-#                    pEnC +
-#                    pIDV+ 
-#                    pVessel+
-#                    pProduct+
-#                    pEnC:pProduct, 
-#                data=ShortStateList)
-# summary(StateFit) 
-# plot(StateFit)
+
+StateFit <- lm(pEffComp ~
+                   pPSRServices  +
+                   pPlatAir +
+                   pIDV +
+                   pPriceFixed+ 
+                   I(pPriceFixed^2)+
+                   pPscEngines+
+                   pPscPAMS+
+                 pPscOther, 
+               data=StateList)
+summary(StateFit) 
+plot(StateFit)
 
 
 write.table(state.competition.combined
@@ -581,8 +582,10 @@ write.table(state.competition.combined
 )
 
 
-# state.competition.combined<-cbind(state.competition.combined,predict(StateFit,state.competition.combined,interval="prediction",level=0.95))
-# subset(state.competition.combined,lwr>pEffectiveComp|upr<pEffectiveComp)$PoPstateCode
+# state.competition.combined<-cbind(state.competition.combined,
+#                               predict(StateFit,state.competition.combined,interval="prediction",level=0.90)
+#                               )
+# state.outside.interval<-subset(state.competition.combined,lwr>pEffectiveComp|upr<pEffectiveComp)$PoPstateCode
 # 
 # 
 # 
