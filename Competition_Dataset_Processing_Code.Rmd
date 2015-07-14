@@ -11,6 +11,7 @@ When you click the **Knit** button a document will be generated that includes bo
 
 ```{r}
 require(ggplot2)
+require(Hmisc)
 Path<-"K:\\2007-01 PROFESSIONAL SERVICES\\R scripts and data\\"
 source(paste(Path,"helper.r",sep=""))
 source(paste(Path,"lookups.r",sep=""))
@@ -25,7 +26,7 @@ options(warn=1)
 You can also embed plots, for example:
 
 ```{r OfficeProcessing, echo=FALSE}
-undebug(statistics.pivot)
+debug(statistics.pivot)
 office.competition.combined<-statistics.pivot(
     VAR.Path=Path,
     competition.file.name="data\\defense_Office_SP_DefenseCompetitionHistoryBucketPlatformSubCustomerOffice.csv",
@@ -555,7 +556,7 @@ state.competition.combined$Exclude[state.competition.combined$PoPstateCode %in% 
                                                                          "ON",
                                                                          "QC",
                                                                          "   ",
-                                                                         "BC"))]<-TRUE
+                                                                         "BC")]<-TRUE
 
 
 # 
@@ -626,7 +627,7 @@ write.table(state.competition.combined
 #             , sep=","
 #             , row.names=FALSE
 #             , append=FALSE
-)
+# )
 
 
 ``` 
