@@ -80,3 +80,87 @@ screenreg(list(fitUp, fitLow))
 ```
 
 centering pPSRServices to 1 sd from the mean up and down yields different coefficients and intercepts for pPlatAir so there is an interaction there. 
+
+-------------------------------------------------------------------------------------
+
+##MCClist: 
+
+###pPlatAir and pPSRServices: 
+
+make interaction term *xz*
+``` {r echo = TRUE}
+
+xz <- (MCClist$pPlatAir) * (MCClist$pPSRServices)
+
+```
+
+run regression of effectivecomp = services + enc + xz
+
+``` {r echo = TRUE}
+
+fit1 <- lm(pEffComp ~ pPSRServices+ pPlatAir+ xz, data = MCClist)
+summary(fit1)
+
+fit2 <- lm(pEffComp ~ pPSRServices+ pPlatAir, data = MCClist)
+summary(fit2)
+```
+
+recentering
+
+``` {r echo=TRUE}
+
+zSD <- sd(StateList$pPSRServices)
+
+zMax <- (mean(StateList$pPSRServices) + zSD)
+zMin <- (mean(StateList$pPSRServices) - zSD)
+
+StateList$pPSRServicesUpper <- StateList$pPSRServices-zMax
+
+StateList$pPSRServicesLower <- StateList$pPSRServices-zMin
+
+```
+
+new interaction terms with recentered variables:
+
+``` {r echo=TRUE}
+
+xzUp <- (StateList$pPlatAir) * (StateList$pPSRServicesUpper)
+
+xzLow <- (StateList$pPlatAir) * (StateList$pPSRServicesLower)
+
+```
+
+Regressions with centered interaction terms
+
+``` {r echo = TRUE}
+
+fitUp <- lm(pEffComp ~ pPlatAir+ pPSRServicesUpper+ xzUp, data = StateList)
+summary(fitUp)
+
+fitLow <- lm(pEffComp ~ pPlatAir+ pPSRServicesLower+ xzLow, data = StateList)
+summary(fitLow)
+
+screenreg(list(fitUp, fitLow))
+
+
+```
+
+centering pPSRServices to 1 sd from the mean up and down yields different coefficients and intercepts for pPlatAir so there is an interaction there. 
+
+###pPlatWnA and pPSRServices:
+make interaction term *xz*
+``` {r echo = TRUE}
+
+xz <- (MCClist$pPlatWnA) * (MCClist$pPSRServices)
+
+```
+
+``` {r echo = TRUE}
+
+fit1 <- lm(pEffComp ~ pPSRServices+ pPlatWnA+ xz, data = MCClist)
+summary(fit1)
+
+fit2 <- lm(pEffComp ~ pPSRServices+ pPlatAir, data = MCClist)
+summary(fit2)
+```
+

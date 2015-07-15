@@ -86,6 +86,8 @@ rcorr(as.matrix(subset(MCClist, select=c(pPSRServices, pIDV, pVehSAC))))
 
 rcorr(as.matrix(subset(MCClist, select=c(pPSRServices, pPscFRSnC, pPscPAMS))))
 
+rcorr(as.matrix(subset(MCClist, select=c(pIDV, pVehSAC))))
+
 ```
 
 **Regressions**
@@ -99,6 +101,10 @@ summary(modela)
 
 screenreg(list(modela))
 
+modelaa <- lm(pEffComp ~ pPSRServices+ I(pPSRServices^2), data = MCClist)
+summary(modelaa)
+
+screenreg(list(modela, modelaa))
 ```
 **Observations** pPSRServices is not statistically significant and only influences the model by 1% (r^2 = .01) thus, it will not be included in the model. 
 
@@ -118,210 +124,206 @@ weapons and Ammunition Platform:
 
 ``` {r echo=TRUE}
 
-modelc <- lm(pEffComp ~  pPlatWnA, data = MCClist)
+modelc <- lm(pEffComp ~ pPSRServices+ I(pPSRServices^2)+ pPlatWnA, data = MCClist)
 summary(modelc)
 
-screenreg(list(modelc))
+screenreg(list(modelaa,modelc))
 
 ```
-**obersvations** pPlatWnA is statistically significant, r^2=.24, it will be included in the model for now but it's scatterplot does not look like it would have such an effect... 
+**obersvations** pPlatWnA is statistically significant, adjusted r^2=.34, it will be included in the model for now but it's scatterplot does not look like it would have such an effect... 
 
 **Electronics and Communication platform:**
 
 ``` {r echo=TRUE}
 
-modeld <- lm(pEffComp ~ pPlatWnA+ pPlatEnC, data = MCClist)
+modeld <- lm(pEffComp ~ pPSRServices+ I(pPSRServices^2)+ pPlatWnA+ pPlatEnC, data = MCClist)
 summary(modeld)
 
-screenreg(list(modelc, modeld))
+screenreg(list(modelaa, modelc, modeld))
 
 ```
-**Observations** EnC is significant at the 90th percent level, it increases adusted r^2 by .03 and increases pPlat by .11. It will be included in the model, it's scatterplot is okay in that it's not too affected by outliers. 
+**Observations** EnC is not significant, deos not affect anything meaningfully will not be included. 
 
 **IDV platform:**
 
 ``` {r echo=TRUE}
 
-modele <- lm(pEffComp ~ pPlatWnA+ pPlatEnC+ pIDV, data = MCClist)
+modele <- lm(pEffComp ~ pPSRServices+ I(pPSRServices^2)+ pPlatWnA+ pIDV, data = MCClist)
 summary(modele)
 
-screenreg(list(modelc, modeld, modele))
+screenreg(list(modelaa, modelc, modele))
 
 
 ```
-**Observations:** IDV is statistically significant at the 95% level, it increases significants of EnC and decreases the coefficient of WnA by 1.42. It increased adjusted r^2 by .07. Will be included in the model.
+**Observations:** IDV is statistically significant at the 95% level. It increased adjusted r^2 by .07. Will be included in the model.
 
-***STOPPED***
+
 
 **Land Vehicles platform**
 ``` {r echo=TRUE}
 
-model6 <- lm(pEffComp ~ pPSRServices+ pIDV+ pPlatLand, data = StateList)
-summary(model6)
+modelf <- lm(pEffComp ~ pPSRServices+ I(pPSRServices^2)+ pPlatWnA+ pIDV+ pPlatLand, data = MCClist)
+summary(modelf)
 
-screenreg(list(model1, model4, model6))
+screenreg(list(modelaa, modelc, modele, modelf))
 
 ```
-**Observations** pPlatLand does not affect the model in an meaningful way. it increases SErvices by .01, doesn't change r^2 and is not significant itself.
+**Observations** pPlatLand's scatterplot does not give any indication that there would be a statistically significant relationship, there are a few outliers that bring the relationship further than 10% contracts obligated and it's impact in the model is not very significant, and it's p value = .0933, thus it will not be included in the model. 
 
-**Aircraft and Drones platform**
+**Aircraft and Drones platform** 
 
 ``` {r echo=TRUE}
 
-model7 <- lm(pEffComp ~ pPSRServices+ pIDV+ pPlatAir, data = StateList)
-summary(model7)
+modelg <- lm(pEffComp ~ pPSRServices+ I(pPSRServices^2)+ pPlatWnA+ pIDV+ pPlatAir, data = MCClist)
+summary(modelg)
 
-screenreg(list(model1, model4, model7))
+screenreg(list(modelaa, modelc, modele, modelg))
 
 ```
-**Observations:** air increases significnace, it is signiciant, decreases services by .1 and increases r^ by .06. will be included. 
+**Observations:** pPlatAir is statistically significant at the 99% level,  increases adjusted r^2 by .08. Will be included in the model. 
 
 **Missiles and Space Platform**
 
 ``` {r echo=TRUE}
 
-model8 <- lm(pEffComp ~ pPSRServices+ pIDV+ pPlatAir+ pPaltMnS, data = StateList)
-summary(model8)
+modelh <- lm(pEffComp ~ pPSRServices+ I(pPSRServices^2)+ pPlatWnA+ pIDV+ pPlatAir+ pPaltMnS, data = MCClist)
+summary(modelh)
 
-screenreg(list(model1, model4, model7, model8))
+screenreg(list(modelaa, modelc, modele, modelg, modelh))
 
 
 ```
-**Observations:** Missiles and Space platform is not statisticaly significant, does not change other cofeficients and does not affect r^2, MnS will not be included
+**Observations:** Missiles and Space platform is not statisticaly significant, does not change other cofeficients and does not affect r^2 (except decreases by .01), MnS will not be included
 
 **Ships and Submarines Platform**
 
 ``` {r echo=TRUE}
 
-model9 <- lm(pEffComp ~ pPSRServices+ pIDV+ pPlatAir+ pPlatVessel, data = StateList)
-summary(model9)
+modeli <- lm(pEffComp ~ pPSRServices+ I(pPSRServices^2)+ pPlatWnA+ pIDV+ pPlatAir+ pPlatVessel, data = MCClist)
+summary(modeli)
 
-screenreg(list(model1, model4, model7, model9))
+screenreg(list(modelaa, modelc, modele, modelg, modeli))
 
 ```
-**Observations** Ships and Submarines Platform does not impact the model nad is not statistically significant and will not be included 
+**Observations** Ships is not statistically significant, it do es not change r^2, and it doesn't really affect the other variables in the model. It will not be included. 
 
 **Other Platforms**
 
 ``` {r echo=TRUE}
 
-model10 <- lm(pEffComp ~ pPSRServices+ pIDV+ pPlatAir+ pPlatOther, data = StateList)
-summary(model10)
+modelj <- lm(pEffComp ~ pPSRServices+ I(pPSRServices^2)+ pPlatWnA+ pIDV+ pPlatAir+ pPlatOther, data = MCClist)
+summary(modelj)
 
-screenreg(list(model1, model4, model7, model10))
+screenreg(list(modelaa, modelc, modele, modelg, modelj))
 
 ```
-**Observations:** Other platform does is not significant, only increases r^1 by .01, (not adjusted r^2 at all) and increases Services by .02. Will not be included in the model. 
+**Observations:** Other platform does is not significant, doesn't affect r^2 and increases doesn't affect other coefficients in the model by very much and Will not be included in the model. 
 
-**Research and Development**
+**Research and Development** 
 
 ``` {r echo=TRUE}
-model11 <- lm(pEffComp ~ pPSRServices+ pIDV+ pPlatAir+ pRnD, data = StateList)
-summary(model11)
+modelk <- lm(pEffComp ~ pPSRServices+ I(pPSRServices^2)+ pPlatWnA+ pIDV+ pPlatAir+ pRnD, data = MCClist)
+summary(modelk)
 
-screenreg(list(model1, model4, model7, model11))
+screenreg(list(modelaa, modelc, modele, modelg, modelk))
 
 ```
-**Observations** RnD is not statistically significant, does not change r^2 or adjusted and only increases services by .01. Will not be included in the model.
+**Observations** RnD is not statistically significant, does not change r^2 or adjusted and doesn't affect other variables in the model, RnD will not be included 
+
 
 **Fixed Price Contracts**
 
 ``` {r echo=TRUE}
 
-model12 <- lm(pEffComp ~ pPSRServices+ pIDV+ pPlatAir+ pPriceFixed, data = StateList)
-summary(model12)
+modell <- lm(pEffComp ~ pPSRServices+ I(pPSRServices^2)+ pPlatWnA+ pIDV+ pPlatAir+ pPriceFixed, data = MCClist)
+summary(modell)
 
-screenreg(list(model1, model4, model7, model12))
+screenreg(list(modelaa, modelc, modele, modelg, modell))
 
-model13 <- lm(pEffComp ~ pPSRServices+ pIDV+ pPlatAir+ pPriceFixed+ I(pPriceFixed^2), data = StateList)
-summary(model13)
-
-screenreg(list(model1, model4, model7, model12, model13))
 ```
-**Observations** Fixed price does not impact the model very significantly, it decreases Services by .02, it increases r^2 by .02, adjusted r^2 by .01 and it is not statistically significant. The plot of Fixed price vs. Effective competition is parabolic and when fixed price is squared, the model increases r^2 by .03, increases servivces by .01 and the squared fixed price is statistically significant. It will be included in the model. 
+**Observations** Fixed price is not statistically significant, does not affect adjusted r^2, it will not  be included in the model
 
 **Indefinite Delivery Vehicle Multi-award contracts**
 
 ``` {r echo=TRUE}
 
-model14 <- lm(pEffComp ~ pPSRServices+ pIDV+ pPlatAir+ pPriceFixed+ I(pPriceFixed^2)+ pVehMAC, data = StateList)
-summary(model14)
+modelm <- lm(pEffComp ~ pPSRServices+ I(pPSRServices^2)+ pPlatWnA+ pIDV+ pPlatAir+ pVehMAC, data = MCClist)
+summary(modelm)
 
-screenreg(list(model1, model4, model7, model12, model13, model14))
+screenreg(list(modelaa, modelc, modele, modelg, modelm))
 
 ```
-**Observations** IDV MAC is not statistically significant, it does not change r^2, it decreases services by .02 but will not  be continued in the model. 
+**Observations** IDV MAC is not statistically significant, it does not change r^2, it does not affect the other  veriables in the model in a meaningful way, . It will not be included in the model. 
 
-**IDV single-award contracts**
+**IDV single-award contracts** 
 
 ``` {r echo=TRUE}
 
-model15 <- lm(pEffComp ~ pPSRServices+ pPlatAir+ pIDV+ pPriceFixed+ I(pPriceFixed^2)+ pVehSAC, data = StateList)
-summary(model15)
+modeln <- lm(pEffComp ~ pPSRServices+ I(pPSRServices^2)+ pPlatWnA+ pIDV+ pPlatAir+ pVehSAC, data = MCClist)
+summary(modeln)
 
-screenreg(list(model1, model4, model7, model12, model13, model15))
-
+screenreg(list(modelaa, modelc, modele, modelg, modeln))
 
 ```
-**Observations** IDV SAC decreases the coefficient on Services by .04, the one on Fixed price by .06 and increases r^2 by .01. Itself is not statistically significant (p value = .20). will not be included in the model. 
+**Observations** IDV SAC is statistically significant (90%), increases adjusted r^2 by .03 and  will be included in the model. 
 
 
 **PSC Air**
 
 ``` {r echo=TRUE}
 
-model16 <- lm(pEffComp ~ pPSRServices+ pPlatAir+ pIDV+ pPriceFixed+ I(pPriceFixed^2)+ pPscAir, data = StateList)
-summary(model16)
+modelo <- lm(pEffComp ~ pPSRServices+ I(pPSRServices^2)+ pPlatWnA+ pIDV+ pPlatAir+ pVehSAC+ pPscAir, data = MCClist)
+summary(modelo)
 
-screenreg(list(model1, model4, model7, model12, model13, model16))
+screenreg(list(modelaa, modelc, modele, modelg, modeln, modelo))
 
 ```
-**Observations**PSC air is not statistically significant and it does not affect the other coefficients of the model. It increases r^2 by .01 but not adjusted r^2. it will not be included in the model. 
+**Observations**PSC air is not statistically significant and it does not affect the other coefficients of the model by very much. It does not change adjusted r^2. it will not be included in the model. 
 
 **PSC land**
 
 ``` {r echo=TRUE}
 
-model17 <- lm(pEffComp ~ pPSRServices+ pPlatAir+ pIDV+ pPriceFixed+ I(pPriceFixed^2)+ pPscLand, data = StateList)
-summary(model17)
+modelp <- lm(pEffComp ~ pPSRServices+ I(pPSRServices^2)+ pPlatWnA+ pIDV+ pPlatAir+ pVehSAC+ pPscLand, data = MCClist)
+summary(modelp)
 
-screenreg(list(model1, model4, model7, model12, model13, model17))
+screenreg(list(modelaa, modelc, modele, modelg, modeln, modelp))
 
 ```
-**Observations** PSC land is not statistically significant, it increases r^2 by .02 nad adjusted r^2 by .01 and increases services by .06. It will not be included in the model.
+**Observations** PSC land is not statistically significant, It decreases adjusted r^2 by .02, and due to its scatterplot, it will not be included in the model. The scatterplot has no indication of a statistically significant realionship. 
 
 **PSC missiles and space**
 
 ``` {r echo=TRUE}
 
-model18 <- lm(pEffComp ~ pPSRServices+ pPlatAir+ pIDV+ pPriceFixed+ I(pPriceFixed^2)+ pPscMnS, data = StateList)
-summary(model18)
+modelq <- lm(pEffComp ~ pPSRServices+ I(pPSRServices^2)+ pPlatWnA+ pIDV+ pPlatAir+ pVehSAC+ pPscMnS, data = MCClist)
+summary(modelq)
 
-screenreg(list(model1, model4, model7, model12, model13, model18))
+screenreg(list(modelaa, modelc, modele, modelg, modeln, modelq))
 
 ```
-**Observations** MnS is not statistically significant, does not affect the other variables in a meaningful way and doesnt affect adjusted r^2, increases r^2 by .01. psc MnS will not be included in the model
+**Observations** MnS is not statistically significant, does not affect the other variables in a meaningful way and doesnt affect adjusted r^2, psc MnS will not be included in the model. Also it's scatter plot suggests this is all true. 
 
 **PSC Enginges and Power Plants**
 
 ``` {r echo=TRUE}
 
-model19 <- lm(pEffComp ~ pPSRServices+ pPlatAir+ pIDV+ pPriceFixed+ I(pPriceFixed^2)+ pPscEngines, data = StateList)
-summary(model19)
+modelr <- lm(pEffComp ~ pPSRServices+ I(pPSRServices^2)+ pPlatWnA+ pIDV+ pPlatAir+ pVehSAC+ pPscEngines, data = MCClist)
+summary(modelr)
 
-screenreg(list(model1, model4, model7, model12, model13, model19))
+screenreg(list(modelaa, modelc, modele, modelg, modeln, modelr))
 
 ```
-**Observations** Engines is significant at the 90% level, influences a few other variables' coefficients, increases r^2 and adjusted r^2 by .02. It will be included in the model. 
+**Observations** Engines is not statistically si gnificant nor does it change the other variables in a meaningful way and it's scatterplot suggests this. It will not be included in the model. 
 
 **Psc Ships**
 
 ``` {r echo = TRUE}
 
-model20 <- lm(pEffComp ~ pPSRServices+ pPlatAir+ pIDV+ pPriceFixed+ I(pPriceFixed^2)+ pPscEngines+ pPscShips, data = StateList)
-summary(model20)
+models <- lm(pEffComp ~ pPSRServices+ I(pPSRServices^2)+ pPlatWnA+ pIDV+ pPlatAir+ pVehSAC+ pPscShips, data = MCClist)
+summary(models)
 
-screenreg(list(model1, model4, model7, model12, model13, model19, model20))
+screenreg(list(modelaa, modelc, modele, modelg, modeln, models))
 
 ```
 **Observations** psc ships is not significant and does not affect other aspects of the model, will not be included. 
@@ -330,48 +332,82 @@ screenreg(list(model1, model4, model7, model12, model13, model19, model20))
 
 ``` {r echo = TRUE}
 
-model21 <- lm(pEffComp ~ pPSRServices+ pPlatAir+ pIDV+ pPriceFixed+ I(pPriceFixed^2)+ pPscEngines+ pPscFRSnC, data = StateList)
-summary(model21)
+modelt <- lm(pEffComp ~ pPSRServices+ I(pPSRServices^2)+ pPlatWnA+ pIDV+ pPlatAir+ pVehSAC+ pPscFRSnC, data = MCClist)
+summary(modelt)
 
-screenreg(list(model1, model4, model7, model12, model13, model19, model21))
+screenreg(list(modelaa, modelc, modele, modelg, modeln, modelt))
 
 ```
-**Observations:** although FRSnC is not statistically significant, and it doesn't affect adjusted r^2, it increases services by .09, fixedprice^2 by .1 among others. It's scatterplot also shows a visually strong and negative relationship
+**Observations:** FRSnC does not change the other aspects of the model by very much, WnA decreases by .06, EnC by .02, Air by .02 and its does not affect r^2 or adjusted r^2 by mroe than .01, it will not be included in the model. 
 
 **PAMS**
 
 ``` {r echo=TRUE}
 
-model22 <- lm(pEffComp ~ pPSRServices+ pPlatAir+ pIDV+ pPriceFixed+ I(pPriceFixed^2)+ pPscEngines+ pPscFRSnC+ pPscPAMS, data = StateList)
-summary(model22)
+modelu <- lm(pEffComp ~ pPSRServices+ I(pPSRServices^2)+ pPlatWnA+ pIDV+ pPlatAir+ pVehSAC+ pPscPAMS, data = MCClist)
+summary(modelu)
 
-screenreg(list(model1, model4, model7, model12, model13, model19, model21, model22))
+screenreg(list(modelaa, modelc, modele, modelg, modeln, modelu))
 
 ```
-**Observations** pPscPAMS is significant at the 90% level, it affects other variables and increases r^2 and adjusted by .01. it will be included in the model. 
+**Observations** pPscPAMS is not statistically significant, it doesn't affect other variables by more than .04 and doesn't affect r^2 by more than .01. It will not be included in the model. 
 
 **PsC Other**
 
 ``` {r echo=TRUE}
 
-model23 <- lm(pEffComp ~ pPSRServices+ pPlatAir+ pIDV+ pPriceFixed+ I(pPriceFixed^2)+ pPscEngines+ pPscFRSnC+ pPscPAMS+ pPscOther, data = StateList)
-summary(model23)
+modelv <- lm(pEffComp ~ pPSRServices+ I(pPSRServices^2)+ pPlatWnA+ pIDV+ pPlatAir+ pVehSAC+ pPscOther, data = MCClist)
+summary(modelv)
 
-screenreg(list(model1, model4, model7, model12, model13, model19, model21, model22, model23))
+screenreg(list(modelaa, modelc, modele, modelg, modeln, modelv))
 
 ```
 **Observations:** PSC other does not affect model and is not significant. will not be included in the model. 
 
-**without FRSnC**
+Final Model:
 
 ``` {r echo=TRUE}
 
-model24 <- lm(pEffComp ~ pPSRServices+ pPlatAir+ pIDV+ pPriceFixed+ I(pPriceFixed^2)+ pPscEngines+ pPscPAMS+ pPscOther, data = StateList)
-summary(model24)
+modelz <- lm(pEffComp ~ pPSRServices+ I(pPSRServices^2)+ pPlatWnA+ pIDV+ pPlatAir+ pVehSAC, data = MCClist)
 
-screenreg(list(model1, model4, model7, model12, model13, model19, model21, model22, model23, model24))
+summary(modelz)
 
-screenreg(list(model24))
+screenreg(list(modelz))
+
+
+```
+
+**Automated Variable Selection: AIC**
+
+``` {r echo=TRUE}
+zfit <- lm(pEffComp ~ pPSRServices+ pPlatWnA+ pPlatEnC+ pIDV+ pPlatLand+ pPlatAir+ pPaltMnS+ pPlatVessel+ pPlatOther+ pRnD+ pPriceFixed+ pVehMAC+ pVehSAC+ pPscAir+ pPscLand+ pPscMnS+ pPscEngines+ pPscShips+ pPscFRSnC+ pPscPAMS+ pPscOther, data = MCClist)
+
+step(zfit)
+
+AIC(zfit)
+
+afit <- lm(formula = pEffComp ~ pPSRServices + pPlatWnA + pPlatEnC + pPlatLand + pPaltMnS + pPlatVessel + pPlatOther + pRnD + pPriceFixed + pVehMAC + pVehSAC + pPscAir + pPscLand + pPscShips, data = MCClist)
+
+screenreg(list(afit, modelz))
+
+
+----------------------------------------------------------------
+ggplotRegression <- function (fit) {
+
+require(ggplot2)
+
+ggplot(fit$model, aes_string(x = names(fit$model)[2], y = names(fit$model)[1])) + 
+  geom_point() +
+  stat_smooth(method = "lm", col = "green") +
+  labs(title = paste("Adj R2 = ",signif(summary(fit)$adj.r.squared, 5),
+                     "Intercept =",signif(fit$coef[[1]],5 ),
+                     " Slope =",signif(fit$coef[[2]], 5),
+                     " P =",signif(summary(fit)$coef[2,4], 5)))
+}
+
+ggplotRegression(zfit)
+
+ggplotRegression(afit)
 
 
 ```

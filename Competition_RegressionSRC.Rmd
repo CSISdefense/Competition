@@ -760,8 +760,6 @@ plot23 + labs(title = "IDV Contract Obligations vs Effective Competition: MCC le
 R&D
 ``` {r echo=TRUE}
 
-
-
 plot24 <- qplot(pRnD, pEffComp, data = MCClist, geom=c('point', 'smooth'), method = 'loess', ylab = "Effective Competition", xlab = "RnD Contract Obligations")
 plot24 + labs(title = "RnD Contract Obligations vs Effective Competition: MCC level")
 

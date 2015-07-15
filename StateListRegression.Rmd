@@ -355,7 +355,7 @@ screenreg(list(model1, model4, model7, model12, model13, model19, model21, model
 **Observations:** PSC other does not affect model and is not significant. will not be included in the model. 
 
 **without FRSnC**
-
+Final model=Model 24
 ``` {r echo=TRUE}
 
 model24 <- lm(pEffComp ~ pPSRServices+ pPlatAir+ pIDV+ pPriceFixed+ I(pPriceFixed^2)+ pPscEngines+ pPscPAMS+ pPscOther, data = StateList)
