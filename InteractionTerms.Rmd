@@ -1,0 +1,82 @@
+---
+title: "Interaction Terms"
+author: "src"
+date: "July 14, 2015"
+output: html_document
+---
+
+Interactions between platform variables and Services.
+
+Platforms used in regression: 
+
+-pPlatAir
+
+**continuous by continuous interaction:** *the slope of one continuous variables on the response variables changes as the values on a second continuous change.* 
+
+reference: http://www.ats.ucla.edu/stat/stata/faq/conconb.htm
+statistical inference reference: http://journals.cambridge.org/download.php?file=%2F1778_67E90F3ADD14E223EAAB275E00CAAA8F_journals__INO_INO58_04_S0020818304040251a.pdf&cover=Y&code=b86309eed9572eef14e1b68b258da7cd 
+
+To explain an interaction of two continuous variables we will compute simple slopes i.e. the slopes of the dependent variable on the independent variable when the moderator variable is held constant at different combinations of high and low values: 1 standard deviation above the mean and one standard deviation below the mean. 
+
+###pPlatAir and pPSRServices: 
+
+make interaction term *xz*
+``` {r echo = TRUE}
+
+xz <- (StateList$pPlatAir) * (StateList$pPSRServices)
+
+
+```
+
+run regression of effectivecomp = services + enc + xz
+
+``` {r echo = TRUE}
+
+fit1 <- lm(pEffComp ~ pPSRServices+ pPlatAir+ xz, data = StateList)
+summary(fit1)
+
+fit2 <- lm(pEffComp ~ pPSRServices+ pPlatAir, data = StateList)
+summary(fit2)
+```
+
+recentering
+
+``` {r echo=TRUE}
+
+zSD <- sd(StateList$pPSRServices)
+
+zMax <- (mean(StateList$pPSRServices) + zSD)
+zMin <- (mean(StateList$pPSRServices) - zSD)
+
+StateList$pPSRServicesUpper <- StateList$pPSRServices-zMax
+
+StateList$pPSRServicesLower <- StateList$pPSRServices-zMin
+
+```
+
+new interaction terms with recentered variables:
+
+``` {r echo=TRUE}
+
+xzUp <- (StateList$pPlatAir) * (StateList$pPSRServicesUpper)
+
+xzLow <- (StateList$pPlatAir) * (StateList$pPSRServicesLower)
+
+```
+
+Regressions with centered interaction terms
+
+``` {r echo = TRUE}
+
+fitUp <- lm(pEffComp ~ pPlatAir+ pPSRServicesUpper+ xzUp, data = StateList)
+summary(fitUp)
+
+fitLow <- lm(pEffComp ~ pPlatAir+ pPSRServicesLower+ xzLow, data = StateList)
+summary(fitLow)
+
+screenreg(list(fitUp, fitLow))
+
+
+```
+
+centering pPSRServices to 1 sd from the mean up and down yields different coefficients and intercepts for pPlatAir so there is an interaction there. 

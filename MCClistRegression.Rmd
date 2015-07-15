@@ -1,5 +1,7 @@
 ---
-title: "State List Regression"
+title: "MCClist regression"
+author: "src"
+date: "July 14, 2015"
 output: html_document
 ---
 
@@ -52,42 +54,37 @@ Path<-"K:\\2007-01 PROFESSIONAL SERVICES\\R scripts and data\\"
 source(paste(Path,"lookups.r",sep=""))
 layout(matrix(c(1,2,3,4),2,2))
 
-
-StateList  <- read.csv(
-    paste("data\\defense_state_competition_combined_2000-2013.csv", sep = ""),
+MCClist  <- read.csv(
+    paste("data\\defense_mcc_competition_combined.csv", sep = ""),
     header = TRUE, sep = ",", dec = ".", strip.white = TRUE, 
     na.strings = c("NULL","NA",""),
     stringsAsFactors = TRUE
     )
-names(StateList)
 
+MCClist$TotalValue<-MCClist$TotalValue
+MCClist<-subset(MCClist,!MajorCommandID %in% c("ORG-2841",
+"ORG-2776",
+"ORG-4793",
+"ORG-2849",
+"ORG-2762",
+"ORG-4020",
+"ORG-2840",
+"ORG-2757")
+)
 
-StateList <-subset(StateList ,!PoPstateCode %in% c("VI",
-"AS",
-"MP",
-"AE",
-"PW",
-"US",
-"UK",
-"GM",
-"GB",
-"JA",
-"ON",
-"QC",
-"   ",
-"BC"))
 
 ```
+
 
 **Correlations of Variables**
 
 ``` {r echo=TRUE}
 
-rcorr(as.matrix(subset(StateList,select=c(pPSRServices,pPSRProducts, pPlatWnA, pPlatEnC, pIDV, pPlatLand, pPlatAir, pPaltMnS, pPlatVessel, pPlatOther, pRnD, pPriceFixed, pVehMAC, pVehSAC, pPscAir, pPscLand, pPscMnS, pPscEngines, pPscShips, pPscFRSnC, pPscPAMS, pPscOther))))
+rcorr(as.matrix(subset(MCClist,select=c(pPSRServices,pPSRProducts, pPlatWnA, pPlatEnC, pIDV, pPlatLand, pPlatAir, pPaltMnS, pPlatVessel, pPlatOther, pRnD, pPriceFixed, pVehMAC, pVehSAC, pPscAir, pPscLand, pPscMnS, pPscEngines, pPscShips, pPscFRSnC, pPscPAMS, pPscOther))))
 
-rcorr(as.matrix(subset(StateList, select=c(pPSRServices, pIDV, pVehSAC))))
+rcorr(as.matrix(subset(MCClist, select=c(pPSRServices, pIDV, pVehSAC))))
 
-rcorr(as.matrix(subset(StateList, select=c(pPSRServices, pPscFRSnC, pPscPAMS))))
+rcorr(as.matrix(subset(MCClist, select=c(pPSRServices, pPscFRSnC, pPscPAMS))))
 
 ```
 
@@ -97,53 +94,64 @@ Services:
 
 ``` {r echo=TRUE}
 
-model1 <- lm(pEffComp ~ pPSRServices, data = StateList)
-summary(model1)
+modela <- lm(pEffComp ~ pPSRServices, data = MCClist)
+summary(modela)
 
-screenreg(list(model1))
+screenreg(list(modela))
 
 ```
+**Observations** pPSRServices is not statistically significant and only influences the model by 1% (r^2 = .01) thus, it will not be included in the model. 
+
+Products:
+
+``` {r echo=TRUE}
+
+modelb <- lm(pEffComp ~ pPSRProducts, data = MCClist)
+summary(modelb)
+
+screenreg(list(modelb))
+
+```
+**observations** not statistically significant and r^2 = .01
 
 weapons and Ammunition Platform:
 
 ``` {r echo=TRUE}
 
-model2 <- lm(pEffComp ~ pPSRServices+ pPlatWnA, data = StateList)
-summary(model2)
+modelc <- lm(pEffComp ~  pPlatWnA, data = MCClist)
+summary(modelc)
 
-screenreg(list(model1, model2))
+screenreg(list(modelc))
 
 ```
-Observations: WnA does does not change R^2, is not significant and only decreases the coefficient on Services by .02. 
--->won't be included in the model. 
+**obersvations** pPlatWnA is statistically significant, r^2=.24, it will be included in the model for now but it's scatterplot does not look like it would have such an effect... 
 
 **Electronics and Communication platform:**
 
 ``` {r echo=TRUE}
 
-model3 <- lm(pEffComp ~ pPSRServices+ pPlatEnC, data = StateList)
-summary(model3)
+modeld <- lm(pEffComp ~ pPlatWnA+ pPlatEnC, data = MCClist)
+summary(modeld)
 
-screenreg(list(model1, model3))
+screenreg(list(modelc, modeld))
 
 ```
-**Observations** EnC  does not change adjusted r^2, increases r^2 by .01 and does not affect coefficietn on Services. Will not be included in the model. 
+**Observations** EnC is significant at the 90th percent level, it increases adusted r^2 by .03 and increases pPlat by .11. It will be included in the model, it's scatterplot is okay in that it's not too affected by outliers. 
 
 **IDV platform:**
 
 ``` {r echo=TRUE}
 
-model4 <- lm(pEffComp ~ pPSRServices+ pIDV, data = StateList)
-summary(model4)
+modele <- lm(pEffComp ~ pPlatWnA+ pPlatEnC+ pIDV, data = MCClist)
+summary(modele)
 
-screenreg(list(model1, model4))
+screenreg(list(modelc, modeld, modele))
 
-model5 <- lm(pEffComp ~ pPSRServices+ pIDV+ I(pIDV^2), data = StateList)
-summary(model5)
-screenreg(list(model1, model4, model5))
 
 ```
-**Observations:** according to the scatterplot of pIDV, it looks as though its relationship with Effective Competition would be parabolic, however, this is only caused by a few outliers, for the most part it's linear and positive and according to the results of the model, the squared IDV variable does not impact the relationship or the other variables so IDV will be kept but not squared. IDVincreases coefficient of service by .02, it increases r^2 by .01 but it's significant at the 90 percent level.
+**Observations:** IDV is statistically significant at the 95% level, it increases significants of EnC and decreases the coefficient of WnA by 1.42. It increased adjusted r^2 by .07. Will be included in the model.
+
+***STOPPED***
 
 **Land Vehicles platform**
 ``` {r echo=TRUE}
@@ -364,47 +372,6 @@ summary(model24)
 screenreg(list(model1, model4, model7, model12, model13, model19, model21, model22, model23, model24))
 
 screenreg(list(model24))
-
-
-```
-
-**Automated Variable Selection: AIC**
-
-``` {r echo=TRUE}
-zfit <- lm(pEffComp ~ pPSRServices+ pPlatWnA+ pPlatEnC+ pIDV+ pPlatLand+ pPlatAir+ pPaltMnS+ pPlatVessel+ pPlatOther+ pRnD+ pPriceFixed+ pVehMAC+ pVehSAC+ pPscAir+ pPscLand+ pPscMnS+ pPscEngines+ pPscShips+ pPscFRSnC+ pPscPAMS+ pPscOther, data = StateList)
-
-step(zfit)
-
-AIC(zfit)
-
-afit <- lm(pEffComp ~ pPSRServices + pPlatEnC + pIDV + pPlatLand + pPlatVessel + pPscAir + pPscMnS + pPscEngines + pPscFRSnC + pPscPAMS, data = StateList)
-
-
-screenreg(list(afit, model24))
-
-ggplotRegression <- function (fit) {
-
-require(ggplot2)
-
-ggplot(fit$model, aes_string(x = names(fit$model)[2], y = names(fit$model)[1])) + 
-  geom_point() +
-  stat_smooth(method = "lm", col = "green") +
-  labs(title = paste("Adj R2 = ",signif(summary(fit)$adj.r.squared, 5),
-                     "Intercept =",signif(fit$coef[[1]],5 ),
-                     " Slope =",signif(fit$coef[[2]], 5),
-                     " P =",signif(summary(fit)$coef[2,4], 5)))
-}
-
-ggplotRegression(zfit)
-
-ggplotRegression(afit)
-
-
-```
-
-
-``` {r echo= TRUE}
-
 
 
 ```
