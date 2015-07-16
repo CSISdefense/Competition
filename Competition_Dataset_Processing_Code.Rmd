@@ -409,12 +409,6 @@ write.table(mcc.competition.combined
 
 
 
-
-
-
-
-
-
 ```{r StateProcessing2000-2013, echo=FALSE}
 state.competition.combined<-statistics.pivot(
     VAR.Path=Path,

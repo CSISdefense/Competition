@@ -573,7 +573,7 @@ Observations: **another item to discuss**
 5. Model 6 decreases r^2 by .08 and decreases the significance and value of pWnA by .23.  This model adds I(pcService^2):pIDV
 
 ###final model
-``` {r}
+``` {r final model}
 jfit 1
  
 jfit1 <- lm(pEffComp ~ pPSRServices + I(pPSRServices^2)+ pPlatAir + pPlatWnA + pPlatEnC + pIDV, data=MCClist)
@@ -583,7 +583,7 @@ screenreg(list(jfit1))
 ```
 
 ###Variable Exploration with single offer competition
-``` {r echo=TRUE}
+``` {r variable exploration singlecomp echo=TRUE}
 
 ##Service
 
@@ -612,7 +612,7 @@ qplot(pIDV, pComp1Offer, data = MCClist, geom=c('point', 'smooth'), method = 'lo
 
 
 ###Variable Exploration with effective competition
-``` {r echo=TRUE}
+``` {r Variable Exploration with effective competition echo=TRUE}
 
 ##Service
 
@@ -758,7 +758,7 @@ plot23 + labs(title = "IDV Contract Obligations vs Effective Competition: MCC le
 
 
 R&D
-``` {r echo=TRUE}
+``` {r r&D graphs echo=TRUE}
 
 plot24 <- qplot(pRnD, pEffComp, data = MCClist, geom=c('point', 'smooth'), method = 'loess', ylab = "Effective Competition", xlab = "RnD Contract Obligations")
 plot24 + labs(title = "RnD Contract Obligations vs Effective Competition: MCC level")
@@ -802,7 +802,7 @@ plot24 + labs(title = "IDV Contract Obligations vs Effective Competition: State 
 
 
 ###data exploration
-``` {r echo=TRUE}
+``` {r data exploration echo=TRUE}
 
 ECmean <- mean(MCClist$pEffComp)
 
