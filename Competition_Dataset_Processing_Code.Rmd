@@ -25,7 +25,7 @@ options(warn=1)
 
 You can also embed plots, for example:
 
-```{r OfficeProcessing, echo=FALSE}
+```{r OfficeProcessing2000-2013, echo=FALSE}
 debug(statistics.pivot)
 office.competition.combined<-statistics.pivot(
     VAR.Path=Path,
@@ -204,7 +204,7 @@ write.table(subset(office.competition.combined,select=-c(TotalThreshold,AnnualTh
 ``` 
 
 
-```{r MCCprocessing, echo=FALSE}
+```{r MCCprocessing2000-2013, echo=FALSE}
 mcc.competition.combined<-statistics.pivot(
     VAR.Path=Path,
     competition.file.name="data\\defense_Office_SP_DefenseCompetitionHistoryBucketPlatformSubCustomerMajorCommand.csv",
@@ -415,7 +415,7 @@ write.table(mcc.competition.combined
 
 
 
-```{r StateProcessing, echo=FALSE}
+```{r StateProcessing2000-2013, echo=FALSE}
 state.competition.combined<-statistics.pivot(
     VAR.Path=Path,
     competition.file.name="data\\defense_location_SP_DefenseCompetitionPoPstateHistoryBucketPlatformSubCustomer.csv",
