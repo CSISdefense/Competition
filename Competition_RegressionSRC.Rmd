@@ -583,7 +583,7 @@ screenreg(list(jfit1))
 ```
 
 ###Variable Exploration with single offer competition
-``` {r variable exploration singlecomp echo=TRUE}
+``` {r variable exploration singlecomp }
 
 ##Service
 
@@ -612,7 +612,7 @@ qplot(pIDV, pComp1Offer, data = MCClist, geom=c('point', 'smooth'), method = 'lo
 
 
 ###Variable Exploration with effective competition
-``` {r Variable Exploration with effective competition echo=TRUE}
+``` {r Variable Exploration with effective competition }
 
 ##Service
 
@@ -758,7 +758,7 @@ plot23 + labs(title = "IDV Contract Obligations vs Effective Competition: MCC le
 
 
 R&D
-``` {r r&D graphs echo=TRUE}
+``` {r r&D graphs}
 
 plot24 <- qplot(pRnD, pEffComp, data = MCClist, geom=c('point', 'smooth'), method = 'loess', ylab = "Effective Competition", xlab = "RnD Contract Obligations")
 plot24 + labs(title = "RnD Contract Obligations vs Effective Competition: MCC level")
@@ -802,7 +802,7 @@ plot24 + labs(title = "IDV Contract Obligations vs Effective Competition: State 
 
 
 ###data exploration
-``` {r data exploration echo=TRUE}
+``` {r data exploration MCC}
 
 ECmean <- mean(MCClist$pEffComp)
 
@@ -822,6 +822,7 @@ ggplot(MCClist, aes(x=pEffComp)) +
   geom_vline(aes(xintercept=ECmean, color="blue"),
              linetype = "dashed", size = 1)
 
+summary(MCClist$pEffComp)
 
 #boxplot(MCClist$pEffComp, col=(c("orange", "orange")), main = "Effective Competition", xlab = "percent of contract value out of total obligation", horizontal = TRUE)
 
@@ -839,17 +840,13 @@ ggplot(MCClist, aes(x=pPSRServices)) +
                  binwidth = .02,
                  color = "red", fill = "light blue", main = "HISTOGRAM") +
   geom_density(alpha = .2, fill = "#FF6666") +
-  labs(title = "Distribution of Services Contracts: MCC level") +
+  labs(title = "Distribution of Services Contracts: MCC Level") +
   labs(x = "Services") +
   geom_vline(aes(xintercept=Servmean, color="blue"),
              linetype = "dashed", size = 1)
-
+summary(MCClist$pPSRServices)
 
 ##pAir
-
-#boxplot(MCClist$pAir, col=(c("yellow", "yellow")), main = "Platform Portfolio: Air", xlab = "percent of contract obligations spent on Air", horizontal = TRUE)
-
-#qplot(MCClist$pAir, geom = "histogram", binwidth = .03, main = "Distribution of Air", xlab = "Type of Product Procured: Air", fill = I("light blue"), col = I("red"), aplpha = .2, xlim = c(0, 1))
 
 Airmean <- mean(MCClist$pPlatAir)
 
@@ -858,12 +855,13 @@ ggplot(MCClist, aes(x=pPlatAir)) +
                  binwidth = .02,
                  color = "red", fill = "light blue", main = "HISTOGRAM") +
   geom_density(alpha = .2, fill = "#FF6666") +
-  labs(title = "Distribution of Aircraft Contracts: MCC level") +
-  labs(x = "Aircraft") +
+  labs(title = "Distribution of Aircraft and Drones Contracts Obligated: MCC Level") +
+  labs(x = "Aircraft and Drones Contracts Obligated") +
   geom_vline(aes(xintercept=Airmean, color="blue"),
              linetype = "dashed", size = 1)
+summary(MCClist$pPlatAir)
 
-#PSCAir
+#PSCAir (Aircraft Product Category Contract Obligations)
 
 pscAirmean <- mean(MCClist$pPscAir)
 
@@ -872,18 +870,15 @@ ggplot(MCClist, aes(x=pPscAir)) +
                  binwidth = .01,
                  color = "red", fill = "light blue", main = "HISTOGRAM") +
   geom_density(alpha = .2, fill = "#FF6666") +
-  labs(title = "Distribution of PSC Aircraft Contracts: MCC level") +
-  labs(x = "Aircraft") +
+  labs(title = "Distribution of Aircraft Product Category Contract Obligations: MCC Level") +
+  labs(x = "Aircraft Product Category Contract Obligations") +
   geom_vline(aes(xintercept=pscAirmean, color="blue"),
              linetype = "dashed", size = 1)
 
-
+summary(MCClist$pPscAir)
 
 ##PWnA
 
-#boxplot(MCClist$pWnA, col=(c("green", "green")), main = "Platform Portfolio: Weapons and Ammunition", xlab = "percent of contract obligations spent on Weapons and Ammunition", horizontal = TRUE)
-
-#qplot(MCClist$pWnA, geom = "histogram", binwidth = .03, main = "Distribution of Weapons and Ammunition", xlab = "Platform Portfolio: Weapons and Ammunition", fill = I("light blue"), col = I("red"), aplpha = .2, xlim = c(0, 1))
 
 WnAmean <- mean(MCClist$pPlatWnA)
 
@@ -892,8 +887,8 @@ ggplot(MCClist, aes(x=pPlatWnA)) +
                  binwidth = .005,
                  color = "red", fill = "light blue", main = "HISTOGRAM") +
   geom_density(alpha = .2, fill = "#FF6666") +
-  labs(title = "Weapons and Ammunition Contracts: MCC level") +
-  labs(x = "Weapons and Ammunition") +
+  labs(title = "Weapons and Ammunition Platform Portfolio Contracts Obligated: MCC Level") +
+  labs(x = "Weapons and Ammunition Platform Portfolio") +
   geom_vline(aes(xintercept=WnAmean, color="blue"),
              linetype = "dashed", size = 1)
 
@@ -901,9 +896,6 @@ ggplot(MCClist, aes(x=pPlatWnA)) +
 
 ##pEnC
 
-#boxplot(MCClist$pEnC, col=(c("pink", "pink")), main = "Platform Portfolio: Electronics and Communication", xlab = "percent of contract obligations spent on Electronics and Communication", horizontal = TRUE)
-
-#qplot(MCClist$pEnC, geom = "histogram", binwidth = .03, main = "Distribution of Electronics and Communication", xlab = "Platform Portfolio: Electronics and Communications", fill = I("light blue"), col = I("red"), aplpha = .2, xlim = c(0, 1))
 
 EnCmean <- mean(MCClist$pPlatEnC)
 
@@ -912,11 +904,12 @@ ggplot(MCClist, aes(x=pPlatEnC)) +
                  binwidth = .01,
                  color = "red", fill = "light blue", main = "HISTOGRAM") +
   geom_density(alpha = .2, fill = "#FF6666") +
-  labs(title = "Electronics and Communication: MCC level") +
-  labs(x = "Electronics and Communication") +
+  labs(title = "Distribution of Electronics and Communications Contracts Obligated: MCC Level") +
+  labs(x = "Electronics and Communications Contracts Obligated") +
   geom_vline(aes(xintercept=EnCmean, color="blue"),
              linetype = "dashed", size = 1)
 
+summary(MCClist$pPlatEnC)
 
 ##pIDV
 
@@ -945,10 +938,11 @@ ggplot(MCClist, aes(x=pPlatLand)) +
                  binwidth = .01,
                  color = "red", fill = "light blue", main = "HISTOGRAM") +
   geom_density(alpha = .2, fill = "#FF6666") +
-  labs(title = "Distribution of Land Contracts: MCC level") +
-  labs(x = "Land Vehicle") +
+  labs(title = "Distribution of Land Vehicles Platform Portfolio Contracts Obligated: MCC Level") +
+  labs(x = "Land Vehicle Platform Portfolio Contracts Obligated") +
   geom_vline(aes(xintercept=Landmean, color="blue"),
              linetype = "dashed", size = 1)
+summary(MCClist$pPlatLand)
 
 #pscLand
 
@@ -959,26 +953,27 @@ ggplot(MCClist, aes(x=pPscLand)) +
                  binwidth = .01,
                  color = "red", fill = "light blue", main = "HISTOGRAM") +
   geom_density(alpha = .2, fill = "#FF6666") +
-  labs(title = "Distribution of PSC Land Contracts: MCC level") +
-  labs(x = "Land Vehicle") +
+  labs(title = "Distribution of Ground Vehicles Product Category Contracts Obligated: MCC Level") +
+  labs(x = "Ground Vehicle Product Category Contracts Obligated") +
   geom_vline(aes(xintercept=pscLandmean, color="blue"),
              linetype = "dashed", size = 1)
 
-
+summary(MCClist$pPscLand)
 
 ##pMnS
 
-MnSmean <- mean(MCClist$pPlatMnS)
+MnSmean <- mean(MCClist$pPaltMnS)
 
-ggplot(MCClist, aes(x=pPlatMnS)) +
-  geom_histogram(aes(pPlatMnS="density"),
+ggplot(MCClist, aes(x=pPaltMnS)) +
+  geom_histogram(aes(pPaltMnS="density"),
                  binwidth = .02,
                  color = "red", fill = "light blue", main = "HISTOGRAM") +
   geom_density(alpha = .2, fill = "#FF6666") +
-  labs(title = "Distribution of Missiles and Space Contracts: MCC level") +
+  labs(title = "Distribution of Missiles and Space Platform Portfolio Contracts: MCC Level") +
   labs(x = "Missiles and Space") +
   geom_vline(aes(xintercept=MnSmean, color="blue"),
              linetype = "dashed", size = 1)
+summary(MCClist$pPlatMnS)
 
 ##psc MnS
 
@@ -989,11 +984,11 @@ ggplot(MCClist, aes(x=pPscMnS)) +
                  binwidth = .02,
                  color = "red", fill = "light blue", main = "HISTOGRAM") +
   geom_density(alpha = .2, fill = "#FF6666") +
-  labs(title = "Distribution of Missiles and Space Contracts PSC: MCC level") +
-  labs(x = "Missiles and Space") +
+  labs(title = "Distribution of Missiles and Space Product Category Contracts Obligated: MCC Level") +
+  labs(x = "Missiles and Space Product Category Contracts Obligated") +
   geom_vline(aes(xintercept=MnSmeanpsc, color="blue"),
              linetype = "dashed", size = 1)
-
+summary(MCClist$pPscMnS)
 
 ##Ships
 
@@ -1004,10 +999,11 @@ ggplot(MCClist, aes(x=pPlatVessel)) +
                  binwidth = .02,
                  color = "red", fill = "light blue", main = "HISTOGRAM") +
   geom_density(alpha = .2, fill = "#FF6666") +
-  labs(title = "Distribution of Ships Contracts Obligated: MCC level") +
-  labs(x = "Ships") +
+  labs(title = "Distribution of Ships and Submarines Platform Portfolio Contracts Obligated: MCC Level") +
+  labs(x = "Ships and Submarines Platform Portfolio") +
   geom_vline(aes(xintercept=Shipsmean, color="blue"),
              linetype = "dashed", size = 1)
+summary(MCClist$pPlatVessel)
 
 ##psc ships
 
@@ -1018,11 +1014,12 @@ ggplot(MCClist, aes(x=pPscShips)) +
                  binwidth = .008,
                  color = "red", fill = "light blue", main = "HISTOGRAM") +
   geom_density(alpha = .2, fill = "#FF6666") +
-  labs(title = "Distribution of Ships (PSC) Contracts Obligated: MCC level") +
-  labs(x = "Ships PSC") +
+  labs(title = "Distribution of Ships Products Category Contracts Obligated: MCC Level") +
+  labs(x = "Ships Products Category Contracts Obligated") +
   geom_vline(aes(xintercept=ShipsPscmean, color="blue"),
              linetype = "dashed", size = 1)
 
+summary(MCClist$pPscShips)
 
 ##pscEngines
 
@@ -1033,12 +1030,12 @@ ggplot(MCClist, aes(x=pPscEngines)) +
                  binwidth = .01,
                  color = "red", fill = "light blue", main = "HISTOGRAM") +
   geom_density(alpha = .2, fill = "#FF6666") +
-  labs(title = "Distribution of Engines and Power Plants Contracts Obligated: MCC level") +
-  labs(x = "Enginges and Power Plants") +
+  labs(title = "Distribution of Engines and Power Contracts Obligated: MCC level") +
+  labs(x = "Enginges and Power Plants Contracts Obligated") +
   geom_vline(aes(xintercept=Enginesmean, color="blue"),
              linetype = "dashed", size = 1)
 
-
+summary(MCClist$pPscEngines)
 
 #Fixed price
 
@@ -1053,6 +1050,8 @@ ggplot(MCClist, aes(x=pPriceFixed)) +
   labs(x = "Fixed Price Contracts") +
   geom_vline(aes(xintercept=Fixedmean, color="blue"),
              linetype = "dashed", size = 1)
+summary(MCClist$pPriceFixed)
+
 ##other
 
 
@@ -1063,11 +1062,11 @@ ggplot(MCClist, aes(x=pPscOther)) +
                  binwidth = .01,
                  color = "red", fill = "light blue", main = "HISTOGRAM") +
   geom_density(alpha = .2, fill = "#FF6666") +
-  labs(title = "Distribution of Other Contracts Obligated: MCC level") +
-  labs(x = "Other") +
+  labs(title = "Distribution of Other Products Contracts Obligated: MCC Level") +
+  labs(x = "Other Products Contracts Obligated") +
   geom_vline(aes(xintercept=Othermean, color="blue"),
              linetype = "dashed", size = 1)
-
+summary(MCClist$pPscOther)
 #-----------------------------------------------------------
 
 ##MED
@@ -1088,15 +1087,18 @@ ggplot(MCClist, aes(x=pPscMED)) +
 
 FRSnCmean <- mean(MCClist$pPscFRSnC)
 
-ggplot(StateList, aes(x=pPscFRSnC)) +
+ggplot(MCClist, aes(x=pPscFRSnC)) +
   geom_histogram(aes(pPscFRSnC="density"),
                  binwidth = .01,
                  color = "red", fill = "light blue", main = "HISTOGRAM") +
   geom_density(alpha = .2, fill = "#FF6666") +
-  labs(title = "Distribution of FRSnC (PSC) Contracts Obligated: MCC level") +
-  labs(x = "FRSnC (PSC) Contracts Obligated") +
+  labs(title = "Distribution of FRS&C Contracts Obligated: MCC Level") +
+  labs(x = "FRS&C Contracts Obligated") +
   geom_vline(aes(xintercept=FRSnCmean, color="blue"),
              linetype = "dashed", size = 1)
+
+summary(MCClist$pPscFRSnC)
+
 
 #PAMs
 
@@ -1108,10 +1110,12 @@ ggplot(MCClist, aes(x=pPscPAMS)) +
                  binwidth = .01,
                  color = "red", fill = "light blue", main = "HISTOGRAM") +
   geom_density(alpha = .2, fill = "#FF6666") +
-  labs(title = "Distribution of PAMS (PSC) Contracts Obligated: MCC level") +
-  labs(x = "PAMS (PSC) Contracts Obligated") +
+  labs(title = "Distribution of PAMS Contracts Obligated: MCC Level") +
+  labs(x = "PAMS Contracts Obligated") +
   geom_vline(aes(xintercept=FRSnCmean, color="blue"),
              linetype = "dashed", size = 1)
+
+summary(MCClist$pPscPAMS)
 
 ##ICT
 
@@ -1150,11 +1154,11 @@ ggplot(MCClist, aes(x=pVehMAC)) +
                  binwidth = .008,
                  color = "red", fill = "light blue", main = "HISTOGRAM") +
   geom_density(alpha = .2, fill = "#FF6666") +
-  labs(title = "Distribution of IDV MAC Contracts Obligated: MCC level") +
-  labs(x = "IDV MAC Contracts Obligated") +
+  labs(title = "Distribution of Multi-Award IDC Contracts Obligated: MCC Level") +
+  labs(x = "Multi-Award IDC Contracts Obligated") +
   geom_vline(aes(xintercept=vehMACsmean, color="blue"),
              linetype = "dashed", size = 1)
-
+summary(MCClist$pVehMAC)
 
 ##IDV single
 pVehSAC
@@ -1166,12 +1170,12 @@ ggplot(MCClist, aes(x=pVehSAC)) +
                  binwidth = .008,
                  color = "red", fill = "light blue", main = "HISTOGRAM") +
   geom_density(alpha = .2, fill = "#FF6666") +
-  labs(title = "Distribution of IDV SAC Contracts Obligated: MCC level") +
-  labs(x = "IDV SAC Contracts Obligated") +
+  labs(title = "Distribution of Single-Award IDC Contracts Obligated: MCC Level") +
+  labs(x = "Single-Award IDC Contracts Obligated") +
   geom_vline(aes(xintercept=vehMACsmean, color="blue"),
              linetype = "dashed", size = 1)
 
-
+summary(MCClist$pVehSAC)
 
 ##IDV vehpur
 
@@ -1197,12 +1201,12 @@ ggplot(MCClist, aes(x=pIDV)) +
                  binwidth = .008,
                  color = "red", fill = "light blue", main = "HISTOGRAM") +
   geom_density(alpha = .2, fill = "#FF6666") +
-  labs(title = "Distribution of IDV  Contracts Obligated: MCC level") +
+  labs(title = "Distribution of IDV Contracts Obligated: MCC Level") +
   labs(x = "IDV Contracts Obligated") +
   geom_vline(aes(xintercept=IDVmean, color="blue"),
              linetype = "dashed", size = 1)
 
-
+summary(MCClist$pIDV)
 
 
 
@@ -1657,17 +1661,10 @@ qplot(pFixed, pEffectiveComp, data = StateList, geom=c('point', 'smooth'), metho
 
 
 ###data exploration
-``` {r echo=TRUE}
+``` {r data exploration state list}
 
-ECmean1 <- mean(StateList$pEffectiveComp)
+ECmean1 <- mean(StateList$pEffComp)
 
-##effective competition
-#hist(StateList$pEffectiveComp, probability=T, breaks = 30, main="Distribution of Effective Competition", col = "light blue", xlim=c(0, 1), xlab="Effective Competition", ylab = "Frequency")
-#abline(v = ECmean1, col = "blue", lwd = 3)
-
-#qplot(StateList$pEffectiveComp, geom = "histogram", binwidth = .03, main = "Distribution of Effective Competition", xlab = "Effective Competition", fill = I("light blue"), col = I("red"), aplpha = .2, xlim = c(0, 1))
-
-#boxplot(StateList$pEffectiveComp, col=(c("orange", "orange")), main = "Effective Competition", xlab = "percent of contract value out of total obligation", horizontal = TRUE)
 
 ECmeanSL <- mean(StateList$pEffComp)
 
@@ -1681,12 +1678,9 @@ ggplot(StateList, aes(x=pEffComp)) +
   geom_vline(aes(xintercept=ECmeanSL, color="blue"),
              linetype = "dashed", size = 1)
 
-
+summary(StateList$pEffComp)
 ##pcService
 
-#boxplot(StateList$pcService, col=(c("light blue", "light blue")), main = "Type of Good Procured: Service", xlab = "dollars spent on services", horizontal = TRUE)
-
-#qplot(StateList$pcService, geom = "histogram", binwidth = .03, main = "Distribution of Service", xlab = "Type of Good Procured: Service", fill = I("light blue"), col = I("red"), aplpha = .2, xlim = c(0, 1))
 
 ServmeanSL <- mean(StateList$pPSRServices)
 
@@ -1695,17 +1689,13 @@ ggplot(StateList, aes(x=pPSRServices)) +
                  binwidth = .02,
                  color = "red", fill = "light blue", main = "HISTOGRAM") +
   geom_density(alpha = .2, fill = "#FF6666") +
-  labs(title = "Distribution of Services Contracts: State Level") +
-  labs(x = "Services") +
+  labs(title = "Distribution of Services Contracts Obligated: State Level") +
+  labs(x = "Services Contracts Obligated") +
   geom_vline(aes(xintercept=ServmeanSL, color="blue"),
              linetype = "dashed", size = 1)
 
-
+summary(StateList$pPSRServices)
 ##pAir
-
-#boxplot(StateList$pAir, col=(c("yellow", "yellow")), main = "Platform Portfolio: Air", xlab = "percent of contract obligations spent on Air", horizontal = TRUE)
-
-#qplot(StateList$pAir, geom = "histogram", binwidth = .03, main = "Distribution of Air", xlab = "Type of Product Procured: Air", fill = I("light blue"), col = I("red"), aplpha = .2, xlim = c(0, 1))
 
 Airmeana <- mean(StateList$pPlatAir)
 
@@ -1714,8 +1704,8 @@ ggplot(StateList, aes(x=pPlatAir)) +
                  binwidth = .01,
                  color = "red", fill = "light blue", main = "HISTOGRAM") +
   geom_density(alpha = .2, fill = "#FF6666") +
-  labs(title = "Distribution of Aircraft Contracts: State level") +
-  labs(x = "Aircraft") +
+  labs(title = "Distribution of Aircraft and Drones Contracts Obligated: State Level") +
+  labs(x = "Aircraft and Drones Contracts Obligated") +
   geom_vline(aes(xintercept=Airmeana, color="blue"),
              linetype = "dashed", size = 1)
 
@@ -1728,12 +1718,12 @@ ggplot(StateList, aes(x=pPscAir)) +
                  binwidth = .01,
                  color = "red", fill = "light blue", main = "HISTOGRAM") +
   geom_density(alpha = .2, fill = "#FF6666") +
-  labs(title = "Distribution of PSC Aircraft Contracts: State Level") +
-  labs(x = "Aircraft") +
+  labs(title = "Distribution of Aircraft Prorduct Category Contract Obligations: State Level") +
+  labs(x = "Aircraft Product Category Contract Obligations") +
   geom_vline(aes(xintercept=pscAirmean1, color="blue"),
              linetype = "dashed", size = 1)
 
-
+summary(StateList$pPscAir)
 
 ##PRnD
 
@@ -1743,9 +1733,6 @@ qplot(StateList$pRnD, geom = "histogram", binwidth = .03, main = "Distribution o
 
 ##pLand
 
-#boxplot(StateList$pLand, col=(c("pink", "pink")), main = "Platform Portfolio: Land Vehicles", xlab = "percent of contract obligations spent on Land Vehicles", horizontal = TRUE)
-
-#qplot(StateList$pLand, geom = "histogram", binwidth = .03, main = "Distribution of Land Vehicles", xlab = "Platform Portfolio: Land", fill = I("light blue"), col = I("red"), aplpha = .2, xlim = c(0, 1))
 
 LandmeanSL <- mean(StateList$pLand)
 
@@ -1768,11 +1755,11 @@ ggplot(StateList, aes(x=pPscLand)) +
                  binwidth = .01,
                  color = "red", fill = "light blue", main = "HISTOGRAM") +
   geom_density(alpha = .2, fill = "#FF6666") +
-  labs(title = "Distribution of PSC Land Contracts: State level") +
-  labs(x = "Land Vehicle") +
+  labs(title = "Distribution of Ground Vehicles Product Category Contracts Obligated: State Level") +
+  labs(x = "Ground Vehicle Product Category Contracts Obligated") +
   geom_vline(aes(xintercept=pscLandmean, color="blue"),
              linetype = "dashed", size = 1)
-
+summary(StateList$pPscLand)
 ##pPlatLand
 
 platLandmean1 <- mean(StateList$pPlatLand)
@@ -1782,8 +1769,8 @@ ggplot(StateList, aes(x=pPlatLand)) +
                  binwidth = .01,
                  color = "red", fill = "light blue", main = "HISTOGRAM") +
   geom_density(alpha = .2, fill = "#FF6666") +
-  labs(title = "Distribution of Land Contracts: State level") +
-  labs(x = "Land Vehicle") +
+  labs(title = "Distribution of Land Vehicles Platform Portfolio Contracts Obligated: State Level") +
+  labs(x = "Land Vehicles Platform Portfolio Contracts Obligated") +
   geom_vline(aes(xintercept=platLandmean1, color="blue"),
              linetype = "dashed", size = 1)
 
@@ -1803,8 +1790,8 @@ ggplot(StateList, aes(x=pPlatWnA)) +
                  binwidth = .005,
                  color = "red", fill = "light blue", main = "HISTOGRAM") +
   geom_density(alpha = .2, fill = "#FF6666") +
-  labs(title = "Weapons and Ammunition Contracts: State Level") +
-  labs(x = "Weapons and Ammunition") +
+  labs(title = "Distribution of Weapons and Ammunition Platform Portfolio Contracts: State Level") +
+  labs(x = "Weapons and Ammunition Platform Portfolio") +
   geom_vline(aes(xintercept=WnAmeanb, color="blue"),
              linetype = "dashed", size = 1)
 
@@ -1817,8 +1804,8 @@ ggplot(StateList, aes(x=pPlatEnC)) +
                  binwidth = .01,
                  color = "red", fill = "light blue", main = "HISTOGRAM") +
   geom_density(alpha = .2, fill = "#FF6666") +
-  labs(title = "Electronics&Communication: State Level") +
-  labs(x = "Electronics and Communication") +
+  labs(title = "Distribution of Electronics and Communication Contracts Obligated: State Level") +
+  labs(x = "Electronics and Communication Contracts Obligated") +
   geom_vline(aes(xintercept=EnCmeanb, color="blue"),
              linetype = "dashed", size = 1)
 
@@ -1831,10 +1818,11 @@ ggplot(StateList, aes(x=pIDV)) +
                  binwidth = .01,
                  color = "red", fill = "light blue", main = "HISTOGRAM") +
   geom_density(alpha = .2, fill = "#FF6666") +
-  labs(title = "IDV: State level") +
-  labs(x = "IDV") +
+  labs(title = "Distribution of IDV Contracts Obligated: State Level") +
+  labs(x = "IDV Contracts Obligated") +
   geom_vline(aes(xintercept=IDVmeana, color="blue"),
              linetype = "dashed", size = 1)
+summary(StateList$pIDV)
 
 #pMnS
 
@@ -1845,7 +1833,7 @@ ggplot(StateList, aes(x=pPlatMnS)) +
                  binwidth = .005,
                  color = "red", fill = "light blue", main = "HISTOGRAM") +
   geom_density(alpha = .2, fill = "#FF6666") +
-  labs(title = "Missiles and Space: State level") +
+  labs(title = "Distribution of Missiles and Space Platform Portfolio Contracts: State Level") +
   labs(x = "Missiles and Space") +
   geom_vline(aes(xintercept=MnSmeana, color="blue"),
              linetype = "dashed", size = 1)
@@ -1859,8 +1847,8 @@ ggplot(StateList, aes(x=pPscMnS)) +
                  binwidth = .005,
                  color = "red", fill = "light blue", main = "HISTOGRAM") +
   geom_density(alpha = .2, fill = "#FF6666") +
-  labs(title = "Missiles and Space PSC: State level") +
-  labs(x = "Missiles and Space") +
+  labs(title = "Distribution of Missiles and Space Product Category Contracts Obligated: State level") +
+  labs(x = "Missiles and Space Product Category Contracts Obligated") +
   geom_vline(aes(xintercept=pscMnSmeana, color="blue"),
              linetype = "dashed", size = 1)
 
@@ -1874,8 +1862,8 @@ ggplot(StateList, aes(x=pPlatVessel)) +
                  binwidth = .01,
                  color = "red", fill = "light blue", main = "HISTOGRAM") +
   geom_density(alpha = .2, fill = "#FF6666") +
-  labs(title = "Distribution of Ships Contracts Obligated: State level") +
-  labs(x = "Ships") +
+  labs(title = "Distribution of Ships and Submarines Platform Portfolio Contracts Obligated: State level") +
+  labs(x = "Ships and Submarines Platform Portfolio") +
   geom_vline(aes(xintercept=Shipsmean1, color="blue"),
              linetype = "dashed", size = 1)
 
@@ -1888,9 +1876,9 @@ ggplot(StateList, aes(x=pPscShips)) +
                  binwidth = .01,
                  color = "red", fill = "light blue", main = "HISTOGRAM") +
   geom_density(alpha = .2, fill = "#FF6666") +
-  labs(title = "Distribution of Ships PSC Contracts Obligated: State level") +
-  labs(x = "Ships") +
-  geom_vline(aes(xintercept=Shipsmean1, color="blue"),
+  labs(title = "Distribution of Ships Products Category Contracts Obligated: State Level") +
+  labs(x = "Ships Products Category Contracts Obligated") +
+  geom_vline(aes(xintercept=Shipsmeanpsc1, color="blue"),
              linetype = "dashed", size = 1)
 
 
@@ -1904,10 +1892,11 @@ ggplot(StateList, aes(x=pPscEngines)) +
                  binwidth = .005,
                  color = "red", fill = "light blue", main = "HISTOGRAM") +
   geom_density(alpha = .2, fill = "#FF6666") +
-  labs(title = "Distribution of Engines and Power Plants Contracts Obligated: MCC level") +
-  labs(x = "Enginges and Power Plants") +
+  labs(title = "Distribution of Engines and Power Plants Contract Obligations: State Level") +
+  labs(x = "Enginges and Power Plants Contracts Obligated") +
   geom_vline(aes(xintercept=Enginesmean1, color="blue"),
              linetype = "dashed", size = 1)
+summary(StateList$pPscEngines)
 
 #fixedprice
 
@@ -1918,10 +1907,11 @@ ggplot(StateList, aes(x=pPriceFixed)) +
                  binwidth = .01,
                  color = "red", fill = "light blue", main = "HISTOGRAM") +
   geom_density(alpha = .2, fill = "#FF6666") +
-  labs(title = "Distribution of Fixed Price Contracts Obligated: State level") +
+  labs(title = "Distribution of Fixed Price Contracts Obligated: State Level") +
   labs(x = "Fixed Price Contracts") +
   geom_vline(aes(xintercept=Fixedmean1, color="blue"),
              linetype = "dashed", size = 1)
+summary(StateList$pPriceFixed)
 
 ##other
 
@@ -1932,8 +1922,8 @@ ggplot(StateList, aes(x=pPscOther)) +
                  binwidth = .005,
                  color = "red", fill = "light blue", main = "HISTOGRAM") +
   geom_density(alpha = .2, fill = "#FF6666") +
-  labs(title = "Distribution of Other (PSC) Contracts Obligated: State level") +
-  labs(x = "Other (PSC) Contracts Obligated") +
+  labs(title = "Distribution of Other Products Contracts Obligated: State Level") +
+  labs(x = "Other Contracts Obligated") +
   geom_vline(aes(xintercept=Othermean1, color="blue"),
              linetype = "dashed", size = 1)
 
@@ -1962,8 +1952,8 @@ ggplot(StateList, aes(x=pPscFRSnC)) +
                  binwidth = .01,
                  color = "red", fill = "light blue", main = "HISTOGRAM") +
   geom_density(alpha = .2, fill = "#FF6666") +
-  labs(title = "Distribution of FRSnC (PSC) Contracts Obligated: State level") +
-  labs(x = "FRSnC (PSC) Contracts Obligated") +
+  labs(title = "Distribution of FRS&C Contracts Obligated: State Level") +
+  labs(x = "FRS&C Contracts Obligated") +
   geom_vline(aes(xintercept=FRSnCmean1, color="blue"),
              linetype = "dashed", size = 1)
 
@@ -1977,8 +1967,8 @@ ggplot(StateList, aes(x=pPscPAMS)) +
                  binwidth = .01,
                  color = "red", fill = "light blue", main = "HISTOGRAM") +
   geom_density(alpha = .2, fill = "#FF6666") +
-  labs(title = "Distribution of PAMS (PSC) Contracts Obligated: State level") +
-  labs(x = "PAMS (PSC) Contracts Obligated") +
+  labs(title = "Distribution of PAMS Contracts Obligated: State Level") +
+  labs(x = "PAMS Contracts Obligated") +
   geom_vline(aes(xintercept=FRSnCmean1, color="blue"),
              linetype = "dashed", size = 1)
 
@@ -2009,7 +1999,7 @@ ggplot(StateList, aes(x=pPscFuels)) +
   geom_vline(aes(xintercept=Fuelsmean1, color="blue"),
              linetype = "dashed", size = 1)
 
-##IDV
+##IDVMAC
 
 IDVMACmean1 <- mean(StateList$pVehMAC)
 
@@ -2018,10 +2008,11 @@ ggplot(StateList, aes(x=pVehMAC)) +
                  binwidth = .005,
                  color = "red", fill = "light blue", main = "HISTOGRAM") +
   geom_density(alpha = .2, fill = "#FF6666") +
-  labs(title = "Distribution of IDV MAC Contracts Obligated: State level") +
-  labs(x = "Fuels (PSC) Contracts Obligated") +
+  labs(title = "Distribution of Multi-Award IDC Contracts Obligated: State Level") +
+  labs(x = "Multi-Award IDC Contracts Obligated") +
   geom_vline(aes(xintercept=IDVMACmean1, color="blue"),
              linetype = "dashed", size = 1)
+summary(StateList$pVehMAC)
 
 ##IDV multi
 pVehMAC
@@ -2049,12 +2040,12 @@ ggplot(StateList, aes(x=pVehSAC)) +
                  binwidth = .008,
                  color = "red", fill = "light blue", main = "HISTOGRAM") +
   geom_density(alpha = .2, fill = "#FF6666") +
-  labs(title = "Distribution of IDV SAC Contracts Obligated: State level") +
-  labs(x = "IDV SAC Contracts Obligated") +
+  labs(title = "Distribution of Single-Award IDC Contracts Obligated: State Level") +
+  labs(x = "Single-Award IDC Contracts Obligated") +
   geom_vline(aes(xintercept=vehSACsmean1, color="blue"),
              linetype = "dashed", size = 1)
 
-
+summary(StateList$pVehSAC)
 
 ##IDV vehpur
 
