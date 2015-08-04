@@ -83,7 +83,7 @@ StateList <-subset(StateList ,!PoPstateCode %in% c("VI",
 
 ``` {r echo=TRUE}
 
-rcorr(as.matrix(subset(StateList,select=c(pPSRServices,pPSRProducts, pPlatWnA, pPlatEnC, pIDV, pPlatLand, pPlatAir, pPaltMnS, pPlatVessel, pPlatOther, pRnD, pPriceFixed, pVehMAC, pVehSAC, pPscAir, pPscLand, pPscMnS, pPscEngines, pPscShips, pPscFRSnC, pPscPAMS, pPscOther))))
+rcorr(as.matrix(subset(StateList,select=c(pPSRServices,pPSRProducts, pPlatWnA, pPlatEnC, pIDV, pPlatLand, pPlatAir, pPlatMnS, pPlatVessel, pPlatOther, pRnD, pPriceFixed, pVehMAC, pVehSAC, pPscAir, pPscLand, pPscMnS, pPscEngines, pPscShips, pPscFRSnC, pPscPAMS, pPscOther))))
 
 rcorr(as.matrix(subset(StateList, select=c(pPSRServices, pIDV, pVehSAC))))
 
@@ -172,7 +172,7 @@ screenreg(list(model1, model4, model7))
 
 ``` {r echo=TRUE}
 
-model8 <- lm(pEffComp ~ pPSRServices+ pIDV+ pPlatAir+ pPaltMnS, data = StateList)
+model8 <- lm(pEffComp ~ pPSRServices+ pIDV+ pPlatAir+ pPlatMnS, data = StateList)
 summary(model8)
 
 screenreg(list(model1, model4, model7, model8))
@@ -371,7 +371,7 @@ screenreg(list(model24))
 **Automated Variable Selection: AIC**
 
 ``` {r echo=TRUE}
-zfit <- lm(pEffComp ~ pPSRServices+ pPlatWnA+ pPlatEnC+ pIDV+ pPlatLand+ pPlatAir+ pPaltMnS+ pPlatVessel+ pPlatOther+ pRnD+ pPriceFixed+ pVehMAC+ pVehSAC+ pPscAir+ pPscLand+ pPscMnS+ pPscEngines+ pPscShips+ pPscFRSnC+ pPscPAMS+ pPscOther, data = StateList)
+zfit <- lm(pEffComp ~ pPSRServices+ pPlatWnA+ pPlatEnC+ pIDV+ pPlatLand+ pPlatAir+ pPlatMnS+ pPlatVessel+ pPlatOther+ pRnD+ pPriceFixed+ pVehMAC+ pVehSAC+ pPscAir+ pPscLand+ pPscMnS+ pPscEngines+ pPscShips+ pPscFRSnC+ pPscPAMS+ pPscOther, data = StateList)
 
 step(zfit)
 

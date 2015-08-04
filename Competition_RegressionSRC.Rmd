@@ -25,9 +25,9 @@ layout(matrix(c(1,2,3,4),2,2))
 ```
 
 
-```{r setup}
+```{r SetupMCCandState}
 MCClist  <- read.csv(
-    paste("data\\defense_mcc_competition_combined.csv", sep = ""),
+    paste("data\\defense_mcc_competition_combined_2000-2013.csv", sep = ""),
     header = TRUE, sep = ",", dec = ".", strip.white = TRUE, 
     na.strings = c("NULL","NA",""),
     stringsAsFactors = TRUE
@@ -44,9 +44,9 @@ MCClist<-subset(MCClist,!MajorCommandID %in% c("ORG-2841",
 "ORG-2757")
 )
 
-ggplot(data=MCClist,aes(x=pEffectiveComp))+geom_bar()
-ggplot(data=MCClist,aes(x=sqrt(pEffectiveComp)))+geom_bar()
-ggplot(data=MCClist,aes(x=log1p(pEffectiveComp)))+geom_bar()
+ggplot(data=MCClist,aes(x=pEffComp))+geom_bar()
+ggplot(data=MCClist,aes(x=sqrt(pEffComp)))+geom_bar()
+ggplot(data=MCClist,aes(x=log1p(pEffComp)))+geom_bar()
 
 
 names(MCClist)
@@ -67,93 +67,119 @@ LMsummaryLine<-function(fit,Unit=NULL){
     #http://stackoverflow.com/questions/23838937/extract-pvalue-from-glm
 }
 
+
+
+StateList  <- read.csv(
+    paste("data\\defense_state_competition_combined_2000-2013.csv", sep = ""),
+    header = TRUE, sep = ",", dec = ".", strip.white = TRUE, 
+    na.strings = c("NULL","NA",""),
+    stringsAsFactors = TRUE
+    )
+names(StateList)
+
+
+StateList <-subset(StateList ,!PoPstateCode %in% c("VI",
+"AS",
+"MP",
+"AE",
+"PW",
+"US",
+"UK",
+"GM",
+"GB",
+"JA",
+"ON",
+"QC",
+"   ",
+"BC"))
+
 ```
 
-Models with pProduct pService and pRnD
+Models with pPSRProducts pPSRServices and pRnD
 
 ```{r PSR}
-#
-# fit <- lm(y ~ x1 + x2 + x3, data=mydata)
-
-rcorr(as.matrix(subset(MCClist,select=c(pProduct,pService,pRnD))))
-
-ggplot(data=MCClist,aes(x=pAir))+geom_bar(bin=0.01)
-ggplot(data=MCClist,aes(x=sqrt(pAir)))+geom_bar(bin=0.01)
-ggplot(data=MCClist,aes(x=log1p(pAir)))+geom_bar(bin=0.01)
-
-
-
-ggplot(data=MCClist,aes(x=pService,y=pEffectiveComp))+geom_point()
-fita <- lm(pEffectiveComp ~ pService, data=MCClist)
-summary(fita)    
-MCClist$pcService<-MCClist$pService-0.5
-
-summary(MCClist$pcService)
-plot(MCClist$pcService)
-
-plot(MCClist$pcService)
-
-ggplot(data=MCClist,aes(x=pcService,y=pEffectiveComp))+geom_point()
-fitb <- lm(pEffectiveComp ~ pcService + I(pcService^2), data = MCClist)
-summary(fitb)  
-plot(fitb)
-
-
-ggplot(data=MCClist,aes(x=pProduct,y=pEffectiveComp))+geom_point()
-fitc <- lm(pEffectiveComp ~ pProduct, data=MCClist)
-summary(fitc)   
-plot(fitc)
-
-fite <- lm(pEffectiveComp ~ pcService + I(pcService^2) +pRnD, data=MCClist)
-summary(fite)
-ggplot(data=MCClist,aes(x=pRnD,y=pEffectiveComp))+geom_point()
-MCClist$pRnD[MCClist$pRnD<0]<-0
-plot(MCClist$pRnD)
-plot(fite)
-
-fitf <- lm(pEffectiveComp ~ pRnD, data=MCClist)
-plot(fitf)
-
-ggplot(data=MCClist,aes(x=log1p(pRnD),y=pEffectiveComp))+geom_point()
-fitd <- lm(pEffectiveComp ~ pcService + I(pcService^2) + pRnD, data=MCClist)
-summary(fitd)  
-plot(fitd)
-screenreg(list(fita, fitb, fitc, fite, fitd))
+# #
+# # fit <- lm(y ~ x1 + x2 + x3, data=mydata)
+# 
+# rcorr(as.matrix(subset(MCClist,select=c(pPSRProducts,pPSRServices,pRnD))))
+# 
+# ggplot(data=MCClist,aes(x=pAir))+geom_bar(bin=0.01)
+# ggplot(data=MCClist,aes(x=sqrt(pAir)))+geom_bar(bin=0.01)
+# ggplot(data=MCClist,aes(x=log1p(pAir)))+geom_bar(bin=0.01)
+# 
+# 
+# 
+# ggplot(data=MCClist,aes(x=pPSRServices,y=pEffComp))+geom_point()
+# fita <- lm(pEffComp ~ pPSRServices, data=MCClist)
+# summary(fita)    
+# MCClist$pcService<-MCClist$pPSRServices-0.5
+# 
+# summary(MCClist$pcService)
+# plot(MCClist$pcService)
+# 
+# plot(MCClist$pcService)
+# 
+# ggplot(data=MCClist,aes(x=pcService,y=pEffComp))+geom_point()
+# fitb <- lm(pEffComp ~ pcService + I(pcService^2), data = MCClist)
+# summary(fitb)  
+# plot(fitb)
+# 
+# 
+# ggplot(data=MCClist,aes(x=pPSRProducts,y=pEffComp))+geom_point()
+# fitc <- lm(pEffComp ~ pPSRProducts, data=MCClist)
+# summary(fitc)   
+# plot(fitc)
+# 
+# fite <- lm(pEffComp ~ pcService + I(pcService^2) +pRnD, data=MCClist)
+# summary(fite)
+# ggplot(data=MCClist,aes(x=pRnD,y=pEffComp))+geom_point()
+# MCClist$pRnD[MCClist$pRnD<0]<-0
+# plot(MCClist$pRnD)
+# plot(fite)
+# 
+# fitf <- lm(pEffComp ~ pRnD, data=MCClist)
+# plot(fitf)
+# 
+# ggplot(data=MCClist,aes(x=log1p(pRnD),y=pEffComp))+geom_point()
+# fitd <- lm(pEffComp ~ pcService + I(pcService^2) + pRnD, data=MCClist)
+# summary(fitd)  
+# plot(fitd)
+# screenreg(list(fita, fitb, fitc, fite, fitd))
 
 ```
 
 Observations:
 
-1. pService is not statistically significant, and explains only 1% of the variation in pEffectiveComp
-2. pcService is significant at the 5% level, explains 25% of the variation in pEffectiveComp and with a one unit increase increases pEffectiveComp by .15.
-3. The plot of pcService mildly resembles a quadratic function. pcService^2 is significant at the .001 level and with pcService explains 25% of the variation in pEffectiveComp.  It istimates that an increase in pcService will result in a 1.25 increase in pEffectiveComp
-4. pProduct is not statistically significant nor does it explain any of the variation in pEffectiveComp.  
+1. pPSRServices is not statistically significant, and explains only 1% of the variation in pEffComp
+2. pcService is significant at the 5% level, explains 25% of the variation in pEffComp and with a one unit increase increases pEffComp by .15.
+3. The plot of pcService mildly resembles a quadratic function. pcService^2 is significant at the .001 level and with pcService explains 25% of the variation in pEffComp.  It istimates that an increase in pcService will result in a 1.25 increase in pEffComp
+4. pPSRProducts is not statistically significant nor does it explain any of the variation in pEffComp.  
 5. pRnD is not statistically significant 
 6.pRnD does not resemble a squareroot relationship and as can be seen in fitd, it impacts the model significantly 
 
 7. sqrt(pRnD) is significant at the .05 level and the addition of these two variables increases r^2 from .25 to .35.  However, the standard error for sqrt(pRnD) is quite large (.32)
 
 ```{r Platform}
-
-rcorr(as.matrix(subset(MCClist,select=c(pService,pRnD,pFnC,pAir,pVessel,pLand,pWnA,pMnS,pEnC))))
-rcorr(cbind(MCClist$pFnC,MCClist$pService^2))
-
-
-ggplot(data=MCClist,aes(x=pAir,y=pEffectiveComp))+geom_point()
-ggplot(data=MCClist,aes(x=sqrt(pAir),y=pEffectiveComp))+geom_point()
-
-fita <- lm(pEffectiveComp ~ pcService, data=MCClist)
-fitb <- lm(pEffectiveComp ~ pcService + I(pcService^2), data=MCClist)
-#fitd <- lm(pEffectiveComp ~ pcService + I(pcService^2) + pRnD, data=MCClist)
-#fite <- lm(pEffectiveComp ~ pcService + I(pcService^2) + pRnD+ sqrt(pRnD), data=MCClist)
-afit <- lm(pEffectiveComp ~ pcService+I(pcService^2)+ pAir, data=MCClist)
-plot(MCClist$pAir)
-bfit <- lm(pEffectiveComp ~ pcService+I(pcService^2)+ pAir+sqrt(pAir), data=MCClist) 
-plot(afit)
-summary(bfit) 
-plot(bfit)
-plot(fita)
-screenreg(list(fita, fitb, afit, bfit))
+# 
+# rcorr(as.matrix(subset(MCClist,select=c(pPSRServices,pRnD,pFnC,pAir,pVessel,pLand,pWnA,pMnS,pEnC))))
+# rcorr(cbind(MCClist$pFnC,MCClist$pPSRServices^2))
+# 
+# 
+# ggplot(data=MCClist,aes(x=pAir,y=pEffComp))+geom_point()
+# ggplot(data=MCClist,aes(x=sqrt(pAir),y=pEffComp))+geom_point()
+# 
+# fita <- lm(pEffComp ~ pcService, data=MCClist)
+# fitb <- lm(pEffComp ~ pcService + I(pcService^2), data=MCClist)
+# #fitd <- lm(pEffComp ~ pcService + I(pcService^2) + pRnD, data=MCClist)
+# #fite <- lm(pEffComp ~ pcService + I(pcService^2) + pRnD+ sqrt(pRnD), data=MCClist)
+# afit <- lm(pEffComp ~ pcService+I(pcService^2)+ pAir, data=MCClist)
+# plot(MCClist$pAir)
+# bfit <- lm(pEffComp ~ pcService+I(pcService^2)+ pAir+sqrt(pAir), data=MCClist) 
+# plot(afit)
+# summary(bfit) 
+# plot(bfit)
+# plot(fita)
+# screenreg(list(fita, fitb, afit, bfit))
 
 ```
 
@@ -163,44 +189,44 @@ Obersvations
 2.the plot of pAir does not resemble a squareroot function.
 3. sqrt(pAir) increases pcService^2 by .05, is not statistically significant and increases r^2 by .01.  Thus between these descriptive statistics and the plot of pAir, it should not be included further in the model. 
 
-```{r pVessel with pProduct}
-ggplot(data=MCClist,aes(x=pVessel,y=pEffectiveComp))+geom_point()
-ggplot(data=MCClist,aes(x=sqrt(pVessel),y=pEffectiveComp))+geom_point()
-
-ggplot(data=MCClist,aes(x=pVessel))+geom_bar(bin=0.01)
-ggplot(data=MCClist,aes(x=sqrt(pVessel)))+geom_bar(bin=0.01)
-ggplot(data=MCClist,aes(x=log1p(pVessel)))+geom_bar(bin=0.01)
-
-fitc <- lm(pEffectiveComp ~ pProduct, data=MCClist)
-fit5 <- lm(pEffectiveComp ~ pProduct+ pAir, data=MCClist)
-fit6 <- lm(pEffectiveComp ~ pProduct+ pAir, data=MCClist)
-#fit7 <- lm(pEffectiveComp ~ pProduct+ pRnD+ sqrt(pRnD)+ pAir, data=MCClist)
-fit1 <- lm(pEffectiveComp ~ pProduct+ pAir+ pVessel, data=MCClist)
-summary(fitc)
-summary(fit6)
-summary(fit7)
-summary(fit1) 
-screenreg(list(fitc, fit5, fit6, fit1))
+```{r pVessel with pPSRProducts}
+# ggplot(data=MCClist,aes(x=pVessel,y=pEffComp))+geom_point()
+# ggplot(data=MCClist,aes(x=sqrt(pVessel),y=pEffComp))+geom_point()
+# 
+# ggplot(data=MCClist,aes(x=pVessel))+geom_bar(bin=0.01)
+# ggplot(data=MCClist,aes(x=sqrt(pVessel)))+geom_bar(bin=0.01)
+# ggplot(data=MCClist,aes(x=log1p(pVessel)))+geom_bar(bin=0.01)
+# 
+# fitc <- lm(pEffComp ~ pPSRProducts, data=MCClist)
+# fit5 <- lm(pEffComp ~ pPSRProducts+ pAir, data=MCClist)
+# fit6 <- lm(pEffComp ~ pPSRProducts+ pAir, data=MCClist)
+# #fit7 <- lm(pEffComp ~ pPSRProducts+ pRnD+ sqrt(pRnD)+ pAir, data=MCClist)
+# fit1 <- lm(pEffComp ~ pPSRProducts+ pAir+ pVessel, data=MCClist)
+# summary(fitc)
+# summary(fit6)
+# summary(fit7)
+# summary(fit1) 
+# screenreg(list(fitc, fit5, fit6, fit1))
 ```
 
 Observations:
 
-1. pproduct is not significant in any of these models and in model 5 has p value of .7
+1. pPSRProducts is not significant in any of these models and in model 5 has p value of .7
 2. The addition of pVessel does not change any of the coefficients or statistics by any meaningful value. 
 
 
-```{r pVessel with pService}
-afit <- lm(pEffectiveComp ~ pcService+ I(pcService^2)+ pAir, data=MCClist) 
-fit2 <- lm(pEffectiveComp ~ pcService+ I(pcService^2)+ pAir+ pVessel, data=MCClist)
-plot(fit2)
-fit8 <- lm(pEffectiveComp ~ pcService+ I(pcService^2)+ pAir+ pVessel+ sqrt(pVessel), data=MCClist)
-plot(MCClist$pVessel)
-fit4 <- lm(pEffectiveComp ~ pcService+ I(pcService^2)+ pAir+ pVessel+ sqrt(pVessel), data=MCClist[rownames(MCClist)!=58,])
-summary(afit)
-summary(fit2)
-summary(fit8)
-summary(fit4)
-screenreg(list(afit, fit2, fit8, fit4))
+```{r pVessel with pPSRServices}
+# afit <- lm(pEffComp ~ pcService+ I(pcService^2)+ pAir, data=MCClist) 
+# fit2 <- lm(pEffComp ~ pcService+ I(pcService^2)+ pAir+ pVessel, data=MCClist)
+# plot(fit2)
+# fit8 <- lm(pEffComp ~ pcService+ I(pcService^2)+ pAir+ pVessel+ sqrt(pVessel), data=MCClist)
+# plot(MCClist$pVessel)
+# fit4 <- lm(pEffComp ~ pcService+ I(pcService^2)+ pAir+ pVessel+ sqrt(pVessel), data=MCClist[rownames(MCClist)!=58,])
+# summary(afit)
+# summary(fit2)
+# summary(fit8)
+# summary(fit4)
+# screenreg(list(afit, fit2, fit8, fit4))
 
 ```
 
@@ -212,24 +238,24 @@ Observations
 
 
 ```{r pLand}
-
-ggplot(data=MCClist,aes(x=pLand,y=pEffectiveComp))+geom_point()
-ggplot(data=MCClist,aes(x=sqrt(pLand),y=pEffectiveComp))+geom_point()
-ggplot(data=MCClist,aes(x=log1p(pLand),y=pEffectiveComp))+geom_point()
-ggplot(data=MCClist,aes(x=pLand,y=pEffectiveComp))+geom_point()
-
-bfit <- lm(pEffectiveComp ~ pcService+ I(pcService^2)+ pAir, data=MCClist)  
-afit1 <- lm(pEffectiveComp ~ pcService+I(pcService^2)+ pAir+ pLand, data=MCClist)
-summary(bfit)
-summary(afit1) 
-plot(afit1)
-screenreg(list(bfit, afit1))
-
-plot(MCClist$pLand)
-afit2 <- lm(pEffectiveComp ~ pcService+ I(pcService^2)+ pLand+ sqrt(pLand), data=MCClist)
-summary(afit2) 
-plot(afit2)
-screenreg(list(bfit, afit1, afit2))
+# 
+# ggplot(data=MCClist,aes(x=pLand,y=pEffComp))+geom_point()
+# ggplot(data=MCClist,aes(x=sqrt(pLand),y=pEffComp))+geom_point()
+# ggplot(data=MCClist,aes(x=log1p(pLand),y=pEffComp))+geom_point()
+# ggplot(data=MCClist,aes(x=pLand,y=pEffComp))+geom_point()
+# 
+# bfit <- lm(pEffComp ~ pcService+ I(pcService^2)+ pAir, data=MCClist)  
+# afit1 <- lm(pEffComp ~ pcService+I(pcService^2)+ pAir+ pLand, data=MCClist)
+# summary(bfit)
+# summary(afit1) 
+# plot(afit1)
+# screenreg(list(bfit, afit1))
+# 
+# plot(MCClist$pLand)
+# afit2 <- lm(pEffComp ~ pcService+ I(pcService^2)+ pLand+ sqrt(pLand), data=MCClist)
+# summary(afit2) 
+# plot(afit2)
+# screenreg(list(bfit, afit1, afit2))
 
 ```
 
@@ -240,32 +266,32 @@ Observations
 
 
 ```{r MnS}
-
-ggplot(data=MCClist,aes(x=pMnS,y=pEffectiveComp))+geom_point()
-ggplot(data=MCClist,aes(x=sqrt(pMnS),y=pEffectiveComp))+geom_point()
-
-bfit <- lm(pEffectiveComp ~ pcService+I(pcService^2)+ pAir, data=MCClist)  
-
-bfit1 <- lm(pEffectiveComp ~ pcService+I(pcService^2)+ pAir+ pMnS, data=MCClist)
-summary(bfit1) 
-
-bfit2 <- lm(pEffectiveComp ~ pcService+I(pcService^2)+ pAir+ pMnS+ pVessel, data=MCClist)
-summary(bfit)
-summary(bfit1)
-plot(bfit2)
-screenreg(list(bfit, bfit1, bfit2))   
-
-bfit3 <- lm(pEffectiveComp ~ pcService+ I(pcService^2)+ pAir, data=subset(MCClist,                                                                                    rownames(MCClist)!=58))
-summary(bfit3) 
-plot(bfit3)
-
-bfit4 <- lm(pEffectiveComp ~ pcService+ I(pcService^2)+ pAir + pMnS, data=subset(MCClist,                                                                                    rownames(MCClist)!=58))
-summary(bfit4)
-summary(bfit1)
-bfit5 <- lm(pEffectiveComp ~ pcService+ I(pcService^2)+ pAir+ pMnS+ pVessel, data=subset(MCClist,                                                                                    rownames(MCClist)!=58))
-summary(bfit5)
-summary(bfit4)
-screenreg(list(bfit, bfit1, bfit2, bfit3, bfit4, bfit5))
+# 
+# ggplot(data=MCClist,aes(x=pMnS,y=pEffComp))+geom_point()
+# ggplot(data=MCClist,aes(x=sqrt(pMnS),y=pEffComp))+geom_point()
+# 
+# bfit <- lm(pEffComp ~ pcService+I(pcService^2)+ pAir, data=MCClist)  
+# 
+# bfit1 <- lm(pEffComp ~ pcService+I(pcService^2)+ pAir+ pMnS, data=MCClist)
+# summary(bfit1) 
+# 
+# bfit2 <- lm(pEffComp ~ pcService+I(pcService^2)+ pAir+ pMnS+ pVessel, data=MCClist)
+# summary(bfit)
+# summary(bfit1)
+# plot(bfit2)
+# screenreg(list(bfit, bfit1, bfit2))   
+# 
+# bfit3 <- lm(pEffComp ~ pcService+ I(pcService^2)+ pAir, data=subset(MCClist,                                                                                    rownames(MCClist)!=58))
+# summary(bfit3) 
+# plot(bfit3)
+# 
+# bfit4 <- lm(pEffComp ~ pcService+ I(pcService^2)+ pAir + pMnS, data=subset(MCClist,                                                                                    rownames(MCClist)!=58))
+# summary(bfit4)
+# summary(bfit1)
+# bfit5 <- lm(pEffComp ~ pcService+ I(pcService^2)+ pAir+ pMnS+ pVessel, data=subset(MCClist,                                                                                    rownames(MCClist)!=58))
+# summary(bfit5)
+# summary(bfit4)
+# screenreg(list(bfit, bfit1, bfit2, bfit3, bfit4, bfit5))
 
 ```
 
@@ -276,21 +302,21 @@ Observations
 
 
 ```{r pWnA}
-
-
-ggplot(data=MCClist,aes(x=pWnA,y=pEffectiveComp))+geom_point()
-ggplot(data=MCClist,aes(x=sqrt(pWnA),y=pEffectiveComp))+geom_point()
-cfit7 <- lm(pEffectiveComp ~ pcService+I(pcService^2)+ pAir, data=MCClist) 
-
-cfit1 <- lm(pEffectiveComp ~ pcService+I(pcService^2)+ pAir+ pMnS, data=MCClist) 
-
-cfit3 <- lm(pEffectiveComp ~ pcService+ I(pcService^2)+ pAir+ pWnA, data=MCClist)
-
-cfit2 <- lm(pEffectiveComp ~ pcService+ I(pcService^2)+ pAir + pMnS +pWnA, data=MCClist)
-summary(cfit1)
-summary(cfit3)
-summary(cfit2)
-screenreg(list(cfit7, cfit1, cfit3, cfit2))
+# 
+# 
+# ggplot(data=MCClist,aes(x=pWnA,y=pEffComp))+geom_point()
+# ggplot(data=MCClist,aes(x=sqrt(pWnA),y=pEffComp))+geom_point()
+# cfit7 <- lm(pEffComp ~ pcService+I(pcService^2)+ pAir, data=MCClist) 
+# 
+# cfit1 <- lm(pEffComp ~ pcService+I(pcService^2)+ pAir+ pMnS, data=MCClist) 
+# 
+# cfit3 <- lm(pEffComp ~ pcService+ I(pcService^2)+ pAir+ pWnA, data=MCClist)
+# 
+# cfit2 <- lm(pEffComp ~ pcService+ I(pcService^2)+ pAir + pMnS +pWnA, data=MCClist)
+# summary(cfit1)
+# summary(cfit3)
+# summary(cfit2)
+# screenreg(list(cfit7, cfit1, cfit3, cfit2))
 
 ```
 
@@ -303,24 +329,24 @@ Observations:
 
 
 ```{r ElectronicAndCommunications}
-
-ggplot(data=MCClist,aes(x=pEnC,y=pEffectiveComp))+geom_point()
-ggplot(data=MCClist,aes(x=sqrt(pEnC),y=pEffectiveComp))+geom_point()
-ggplot(data=MCClist,aes(x=log1p(pEnC),y=pEffectiveComp))+geom_point()
-
-dfit1 <- lm(pEffectiveComp ~ pcService+ I(pcService^2)+ pAir+ pMnS+ pWnA, data=MCClist)
-summary(dfit1) 
-plot(dfit1)
-
-dfit2 <- lm(pEffectiveComp ~ pcService+ I(pcService^2)+ pAir+ pMnS+ pWnA+ pEnC, data=MCClist)
-summary(dfit2) 
-plot(dfit2)
-screenreg(list(dfit1, dfit2))
-
-dfit3 <- lm(pEffectiveComp ~ pcService+ I(pcService^2)+ pAir+ pMnS+ pWnA +pEnC +pVessel, data=subset(MCClist, rownames(MCClist)!=58 ))
-summary(dfit3) 
-plot(dfit3)
-screenreg(list(dfit1, dfit2, dfit3))
+# 
+# ggplot(data=MCClist,aes(x=pEnC,y=pEffComp))+geom_point()
+# ggplot(data=MCClist,aes(x=sqrt(pEnC),y=pEffComp))+geom_point()
+# ggplot(data=MCClist,aes(x=log1p(pEnC),y=pEffComp))+geom_point()
+# 
+# dfit1 <- lm(pEffComp ~ pcService+ I(pcService^2)+ pAir+ pMnS+ pWnA, data=MCClist)
+# summary(dfit1) 
+# plot(dfit1)
+# 
+# dfit2 <- lm(pEffComp ~ pcService+ I(pcService^2)+ pAir+ pMnS+ pWnA+ pEnC, data=MCClist)
+# summary(dfit2) 
+# plot(dfit2)
+# screenreg(list(dfit1, dfit2))
+# 
+# dfit3 <- lm(pEffComp ~ pcService+ I(pcService^2)+ pAir+ pMnS+ pWnA +pEnC +pVessel, data=subset(MCClist, rownames(MCClist)!=58 ))
+# summary(dfit3) 
+# plot(dfit3)
+# screenreg(list(dfit1, dfit2, dfit3))
  
 ```
 Observations
@@ -330,30 +356,30 @@ Observations
 3. Adding pEnC decreases pcService^2 by .11. This could merit inclusion
 
 ```{r FacilityAndConstruction}
-
-ggplot(data=MCClist,aes(x=pFnC,y=pEffectiveComp))+geom_point()
-ggplot(data=MCClist,aes(x=sqrt(pFnC),y=pEffectiveComp))+geom_point()
-ggplot(data=MCClist,aes(x=log1p(pFnC),y=pEffectiveComp))+geom_point()
-
-
-efit1 <- lm(pEffectiveComp ~ pcService+ I(pcService^2)+ pAir+ pWnA+ pEnC, data=MCClist)
-summary(efit1) 
-plot(efit1)
-
-efit2 <- lm(pEffectiveComp ~ pcService+ I(pcService^2)+ pAir+ pWnA+ pWnA+ pEnC + pFnC, data=MCClist)
-summary(efit2) 
-plot(efit2)
-screenreg(list(efit1, efit2))
-
-efit3 <- lm(pEffectiveComp ~ pcService+ I(pcService^2)+ pAir+ +pWnA+ pEnC+ pFnC+ pVessel, data=MCClist)
-summary(efit3) 
-plot(efit3)
-screenreg(list(efit1, efit2, efit3))
-
-efit4 <- lm(pEffectiveComp ~ pcService+ I(pcService^2)+ pAir+ pWnA + pEnC+ pFnC+ pVessel, data=subset(MCClist, rownames(MCClist)!=58 & rownames(MCClist)!=59 ))
-summary(efit2) 
-plot(efit4)
-screenreg(list(efit1, efit2, efit3, efit4))
+# 
+# ggplot(data=MCClist,aes(x=pFnC,y=pEffComp))+geom_point()
+# ggplot(data=MCClist,aes(x=sqrt(pFnC),y=pEffComp))+geom_point()
+# ggplot(data=MCClist,aes(x=log1p(pFnC),y=pEffComp))+geom_point()
+# 
+# 
+# efit1 <- lm(pEffComp ~ pcService+ I(pcService^2)+ pAir+ pWnA+ pEnC, data=MCClist)
+# summary(efit1) 
+# plot(efit1)
+# 
+# efit2 <- lm(pEffComp ~ pcService+ I(pcService^2)+ pAir+ pWnA+ pWnA+ pEnC + pFnC, data=MCClist)
+# summary(efit2) 
+# plot(efit2)
+# screenreg(list(efit1, efit2))
+# 
+# efit3 <- lm(pEffComp ~ pcService+ I(pcService^2)+ pAir+ +pWnA+ pEnC+ pFnC+ pVessel, data=MCClist)
+# summary(efit3) 
+# plot(efit3)
+# screenreg(list(efit1, efit2, efit3))
+# 
+# efit4 <- lm(pEffComp ~ pcService+ I(pcService^2)+ pAir+ pWnA + pEnC+ pFnC+ pVessel, data=subset(MCClist, rownames(MCClist)!=58 & rownames(MCClist)!=59 ))
+# summary(efit2) 
+# plot(efit4)
+# screenreg(list(efit1, efit2, efit3, efit4))
 
 ##the addition of pFnC increases r^2 by .02, increases coefficients pcService^2 by .05, decreases the significance of sqrt(pRnD) and does not change the other variables significantly.  when vessel is added, r^2 does not change, and neither do any other coefficients to a large extent.  When the outlier is eliminated, the sign of pVessel changes to positive and increases by .51, however, it is not significant (p=.376).  thus, I do not think pFnC should continue as part of the model.  
 ```
@@ -367,20 +393,20 @@ Observations:
 
 
 ```{r IDV}
-rcorr(as.matrix(subset(MCClist,select=c(pService,pRnD,pAir,pLand,pWnA,pMnS,pEnC,pIDV,pFixed,pCostPlus,pIncentFee))))
-
-
-ggplot(data=MCClist,aes(x=pIDV,y=pEffectiveComp))+geom_point()
-
-ffit1 <- lm(pEffectiveComp ~ pcService+ I(pcService^2)+ pAir + pWnA+ pEnC, data=MCClist)
-summary(ffit1) 
-plot(ffit1)
-
-ffit2 <- lm(pEffectiveComp ~ pcService+ I(pcService^2)+ pAir + pWnA+ pEnC+ pIDV, data=MCClist)
-           
-summary(ffit2) 
-plot(ffit2)
-screenreg(list(ffit1, ffit2))  
+# rcorr(as.matrix(subset(MCClist,select=c(pPSRServices,pRnD,pAir,pLand,pWnA,pMnS,pEnC,pIDV,pFixed,pCostPlus,pIncentFee))))
+# 
+# 
+# ggplot(data=MCClist,aes(x=pIDV,y=pEffComp))+geom_point()
+# 
+# ffit1 <- lm(pEffComp ~ pcService+ I(pcService^2)+ pAir + pWnA+ pEnC, data=MCClist)
+# summary(ffit1) 
+# plot(ffit1)
+# 
+# ffit2 <- lm(pEffComp ~ pcService+ I(pcService^2)+ pAir + pWnA+ pEnC+ pIDV, data=MCClist)
+#            
+# summary(ffit2) 
+# plot(ffit2)
+# screenreg(list(ffit1, ffit2))  
 ```
 
 Observations:
@@ -389,14 +415,14 @@ Observations:
 
 
 ```{r FixedPrice}
-ggplot(data=MCClist,aes(x=pFixed,y=pEffectiveComp))+geom_point()
-
-gfit2 <- lm(pEffectiveComp ~ pcService+ I(pcService^2)+ pAir + pWnA + pEnC+ pIDV, data=MCClist)
-
-gfit1 <- lm(pEffectiveComp ~ pcService+ I(pcService^2)+ pAir+ pWnA+ pEnC+ pIDV+ pFixed, data=MCClist)
-summary(gfit1) 
-plot(gfit1)
-screenreg(list(gfit2, gfit1))
+# ggplot(data=MCClist,aes(x=pFixed,y=pEffComp))+geom_point()
+# 
+# gfit2 <- lm(pEffComp ~ pcService+ I(pcService^2)+ pAir + pWnA + pEnC+ pIDV, data=MCClist)
+# 
+# gfit1 <- lm(pEffComp ~ pcService+ I(pcService^2)+ pAir+ pWnA+ pEnC+ pIDV+ pFixed, data=MCClist)
+# summary(gfit1) 
+# plot(gfit1)
+# screenreg(list(gfit2, gfit1))
 
 ```
 
@@ -407,16 +433,16 @@ Observations:
 
 
 ```{r CostPlus}
-ggplot(data=MCClist,aes(x=pFixed,y=pEffectiveComp))+geom_point()
-
-hfit1 <- lm(pEffectiveComp ~ pcService+ I(pcService^2)+ pAir+ pWnA+ pEnC+ pIDV, data=MCClist)
-summary(hfit1) 
-plot(hfit1)
-
-hfit2 <- lm(pEffectiveComp ~ pcService+ I(pcService^2)+ pAir + pWnA+ pEnC+ pIDV+ pCostPlus, data=subset(MCClist,!rownames(MCClist) %in% c(59) ))
-summary(hfit2) 
-plot(hfit2)
-screenreg(list(hfit1, hfit2)) 
+# ggplot(data=MCClist,aes(x=pFixed,y=pEffComp))+geom_point()
+# 
+# hfit1 <- lm(pEffComp ~ pcService+ I(pcService^2)+ pAir+ pWnA+ pEnC+ pIDV, data=MCClist)
+# summary(hfit1) 
+# plot(hfit1)
+# 
+# hfit2 <- lm(pEffComp ~ pcService+ I(pcService^2)+ pAir + pWnA+ pEnC+ pIDV+ pCostPlus, data=subset(MCClist,!rownames(MCClist) %in% c(59) ))
+# summary(hfit2) 
+# plot(hfit2)
+# screenreg(list(hfit1, hfit2)) 
 ```
 
 Observations:
@@ -424,15 +450,15 @@ Observations:
 1.pCostPlus decreases r^2 by .07, is not statistically significant (p= 0.7397), increases the coefficient of pcService&2 by .05 and does not change other factors of the model significantly. Based on this information, the team decided to leave CostPlus out. 
 
 ```{r IncentiveFee}
-
-ifit1 <- lm(pEffectiveComp ~ pcService+ I(pcService^2)+ pAir + pWnA + pEnC + pIDV, data=MCClist)
-summary(ifit1) 
-plot(ifit1)
-
-ifit2 <- lm(pEffectiveComp ~ pcService+ I(pcService^2)+ pAir + pWnA + pEnC + pIDV+ pIncentFee, data=MCClist)
-summary(ifit2) 
-plot(ifit2)
-screenreg(list(ifit1, ifit2))
+# 
+# ifit1 <- lm(pEffComp ~ pcService+ I(pcService^2)+ pAir + pWnA + pEnC + pIDV, data=MCClist)
+# summary(ifit1) 
+# plot(ifit1)
+# 
+# ifit2 <- lm(pEffComp ~ pcService+ I(pcService^2)+ pAir + pWnA + pEnC + pIDV+ pIncentFee, data=MCClist)
+# summary(ifit2) 
+# plot(ifit2)
+# screenreg(list(ifit1, ifit2))
 
 
 ```
@@ -442,31 +468,31 @@ Observations:
 1. the addition of incentive fee into the model does not change the coefficients of the other variables, does not change the r^2 values nor is it significant.  Thus, it will not be further included in the model. 
 
 ```{r TotalCount}
-
-rcorr(as.matrix(subset(MCClist,select=c(pService,pRnD,pAir,pLand,pWnA,pMnS,pEnC,pIDV,TotalCount,TotalValue,avSize))))
-
-ggplot(data=MCClist,aes(x=TotalCount))+geom_bar()
-ggplot(data=MCClist,aes(x=log(TotalCount)))+geom_bar()
-ggplot(data=MCClist,aes(x=TotalCount,y=pEffectiveComp))+geom_point()
-ggplot(data=MCClist,aes(x=log(TotalCount),y=pEffectiveComp))+geom_point()
-
-jfit1 <- lm(pEffectiveComp ~ pcService+ I(pcService^2)+ pAir + pWnA + pEnC + pIDV, data=MCClist)
-summary(jfit1)
-plot(jfit1)
-
-
-ggplot(data=MCClist,aes(x=TotalCount))+geom_bar()
-ggplot(data=MCClist,aes(x=log(TotalCount)))+geom_bar()
-ggplot(data=MCClist,aes(x=TotalCount,y=pEffectiveComp))+geom_point()
-ggplot(data=MCClist,aes(x=log(TotalCount),y=pEffectiveComp))+geom_point()
-
-jfit2 <- lm(pEffectiveComp ~ pcService+ I(pcService^2)+ pAir + pWnA + pEnC + pIDV+ TotalCount, data=MCClist)
-summary(jfit2)
-plot(jfit2)
-
-jfit3 <- lm(pEffectiveComp ~ pcService+ I(pcService^2)+ pAir + pWnA + pEnC + pIDV+ log(TotalCount), data=MCClist)
-summary(jfit3)
-screenreg(list(jfit1, jfit2, jfit3))
+# 
+# rcorr(as.matrix(subset(MCClist,select=c(pPSRServices,pRnD,pAir,pLand,pWnA,pMnS,pEnC,pIDV,TotalCount,TotalValue,avSize))))
+# 
+# ggplot(data=MCClist,aes(x=TotalCount))+geom_bar()
+# ggplot(data=MCClist,aes(x=log(TotalCount)))+geom_bar()
+# ggplot(data=MCClist,aes(x=TotalCount,y=pEffComp))+geom_point()
+# ggplot(data=MCClist,aes(x=log(TotalCount),y=pEffComp))+geom_point()
+# 
+# jfit1 <- lm(pEffComp ~ pcService+ I(pcService^2)+ pAir + pWnA + pEnC + pIDV, data=MCClist)
+# summary(jfit1)
+# plot(jfit1)
+# 
+# 
+# ggplot(data=MCClist,aes(x=TotalCount))+geom_bar()
+# ggplot(data=MCClist,aes(x=log(TotalCount)))+geom_bar()
+# ggplot(data=MCClist,aes(x=TotalCount,y=pEffComp))+geom_point()
+# ggplot(data=MCClist,aes(x=log(TotalCount),y=pEffComp))+geom_point()
+# 
+# jfit2 <- lm(pEffComp ~ pcService+ I(pcService^2)+ pAir + pWnA + pEnC + pIDV+ TotalCount, data=MCClist)
+# summary(jfit2)
+# plot(jfit2)
+# 
+# jfit3 <- lm(pEffComp ~ pcService+ I(pcService^2)+ pAir + pWnA + pEnC + pIDV+ log(TotalCount), data=MCClist)
+# summary(jfit3)
+# screenreg(list(jfit1, jfit2, jfit3))
 
 
 ```
@@ -479,34 +505,34 @@ Observations:
 
 
 ```{r TotalValue}
-
-rcorr(as.matrix(subset(MCClist,select=c(pService,pRnD,pAir,pLand,pWnA,pMnS,pEnC,pIDV,TotalCount,TotalValue,avSize))))
-
-ggplot(data=MCClist,aes(x=TotalValue))+geom_bar()
-ggplot(data=MCClist,aes(x=log(TotalValue)))+geom_bar()
-ggplot(data=MCClist,aes(x=TotalValue,y=pEffectiveComp))+geom_point()
-ggplot(data=MCClist,aes(x=log(TotalValue),y=pEffectiveComp))+geom_point()
-
-kfit1 <- lm(pEffectiveComp ~ pcService+ I(pcService^2)+ pAir + pWnA + pEnC + pIDV, data=MCClist)
-
-kfit2 <- lm(pEffectiveComp ~ pcService+ I(pcService^2)+ pAir + pWnA + pEnC + pIDV+ log(TotalValue), data=MCClist)
-summary(kfit2)
-plot(kfit2)
-
-kfit3 <- lm(pEffectiveComp ~ pcService+ I(pcService^2)+ pAir + pWnA + pEnC + pIDV+ log(TotalValue) + log(TotalValue):I(pcService^2), data=subset(MCClist, rownames(MCClist)!=26))
-summary(kfit3)
-plot(kfit3)
-
-kfit4 <- lm(pEffectiveComp ~ pcService+ I(pcService^2)+ pAir + pWnA + pEnC + pIDV+ log(TotalValue), data=subset(MCClist, rownames(MCClist)!=26))
-summary(kfit4)
-plot(kfit4)
-
-kfit5 <- lm(pEffectiveComp ~ pcService+ I(pcService^2)+ pAir + pWnA + pEnC + pIDV+ log(TotalValue), data=subset(MCClist, rownames(MCClist)!=26&rownames(MCClist)!=58))
-summary(kfit5)
-plot(kfit5)
-
-
-screenreg(list(kfit1, kfit2, kfit3, kfit4, kfit5)) 
+# 
+# rcorr(as.matrix(subset(MCClist,select=c(pPSRServices,pRnD,pAir,pLand,pWnA,pMnS,pEnC,pIDV,TotalCount,TotalValue,avSize))))
+# 
+# ggplot(data=MCClist,aes(x=TotalValue))+geom_bar()
+# ggplot(data=MCClist,aes(x=log(TotalValue)))+geom_bar()
+# ggplot(data=MCClist,aes(x=TotalValue,y=pEffComp))+geom_point()
+# ggplot(data=MCClist,aes(x=log(TotalValue),y=pEffComp))+geom_point()
+# 
+# kfit1 <- lm(pEffComp ~ pcService+ I(pcService^2)+ pAir + pWnA + pEnC + pIDV, data=MCClist)
+# 
+# kfit2 <- lm(pEffComp ~ pcService+ I(pcService^2)+ pAir + pWnA + pEnC + pIDV+ log(TotalValue), data=MCClist)
+# summary(kfit2)
+# plot(kfit2)
+# 
+# kfit3 <- lm(pEffComp ~ pcService+ I(pcService^2)+ pAir + pWnA + pEnC + pIDV+ log(TotalValue) + log(TotalValue):I(pcService^2), data=subset(MCClist, rownames(MCClist)!=26))
+# summary(kfit3)
+# plot(kfit3)
+# 
+# kfit4 <- lm(pEffComp ~ pcService+ I(pcService^2)+ pAir + pWnA + pEnC + pIDV+ log(TotalValue), data=subset(MCClist, rownames(MCClist)!=26))
+# summary(kfit4)
+# plot(kfit4)
+# 
+# kfit5 <- lm(pEffComp ~ pcService+ I(pcService^2)+ pAir + pWnA + pEnC + pIDV+ log(TotalValue), data=subset(MCClist, rownames(MCClist)!=26&rownames(MCClist)!=58))
+# summary(kfit5)
+# plot(kfit5)
+# 
+# 
+# screenreg(list(kfit1, kfit2, kfit3, kfit4, kfit5)) 
 ```
 
 Observations:
@@ -518,55 +544,55 @@ Observations:
 
 
 ```{r AverageSize}
-
-lfit1 <- lm(pEffectiveComp ~ pcService+ I(pcService^2)+ pAir + pWnA + pEnC + pIDV, data=MCClist)
-summary(lfit1)
-
-lfit2 <- lm(pEffectiveComp ~ pcService+ I(pcService^2)+ pAir + pWnA + pEnC + pIDV+ avSize, data=MCClist)
-summary(lfit2) 
-plot(lfit2)
-
-
-lfit3 <- lm(pEffectiveComp ~ pcService+ I(pcService^2)+ pAir+ pWnA+ pEnC+ pIDV+ lavSize, data=MCClist)
-summary(lfit3) 
-plot(lfit3)
-
-rcorr(as.matrix(subset(MCClist,select=c(pService,pRnD,pAir,pLand,pWnA,pMnS,pEnC,pIDV,TotalCount,TotalValue,avSize))))
-
-ggplot(data=MCClist,aes(x=avSize))+geom_bar()
-ggplot(data=MCClist,aes(x=log(avSize)))+geom_bar()
-ggplot(data=MCClist,aes(x=avSize,y=pEffectiveComp))+geom_point()
-ggplot(data=MCClist,aes(x=log(avSize),y=pEffectiveComp))+geom_point()
-
-lfit4 <- lm(pEffectiveComp ~ pcService+ I(pcService^2)+ pAir + pWnA + pEnC + pIDV+ log(avSize), data=MCClist)
-summary(lfit4)
-plot(lfit4)
-
-lfit5 <- lm(pEffectiveComp ~ pcService+ I(pcService^2)+ pAir+ pWnA+ pEnC + pIDV+ log(avSize), data=subset(MCClist, rownames(MCClist)!=26))
-summary(lfit5)
-plot(lfit5)
-
-
-lfit6 <- lm(pEffectiveComp ~ pcService+ I(pcService^2)+ pAir+ pWnA+ pEnC + pIDV+ log(avSize)+ pVessel, data=subset(MCClist, rownames(MCClist)!=26&rownames(MCClist)!=59))
-summary(lfit6)
-plot(lfit6)
-
-
-lfit7 <- lm(pEffectiveComp ~ pcService+ I(pcService^2)+ pAir+ pWnA+ pEnC+ log(avSize)+ pVessel+ pIDV:I(pcService^2), data=MCClist)
-summary(lfit7) 
-plot(lfit7)
-
-
-lfit8 <- lm(pEffectiveComp ~ pcService+ I(pcService^2)+ pAir+ pWnA+ pEnC+ log(avSize)+ pVessel + pIDV:I(pcService^2)+ pIDV:pcService, data=MCClist)
-summary(lfit8) 
-plot(lfit8)
-screenreg(list(lfit1, lfit2, lfit3, lfit4, lfit5, lfit6, lfit7, lfit8))
+# 
+# lfit1 <- lm(pEffComp ~ pcService+ I(pcService^2)+ pAir + pWnA + pEnC + pIDV, data=MCClist)
+# summary(lfit1)
+# 
+# lfit2 <- lm(pEffComp ~ pcService+ I(pcService^2)+ pAir + pWnA + pEnC + pIDV+ avSize, data=MCClist)
+# summary(lfit2) 
+# plot(lfit2)
+# 
+# 
+# lfit3 <- lm(pEffComp ~ pcService+ I(pcService^2)+ pAir+ pWnA+ pEnC+ pIDV+ lavSize, data=MCClist)
+# summary(lfit3) 
+# plot(lfit3)
+# 
+# rcorr(as.matrix(subset(MCClist,select=c(pPSRServices,pRnD,pAir,pLand,pWnA,pMnS,pEnC,pIDV,TotalCount,TotalValue,avSize))))
+# 
+# ggplot(data=MCClist,aes(x=avSize))+geom_bar()
+# ggplot(data=MCClist,aes(x=log(avSize)))+geom_bar()
+# ggplot(data=MCClist,aes(x=avSize,y=pEffComp))+geom_point()
+# ggplot(data=MCClist,aes(x=log(avSize),y=pEffComp))+geom_point()
+# 
+# lfit4 <- lm(pEffComp ~ pcService+ I(pcService^2)+ pAir + pWnA + pEnC + pIDV+ log(avSize), data=MCClist)
+# summary(lfit4)
+# plot(lfit4)
+# 
+# lfit5 <- lm(pEffComp ~ pcService+ I(pcService^2)+ pAir+ pWnA+ pEnC + pIDV+ log(avSize), data=subset(MCClist, rownames(MCClist)!=26))
+# summary(lfit5)
+# plot(lfit5)
+# 
+# 
+# lfit6 <- lm(pEffComp ~ pcService+ I(pcService^2)+ pAir+ pWnA+ pEnC + pIDV+ log(avSize)+ pVessel, data=subset(MCClist, rownames(MCClist)!=26&rownames(MCClist)!=59))
+# summary(lfit6)
+# plot(lfit6)
+# 
+# 
+# lfit7 <- lm(pEffComp ~ pcService+ I(pcService^2)+ pAir+ pWnA+ pEnC+ log(avSize)+ pVessel+ pIDV:I(pcService^2), data=MCClist)
+# summary(lfit7) 
+# plot(lfit7)
+# 
+# 
+# lfit8 <- lm(pEffComp ~ pcService+ I(pcService^2)+ pAir+ pWnA+ pEnC+ log(avSize)+ pVessel + pIDV:I(pcService^2)+ pIDV:pcService, data=MCClist)
+# summary(lfit8) 
+# plot(lfit8)
+# screenreg(list(lfit1, lfit2, lfit3, lfit4, lfit5, lfit6, lfit7, lfit8))
 
 ```
 
 Observations: **another item to discuss**
 
-1. adding average size decreases pservice^2 by .01 and otherwise has no impact on the model and itself is not significant
+1. adding average size decreases pPSRServices^2 by .01 and otherwise has no impact on the model and itself is not significant
 2.  Adding log(avSize) has no impact
 3. The rest of the additions/modifications do not contribute in a way that merits further inclusion.
 4. Because log(avSize) does not change the r^2, is itself not significant and only changes the coefficient of pcService^2 by .04 I do not think it should continue.   
@@ -574,7 +600,7 @@ Observations: **another item to discuss**
 
 ###final model
 ``` {r final model}
-jfit 1
+
  
 jfit1 <- lm(pEffComp ~ pPSRServices + I(pPSRServices^2)+ pPlatAir + pPlatWnA + pPlatEnC + pIDV, data=MCClist)
 summary(jfit1)
@@ -962,10 +988,10 @@ summary(MCClist$pPscLand)
 
 ##pMnS
 
-MnSmean <- mean(MCClist$pPaltMnS)
+MnSmean <- mean(MCClist$pPlatMnS)
 
-ggplot(MCClist, aes(x=pPaltMnS)) +
-  geom_histogram(aes(pPaltMnS="density"),
+ggplot(MCClist, aes(x=pPlatMnS)) +
+  geom_histogram(aes(pPlatMnS="density"),
                  binwidth = .02,
                  color = "red", fill = "light blue", main = "HISTOGRAM") +
   geom_density(alpha = .2, fill = "#FF6666") +
@@ -1145,7 +1171,7 @@ ggplot(MCClist, aes(x=pPscFuels)) +
              linetype = "dashed", size = 1)
 
 ##IDV multi
-pVehMAC
+# pVehMAC
 
 vehMACsmean <- mean(MCClist$pVehMAC)
 
@@ -1161,7 +1187,7 @@ ggplot(MCClist, aes(x=pVehMAC)) +
 summary(MCClist$pVehMAC)
 
 ##IDV single
-pVehSAC
+# pVehSAC
 
 vehSACsmean <- mean(MCClist$pVehSAC)
 
@@ -1213,91 +1239,67 @@ summary(MCClist$pIDV)
 ```
 
 ###final model exploration:
-``` {r echo = TRUE}
+``` {r MCCfinal, echo = TRUE }
 
-jfit1 <- lm(pEffectiveComp ~ pcService+ I(pcService^2)+ pAir + pWnA + pEnC + pIDV, data=MCClist)
-
-plot(jfit1)
-
-##residual plot
-##http://www.r-bloggers.com/ggplot2-version-of-figures-in-%E2%80%9C25-recipes-for-getting-started-with-r%E2%80%9D/
+# jfit1 <- lm(pEffComp ~ pcService+ I(pcService^2)+ pAir + pWnA + pEnC + pIDV, data=MCClist)
 
 
-ggplotRegression <- function (fit) {
-
-require(ggplot2)
-
-ggplot(fit$model, aes_string(x = names(fit$model)[2], y = names(fit$model)[1])) + 
-  geom_point() +
-  stat_smooth(method = "lm", col = "green") +
-  labs(title = paste("Adj R2 = ",signif(summary(fit)$adj.r.squared, 5),
-                     "Intercept =",signif(fit$coef[[1]],5 ),
-                     " Slope =",signif(fit$coef[[2]], 5),
-                     " P =",signif(summary(fit)$coef[2,4], 5)))
-}
-
-ggplotRegression(jfit1)
-
-
+# plot(jfit1)
+# 
+# ##residual plot
+# ##http://www.r-bloggers.com/ggplot2-version-of-figures-in-%E2%80%9C25-recipes-for-getting-started-with-r%E2%80%9D/
+# 
+# 
+# ggplotRegression <- function (fit) {
+# 
+# require(ggplot2)
+# 
+# ggplot(fit$model, aes_string(x = names(fit$model)[2], y = names(fit$model)[1])) + 
+#   geom_point() +
+#   stat_smooth(method = "lm", col = "green") +
+#   labs(title = paste("Adj R2 = ",signif(summary(fit)$adj.r.squared, 5),
+#                      "Intercept =",signif(fit$coef[[1]],5 ),
+#                      " Slope =",signif(fit$coef[[2]], 5),
+#                      " P =",signif(summary(fit)$coef[2,4], 5)))
+# }
+# 
+# ggplotRegression(jfit1)
+# 
+# 
 
 ```
 
 
 ###State Level
-```{r StateValidation}
-mfit1 <- lm(pEffectiveComp ~ pcService, data=MCClist)
-summary(mfit1) 
-plot(mfit1)
-
-
-StateList  <- read.csv(
-    paste("data\\defense_state_competition_combined_2000-2013.csv", sep = ""),
-    header = TRUE, sep = ",", dec = ".", strip.white = TRUE, 
-    na.strings = c("NULL","NA",""),
-    stringsAsFactors = TRUE
-    )
-names(StateList)
-
-
-StateList <-subset(StateList ,!PoPstateCode %in% c("VI",
-"AS",
-"MP",
-"AE",
-"PW",
-"US",
-"UK",
-"GM",
-"GB",
-"JA",
-"ON",
-"QC",
-"   ",
-"BC"))
-
-rcorr(as.matrix(subset(StateList,select=c(pService,pProduct,pRnD,pAir,pLand,pVessel,pWnA,pFnC,pMnS,pEnC,pIDV,pFixed,pCostPlus,TotalCount,TotalValue,avSize))))
-
-StateList$pcService<-StateList$pService-0.5
-mfit1 <- lm(pEffectiveComp ~ pcService, data=StateList)
-
-StateList$pcService<-StateList$pService-0.5
-mfit2 <- lm(pEffectiveComp ~ pcService + I(pcService^2), data=StateList)
-summary(mfit2) 
-plot(mfit2)
-
-screenreg(list(mfit1, mfit2))
-
-##using statelist certainly yields very different results. 
-
-mfit3 <- lm(pEffectiveComp ~ pcService + I(pcService^2) + pRnD, data=StateList)
-summary(fit) 
-plot(mfit3)
-
-
-mfit4 <- lm(pEffectiveComp ~ pcService+I(pcService^2)+ pRnD+ pAir, data=StateList)
-summary(mfit4) 
-plot(mfit4)
-
-screenreg(list(mfit1, mfit2, mfit3, mfit4))
+```{r StateInitial}
+# mfit1 <- lm(pEffComp ~ pcService, data=MCClist)
+# summary(mfit1) 
+# plot(mfit1)
+# 
+# rcorr(as.matrix(subset(StateList,select=c(pPSRServices,pPSRProducts,pRnD,pAir,pLand,pVessel,pWnA,pFnC,pMnS,pEnC,pIDV,pFixed,pCostPlus,TotalCount,TotalValue,avSize))))
+# 
+# StateList$pcService<-StateList$pPSRServices-0.5
+# mfit1 <- lm(pEffComp ~ pcService, data=StateList)
+# 
+# StateList$pcService<-StateList$pPSRServices-0.5
+# mfit2 <- lm(pEffComp ~ pcService + I(pcService^2), data=StateList)
+# summary(mfit2) 
+# plot(mfit2)
+# 
+# screenreg(list(mfit1, mfit2))
+# 
+# ##using statelist certainly yields very different results. 
+# 
+# mfit3 <- lm(pEffComp ~ pcService + I(pcService^2) + pRnD, data=StateList)
+# summary(fit) 
+# plot(mfit3)
+# 
+# 
+# mfit4 <- lm(pEffComp ~ pcService+I(pcService^2)+ pRnD+ pAir, data=StateList)
+# summary(mfit4) 
+# plot(mfit4)
+# 
+# screenreg(list(mfit1, mfit2, mfit3, mfit4))
 ```
 Observations:
 
@@ -1307,62 +1309,62 @@ Observations:
 4. pAir increases r^2 by .1, is statistically significant and decreases the coefficient of pcService by .11 and shoudl be continued. 
 
 
-```{r echo= TRUE}
-
-mfit5 <- lm(pEffectiveComp ~ pcService+ I(pcService^2)+ pRnD+ pAir+ pVessel, data=StateList)
-summary(mfit5) 
-plot(mfit5)
-
-screenreg(list(mfit1, mfit2, mfit3, mfit4, mfit5))
+```{r StateVessel, echo= TRUE }
+# 
+# mfit5 <- lm(pEffComp ~ pcService+ I(pcService^2)+ pRnD+ pAir+ pVessel, data=StateList)
+# summary(mfit5) 
+# plot(mfit5)
+# 
+# screenreg(list(mfit1, mfit2, mfit3, mfit4, mfit5))
 
 ```
 observations:
 
 1. pVessel is not statistically significant, it does not change the coefficient on pcService by more than .01 nor does it change the r^2 or other variable's coefficients. It should not be continued in the model
 
-```{r echo=TRUE}
-
-mfit6 <- lm(pEffectiveComp ~ pcService+I(pcService^2)+ pRnD+ pAir+ pLand, data=StateList)
-summary(mfit6) 
-plot(mfit6)
-
-screenreg(list(mfit1, mfit2, mfit3, mfit4, mfit6))
+```{r StateLand, echo=TRUE}
+# 
+# mfit6 <- lm(pEffComp ~ pcService+I(pcService^2)+ pRnD+ pAir+ pLand, data=StateList)
+# summary(mfit6) 
+# plot(mfit6)
+# 
+# screenreg(list(mfit1, mfit2, mfit3, mfit4, mfit6))
 ```
 oBSERVATIONS:
 1. pLand increases r^2 by .02, adjusted r^2 by .01, decreases coefficient of pcService by .06 and is not statistically significant.  
 2. because of its effect on pcService, it should be included.
 
-```{r echo=TRUE}
-
-mfit7 <- lm(pEffectiveComp ~ pcService+ I(pcService^2)+ pRnD+ pAir + pLand+ pMnS, data=StateList)
-summary(mfit7) 
-plot(mfit7)
-
-screenreg(list(mfit1, mfit2, mfit3, mfit4, mfit6, mfit7))
+```{r StateMnS, echo=TRUE}
+# 
+# mfit7 <- lm(pEffComp ~ pcService+ I(pcService^2)+ pRnD+ pAir + pLand+ pMnS, data=StateList)
+# summary(mfit7) 
+# plot(mfit7)
+# 
+# screenreg(list(mfit1, mfit2, mfit3, mfit4, mfit6, mfit7))
 ```
 observations:
 1. pMnS does not change any part of the model that merits its inclusion. and is not statistically significant
 
 
-```{r echo=TRUE}
-
-mfit8 <- lm(pEffectiveComp ~ pcService+ I(pcService^2)+ pRnD+ pAir + pLand + pWnA, data=StateList)
-summary(mfit8) 
-plot(mfit8)
-
-screenreg(list(mfit1, mfit2, mfit3, mfit4, mfit6, mfit8))
+```{r StateWnA, echo=TRUE}
+# 
+# mfit8 <- lm(pEffComp ~ pcService+ I(pcService^2)+ pRnD+ pAir + pLand + pWnA, data=StateList)
+# summary(mfit8) 
+# plot(mfit8)
+# 
+# screenreg(list(mfit1, mfit2, mfit3, mfit4, mfit6, mfit8))
 ```
 Observations:
 1. PWnA does not change r^2 or adjusted r^2, decreases pcService by .02 and is not statistically significant, it should not be included in the model.
 
 
-```{r echo=TRUE}
-
-mfit9 <- lm(pEffectiveComp ~ pcService+ I(pcService^2)+ pRnD+ pAir + pLand + pIDV, data=StateList)
-summary(mfit9) 
-plot(mfit9)
-
-screenreg(list(mfit1, mfit2, mfit3, mfit4, mfit6, mfit9))
+```{r StateIDV, echo=TRUE}
+# 
+# mfit9 <- lm(pEffComp ~ pcService+ I(pcService^2)+ pRnD+ pAir + pLand + pIDV, data=StateList)
+# summary(mfit9) 
+# plot(mfit9)
+# 
+# screenreg(list(mfit1, mfit2, mfit3, mfit4, mfit6, mfit9))
 ```
 Observations:
 1. pIDV does not impact r^2 significantly (.66-.67)
@@ -1370,13 +1372,13 @@ Observations:
 3. pIDV is not statistically significant. Thus pIDV will not further be included
 
 
-```{r echo=TRUE}
-
-mfit10 <- lm(pEffectiveComp ~ pcService+ I(pcService^2)+ pRnD+ pAir+ pLand + pFixed, data=StateList)
-summary(mfit10) 
-plot(mfit10)
-
-screenreg(list(mfit1, mfit2, mfit3, mfit4, mfit6, mfit10))
+```{r StateFixed, echo=TRUE}
+# 
+# mfit10 <- lm(pEffComp ~ pcService+ I(pcService^2)+ pRnD+ pAir+ pLand + pFixed, data=StateList)
+# summary(mfit10) 
+# plot(mfit10)
+# 
+# screenreg(list(mfit1, mfit2, mfit3, mfit4, mfit6, mfit10))
 ```
 Observations:
 1. pFixed increases r^2 by .02 and adjusted r^2 by .02.
@@ -1384,12 +1386,12 @@ Observations:
 3. it itselft is not statistically significant but has a p-value of .0774
 4. it should be included in the model
 
-```{r echo=TRUE}
-
-mfit11 <- lm(pEffectiveComp ~ pcService+ I(pcService^2)+ pRnD+ pAir + pLand + pFixed + pCostPlus, data=StateList)
-summary(mfit11)
-
-screenreg(list(mfit1, mfit2, mfit3, mfit4, mfit6, mfit10, mfit11))
+```{r StateCostPlus, echo=TRUE}
+# 
+# mfit11 <- lm(pEffComp ~ pcService+ I(pcService^2)+ pRnD+ pAir + pLand + pFixed + pCostPlus, data=StateList)
+# summary(mfit11)
+# 
+# screenreg(list(mfit1, mfit2, mfit3, mfit4, mfit6, mfit10, mfit11))
 ```
 Observations:
 1. pCostplus does not hcange r^2 or adjusted r^2
@@ -1398,12 +1400,12 @@ Observations:
 it should not be included in the model
 
 
-```{r echo=TRUE}
-
-mfit12 <- lm(pEffectiveComp ~ pcService+ I(pcService^2)+ pRnD+ pAir + pLand+ pFixed+ pIncentFee, data=StateList)
-summary(mfit12)
-
-screenreg(list(mfit1, mfit2, mfit3, mfit4, mfit6, mfit10, mfit12))
+```{r StateIncent, echo=TRUE}
+# 
+# mfit12 <- lm(pEffComp ~ pcService+ I(pcService^2)+ pRnD+ pAir + pLand+ pFixed+ pIncentFee, data=StateList)
+# summary(mfit12)
+# 
+# screenreg(list(mfit1, mfit2, mfit3, mfit4, mfit6, mfit10, mfit12))
 ```
 Observations:
 1. pcService decreases by .02 with the addition of incenteive fee
@@ -1412,12 +1414,12 @@ Observations:
 4. incentive fee will not be included further
 
 
-```{r echo=TRUE}
+```{r StateCount, echo=TRUE}
 
-
-mfit13 <- lm(pEffectiveComp ~ pcService+ I(pcService^2)+ pRnD+ pAir + pLand + pFixed+ TotalCount, data=StateList)
-
-screenreg(list(mfit1, mfit2, mfit3, mfit4, mfit6, mfit10, mfit13))
+# 
+# mfit13 <- lm(pEffComp ~ pcService+ I(pcService^2)+ pRnD+ pAir + pLand + pFixed+ TotalCount, data=StateList)
+# 
+# screenreg(list(mfit1, mfit2, mfit3, mfit4, mfit6, mfit10, mfit13))
 ```
 Observations
 1. TotalCount does not change pcService
@@ -1425,20 +1427,20 @@ Observations
 2. total count is not statistically significant nor does it have any affect on effectivecomp according to its coefficient (00.00)
 
 
-```{r echo=TRUE}
-
-mfit14 <- lm(pEffectiveComp ~ pcService+ I(pcService^2)+ pRnD+ pAir + pLand + pFixed+ log(TotalValue), data=StateList)
-
-screenreg(list(mfit1, mfit2, mfit3, mfit4, mfit6, mfit10, mfit14))
+```{r  StateValue, echo=TRUE}
+# 
+# mfit14 <- lm(pEffComp ~ pcService+ I(pcService^2)+ pRnD+ pAir + pLand + pFixed+ log(TotalValue), data=StateList)
+# 
+# screenreg(list(mfit1, mfit2, mfit3, mfit4, mfit6, mfit10, mfit14))
 ```
 not significant
 
-```{r echo=TRUE}
-
-mfit15 <- lm(pEffectiveComp ~ pcService+ I(pcService^2)+ pRnD+ pAir + pLand + pFixed+ log(TotalValue)+ log(avSize), data=StateList)
-
-
-screenreg(list(mfit1, mfit2, mfit3, mfit4, mfit6, mfit10, mfit15))
+```{r StateAvSize, echo=TRUE}
+# 
+# mfit15 <- lm(pEffComp ~ pcService+ I(pcService^2)+ pRnD+ pAir + pLand + pFixed+ log(TotalValue)+ log(avSize), data=StateList)
+# 
+# 
+# screenreg(list(mfit1, mfit2, mfit3, mfit4, mfit6, mfit10, mfit15))
 
 
 ```
@@ -1446,182 +1448,167 @@ not significant
 
 
 ###final model
-```{r echo=TRUE}
+```{r StateFinal, echo=TRUE}
 
-
-
-#mfit10 <- lm(pEffectiveComp ~ pcService+ I(pcService^2)+ pRnD+ pAir+ pLand + pFixed, data=StateList)
-
-mfit10 <- lm(pEffectiveComp ~ pcService+ pRnD+ pAir+ pLand + pFixed, data=StateList)
-
-summary(mfit10)
-
-
-screenreg(list(mfit1, mfit2, mfit3, mfit4, mfit6, mfit10))
-
-screenreg(mfit10)
-
-
-```
-
-
-`````` {r AutomatedGraphs echo=TRUE}
-
-# ##Service
-# ListOfVariables<-names(StateList)
-# # subset(ListOfVariables, select=c(pEffComp))
 # 
-# for (var in ListOfVariables){
-#   plota <- qplot(pPSRServices, pEffComp, data = StateList, geom=c('point', 'smooth'), method = 'loess', ylab = "Effective Competition", xlab = "Services")
-#   plota + labs(title = "Services vs Effective Competition: State Level")
-# }
-
-plota <- qplot(pPSRServices, pEffComp, data = StateList, geom=c('point', 'smooth'), method = 'loess', ylab = "Effective Competition", xlab = "Services")
-plota + labs(title = "Services vs Effective Competition: State Level")
+# 
+# #mfit10 <- lm(pEffComp ~ pcService+ I(pcService^2)+ pRnD+ pAir+ pLand + pFixed, data=StateList)
+# 
+# mfit10 <- lm(pEffComp ~ pcService+ pRnD+ pAir+ pLand + pFixed, data=StateList)
+# 
+# summary(mfit10)
+# 
+# 
+# screenreg(list(mfit1, mfit2, mfit3, mfit4, mfit6, mfit10))
+# 
+# screenreg(mfit10)
+# 
 
 ```
+
+
 
 ###Variable Exploration with effective competition
-``` {r echo=TRUE}
-
-##Service
-
-plota <- qplot(pPSRServices, pEffComp, data = StateList, geom=c('point', 'smooth'), method = 'loess', ylab = "Effective Competition", xlab = "Services")
-plota + labs(title = "Services vs Effective Competition: State Level")
-
-##Research and Development
-
-qplot(pRnD, pEffectiveComp, data = StateList, geom=c('point', 'smooth'), method = 'loess', ylab = "Effective Competition", xxlab = "Research and Development")
-
-##Air
-
-#qplot(pAir, pEffectiveComp, data = StateList, geom=c('point', 'smooth'), method = 'loess', ylab = "Effective Competition", xxlab = "Platform: Air")
-
-plotf <- qplot(pAir, pEffectiveComp, data = StateList, geom=c('point', 'smooth'), method = 'loess', ylab = "Effective Competition", xlab = "Aircraft")
-plotf + labs(title = "Aircraft Contracts vs Effective Competition: State Level")
-
-#psc air
-
-ploth <- qplot(pPscAir, pEffComp, data = StateList, geom=c('point', 'smooth'), method = 'loess', ylab = "Effective Competition", xlab = "Aircraft")
-ploth + labs(title = "PSC Aircraft Contracts vs Effective Competition: State Level")
-
-
-##Land
-
-#qplot(pLand, pEffectiveComp, data = StateList, geom=c('point', 'smooth'), method = 'loess', ylab = "Effective Competition", xxlab = "Platform: Land")
-
-plote <- qplot(pLand, pEffectiveComp, data = StateList, geom=c('point', 'smooth'), method = 'loess', ylab = "Effective Competition", xlab = "Land Vehicle Contracts")
-plote + labs(title = "Land Vehicle Contracts vs Effective Competition: State level")
-
-ploti <- qplot(pPscLand, pEffComp, data = StateList, geom=c('point', 'smooth'), method = 'loess', ylab = "Effective Competition", xlab = "Land Vehicle")
-ploti + labs(title = "PSC Land Vehicle Contracts vs Effective Competition: State level")
-
-
-##Fixed Price
-
-qplot(pPriceFixed, pEffComp, data = StateList, geom=c('point', 'smooth'), method = 'loess', ylab = "Effective Competition", xxlab = "Fixed Price Contracts")
-
-#WnA
-
-plotb <- qplot(pWnA, pEffectiveComp, data = StateList, geom=c('point', 'smooth'), method = 'loess', ylab = "Effective Competition", xlab = "Weapons and Ammunition")
-plotb + labs(title = "Weapons&Ammunition vs Effective Competition: State")
-
-#EnC
-plotc <- qplot(pEnC, pEffectiveComp, data = StateList, geom=c('point', 'smooth'), method = 'loess', ylab = "Effective Competition", xlab = "Electronics and Communication")
-plotc + labs(title = "Electronics&Communication vs Effective Comp: State")
-
-#pIDV
-
-plotd <- qplot(pIDV, pEffectiveComp, data = StateList, geom=c('point', 'smooth'), method = 'loess', ylab = "Effective Competition", xlab = "IDV")
-plotd + labs(title = "IDV vs Effective Competition: State level")
-
-#pMnS
-
-plote <- qplot(pMnS, pEffectiveComp, data = StateList, geom=c('point', 'smooth'), method = 'loess', ylab = "Effective Competition", xlab = "Misiles and Space Contract Obligations")
-plote + labs(title = "Missiles and Space Contract Obligations vs Effective Competition: State level") 
-
-##pscMnS
-
-plotj <- qplot(pPscMnS, pEffComp, data = StateList, geom=c('point', 'smooth'), method = 'loess', ylab = "Effective Competition", xlab = "Misiles and Space PSC Contract Obligations")
-plotj + labs(title = "Missiles and Space PSC Contract Obligations vs Effective Competition: State level") 
-
-
-
-##Ships
-
-plotf <- qplot(pVessel, pEffectiveComp, data = StateList, geom=c('point', 'smooth'), method = 'loess', ylab = "Effective Competition", xlab = "Ships Contract Obligations")
-plotf + labs(title = "Ships Contract Obligations vs Effective Competition: State level")
-
-##pscShips
-
-plotl <- qplot(pPscShips, pEffComp, data = StateList, geom=c('point', 'smooth'), method = 'loess', ylab = "Effective Competition", xlab = "Ships PSC Contract Obligations")
-plotl + labs(title = "Ships PSC Contract Obligations vs Effective Competition: State level")
-
-
-##fixed price
-
-plotg <- qplot(pPriceFixed, pEffComp, data = StateList, geom=c('point', 'smooth'), method = 'loess', ylab = "Effective Competition", xlab = "Fixed Price Contract Obligations")
-plotg + labs(title = "Fixed Price Contract Obligations vs Effective Competition: State level")
-
-##psc Engines
-
-plotk <- qplot(pPscEngines, pEffComp, data = StateList, geom=c('point', 'smooth'), method = 'loess', ylab = "Effective Competition", xlab = "Engines&Power Plants PSC Contract Obligations")
-plotk + labs(title = "Engines&Power Plants PSC Contract Obligations vs Effective Competition: State level")
-
-##other
-
-
-plotm <- qplot(pPscOther, pEffComp, data = StateList, geom=c('point', 'smooth'), method = 'loess', ylab = "Effective Competition", xlab = "Other (PSC) Contract Obligations")
-plotm + labs(title = "Other (PSC) Contract Obligations vs Effective Competition: State level")
-
-#----------------------------------------------------
-
-#med
-
-plotn <- qplot(pPscMED, pEffComp, data = StateList, geom=c('point', 'smooth'), method = 'loess', ylab = "Effective Competition", xlab = "MED (PSC) Contract Obligations")
-plotn + labs(title = "MED (PSC) Contract Obligations vs Effective Competition: State level")
-
-##FRSnC
-
-ploto <- qplot(pPscFRSnC, pEffComp, data = StateList, geom=c('point', 'smooth'), method = 'loess', ylab = "Effective Competition", xlab = "FRSnC (PSC) Contract Obligations")
-ploto + labs(title = "FRSnC (PSC) Contract Obligations vs Effective Competition: State Level")
-
-
-#PAMS
-
-plotp <- qplot(pPscPAMS, pEffComp, data = StateList, geom=c('point', 'smooth'), method = 'loess', ylab = "Effective Competition", xlab = "PAMS (PSC) Contract Obligations")
-plotp + labs(title = "PAMS (PSC) Contract Obligations vs Effective Competition: State Level")
-
-##ICT
-
-plotq <- qplot(pPscICT, pEffComp, data = StateList, geom=c('point', 'smooth'), method = 'loess', ylab = "Effective Competition", xlab = "ICT (PSC) Contract Obligations")
-plotq + labs(title = "ICT (PSC) Contract Obligations vs Effective Competition: state level")
-
-##Fuels
-
-plotr1 <- qplot(pPscFuels, pEffComp, data = StateList, geom=c('point', 'smooth'), method = 'loess', ylab = "Effective Competition", xlab = "Fuels (PSC) Contract Obligations")
-plotr1 + labs(title = "Fuels (PSC) Contract Obligations vs Effective Competition: State level")
-
-##IDV MAC 
-
-plots <- qplot(pVehMAC, pEffComp, data = StateList, geom=c('point', 'smooth'), method = 'loess', ylab = "Effective Competition", xlab = "IDV MAC Contract Obligations")
-plots + labs(title = "IDV MAC Contract Obligations vs Effective Competition: State level")
-
-##IDV SAC
-
-plott <- qplot(pVehSAC, pEffComp, data = StateList, geom=c('point', 'smooth'), method = 'loess', ylab = "Effective Competition", xlab = "IDV SAC Contract Obligations")
-plott + labs(title = "IDV SAC Contract Obligations vs Effective Competition: State level")
-
-##IDV Purchase order
-
-plotu <- qplot(pVehPur, pEffComp, data = StateList, geom=c('point', 'smooth'), method = 'loess', ylab = "Effective Competition", xlab = "IDV Purchase Order Contract Obligations")
-plotu + labs(title = "IDV Purchase Order Contract Obligations vs Effective Competition: State level")
-
-##pIDV
-
-plotv <- qplot(pIDV, pEffComp, data = StateList, geom=c('point', 'smooth'), method = 'loess', ylab = "Effective Competition", xlab = "IDV  Contract Obligations")
-plotv + labs(title = "IDV Contract Obligations vs Effective Competition: State level")
-
+``` {r StateExploration, echo=TRUE}
+# 
+# ##Service
+# 
+# plota <- qplot(pPSRServices, pEffComp, data = StateList, geom=c('point', 'smooth'), method = 'loess', ylab = "Effective Competition", xlab = "Services")
+# plota + labs(title = "Services vs Effective Competition: State Level")
+# 
+# ##Research and Development
+# 
+# qplot(pRnD, pEffComp, data = StateList, geom=c('point', 'smooth'), method = 'loess', ylab = "Effective Competition", xxlab = "Research and Development")
+# 
+# ##Air
+# 
+# #qplot(pAir, pEffComp, data = StateList, geom=c('point', 'smooth'), method = 'loess', ylab = "Effective Competition", xxlab = "Platform: Air")
+# 
+# plotf <- qplot(pAir, pEffComp, data = StateList, geom=c('point', 'smooth'), method = 'loess', ylab = "Effective Competition", xlab = "Aircraft")
+# plotf + labs(title = "Aircraft Contracts vs Effective Competition: State Level")
+# 
+# #psc air
+# 
+# ploth <- qplot(pPscAir, pEffComp, data = StateList, geom=c('point', 'smooth'), method = 'loess', ylab = "Effective Competition", xlab = "Aircraft")
+# ploth + labs(title = "PSC Aircraft Contracts vs Effective Competition: State Level")
+# 
+# 
+# ##Land
+# 
+# #qplot(pLand, pEffComp, data = StateList, geom=c('point', 'smooth'), method = 'loess', ylab = "Effective Competition", xxlab = "Platform: Land")
+# 
+# plote <- qplot(pLand, pEffComp, data = StateList, geom=c('point', 'smooth'), method = 'loess', ylab = "Effective Competition", xlab = "Land Vehicle Contracts")
+# plote + labs(title = "Land Vehicle Contracts vs Effective Competition: State level")
+# 
+# ploti <- qplot(pPscLand, pEffComp, data = StateList, geom=c('point', 'smooth'), method = 'loess', ylab = "Effective Competition", xlab = "Land Vehicle")
+# ploti + labs(title = "PSC Land Vehicle Contracts vs Effective Competition: State level")
+# 
+# 
+# ##Fixed Price
+# 
+# qplot(pPriceFixed, pEffComp, data = StateList, geom=c('point', 'smooth'), method = 'loess', ylab = "Effective Competition", xxlab = "Fixed Price Contracts")
+# 
+# #WnA
+# 
+# plotb <- qplot(pWnA, pEffComp, data = StateList, geom=c('point', 'smooth'), method = 'loess', ylab = "Effective Competition", xlab = "Weapons and Ammunition")
+# plotb + labs(title = "Weapons&Ammunition vs Effective Competition: State")
+# 
+# #EnC
+# plotc <- qplot(pEnC, pEffComp, data = StateList, geom=c('point', 'smooth'), method = 'loess', ylab = "Effective Competition", xlab = "Electronics and Communication")
+# plotc + labs(title = "Electronics&Communication vs Effective Comp: State")
+# 
+# #pIDV
+# 
+# plotd <- qplot(pIDV, pEffComp, data = StateList, geom=c('point', 'smooth'), method = 'loess', ylab = "Effective Competition", xlab = "IDV")
+# plotd + labs(title = "IDV vs Effective Competition: State level")
+# 
+# #pMnS
+# 
+# plote <- qplot(pMnS, pEffComp, data = StateList, geom=c('point', 'smooth'), method = 'loess', ylab = "Effective Competition", xlab = "Misiles and Space Contract Obligations")
+# plote + labs(title = "Missiles and Space Contract Obligations vs Effective Competition: State level") 
+# 
+# ##pscMnS
+# 
+# plotj <- qplot(pPscMnS, pEffComp, data = StateList, geom=c('point', 'smooth'), method = 'loess', ylab = "Effective Competition", xlab = "Misiles and Space PSC Contract Obligations")
+# plotj + labs(title = "Missiles and Space PSC Contract Obligations vs Effective Competition: State level") 
+# 
+# 
+# 
+# ##Ships
+# 
+# plotf <- qplot(pVessel, pEffComp, data = StateList, geom=c('point', 'smooth'), method = 'loess', ylab = "Effective Competition", xlab = "Ships Contract Obligations")
+# plotf + labs(title = "Ships Contract Obligations vs Effective Competition: State level")
+# 
+# ##pscShips
+# 
+# plotl <- qplot(pPscShips, pEffComp, data = StateList, geom=c('point', 'smooth'), method = 'loess', ylab = "Effective Competition", xlab = "Ships PSC Contract Obligations")
+# plotl + labs(title = "Ships PSC Contract Obligations vs Effective Competition: State level")
+# 
+# 
+# ##fixed price
+# 
+# plotg <- qplot(pPriceFixed, pEffComp, data = StateList, geom=c('point', 'smooth'), method = 'loess', ylab = "Effective Competition", xlab = "Fixed Price Contract Obligations")
+# plotg + labs(title = "Fixed Price Contract Obligations vs Effective Competition: State level")
+# 
+# ##psc Engines
+# 
+# plotk <- qplot(pPscEngines, pEffComp, data = StateList, geom=c('point', 'smooth'), method = 'loess', ylab = "Effective Competition", xlab = "Engines&Power Plants PSC Contract Obligations")
+# plotk + labs(title = "Engines&Power Plants PSC Contract Obligations vs Effective Competition: State level")
+# 
+# ##other
+# 
+# 
+# plotm <- qplot(pPscOther, pEffComp, data = StateList, geom=c('point', 'smooth'), method = 'loess', ylab = "Effective Competition", xlab = "Other (PSC) Contract Obligations")
+# plotm + labs(title = "Other (PSC) Contract Obligations vs Effective Competition: State level")
+# 
+# #----------------------------------------------------
+# 
+# #med
+# 
+# plotn <- qplot(pPscMED, pEffComp, data = StateList, geom=c('point', 'smooth'), method = 'loess', ylab = "Effective Competition", xlab = "MED (PSC) Contract Obligations")
+# plotn + labs(title = "MED (PSC) Contract Obligations vs Effective Competition: State level")
+# 
+# ##FRSnC
+# 
+# ploto <- qplot(pPscFRSnC, pEffComp, data = StateList, geom=c('point', 'smooth'), method = 'loess', ylab = "Effective Competition", xlab = "FRSnC (PSC) Contract Obligations")
+# ploto + labs(title = "FRSnC (PSC) Contract Obligations vs Effective Competition: State Level")
+# 
+# 
+# #PAMS
+# 
+# plotp <- qplot(pPscPAMS, pEffComp, data = StateList, geom=c('point', 'smooth'), method = 'loess', ylab = "Effective Competition", xlab = "PAMS (PSC) Contract Obligations")
+# plotp + labs(title = "PAMS (PSC) Contract Obligations vs Effective Competition: State Level")
+# 
+# ##ICT
+# 
+# plotq <- qplot(pPscICT, pEffComp, data = StateList, geom=c('point', 'smooth'), method = 'loess', ylab = "Effective Competition", xlab = "ICT (PSC) Contract Obligations")
+# plotq + labs(title = "ICT (PSC) Contract Obligations vs Effective Competition: state level")
+# 
+# ##Fuels
+# 
+# plotr1 <- qplot(pPscFuels, pEffComp, data = StateList, geom=c('point', 'smooth'), method = 'loess', ylab = "Effective Competition", xlab = "Fuels (PSC) Contract Obligations")
+# plotr1 + labs(title = "Fuels (PSC) Contract Obligations vs Effective Competition: State level")
+# 
+# ##IDV MAC 
+# 
+# plots <- qplot(pVehMAC, pEffComp, data = StateList, geom=c('point', 'smooth'), method = 'loess', ylab = "Effective Competition", xlab = "IDV MAC Contract Obligations")
+# plots + labs(title = "IDV MAC Contract Obligations vs Effective Competition: State level")
+# 
+# ##IDV SAC
+# 
+# plott <- qplot(pVehSAC, pEffComp, data = StateList, geom=c('point', 'smooth'), method = 'loess', ylab = "Effective Competition", xlab = "IDV SAC Contract Obligations")
+# plott + labs(title = "IDV SAC Contract Obligations vs Effective Competition: State level")
+# 
+# ##IDV Purchase order
+# 
+# plotu <- qplot(pVehPur, pEffComp, data = StateList, geom=c('point', 'smooth'), method = 'loess', ylab = "Effective Competition", xlab = "IDV Purchase Order Contract Obligations")
+# plotu + labs(title = "IDV Purchase Order Contract Obligations vs Effective Competition: State level")
+# 
+# ##pIDV
+# 
+# plotv <- qplot(pIDV, pEffComp, data = StateList, geom=c('point', 'smooth'), method = 'loess', ylab = "Effective Competition", xlab = "IDV  Contract Obligations")
+# plotv + labs(title = "IDV Contract Obligations vs Effective Competition: State level")
+# 
 
 
 
@@ -1629,29 +1616,29 @@ plotv + labs(title = "IDV Contract Obligations vs Effective Competition: State l
 
 
 ###Variable Exploration with single offer competition **need to update data.
-``` {r echo=TRUE}
-
-##Service
-
-qplot(pcService, pEffectiveComp, data = StateList, geom=c('point', 'smooth'), method = 'loess', ylab = "Single Offer Competition", xxlab = "Services")
-
-##Research and Development
-
-qplot(pRnD, pEffectiveComp, data = StateList, geom=c('point', 'smooth'), method = 'lm', ylab = "Effective Competition", xxlab = "Research and Development")
-
-##Air
-
-qplot(pAir, pEffectiveComp, data = StateList, geom=c('point', 'smooth'), method = 'lm', ylab = "Effective Competition", xxlab = "Platform: Air")
-
-##Land
-
-qplot(pLand, pEffectiveComp, data = StateList, geom=c('point', 'smooth'), method = 'lm', ylab = "Effective Competition", xxlab = "Platform: Land")
-
-##Fixed Price
-
-qplot(pFixed, pEffectiveComp, data = StateList, geom=c('point', 'smooth'), method = 'lm', ylab = "Effective Competition", xxlab = "Fixed Price Contracts")
-
-##IDV MAC
+``` {r StateExploration2, echo=TRUE}
+# 
+# ##Service
+# 
+# qplot(pcService, pEffComp, data = StateList, geom=c('point', 'smooth'), method = 'loess', ylab = "Single Offer Competition", xxlab = "Services")
+# 
+# ##Research and Development
+# 
+# qplot(pRnD, pEffComp, data = StateList, geom=c('point', 'smooth'), method = 'lm', ylab = "Effective Competition", xxlab = "Research and Development")
+# 
+# ##Air
+# 
+# qplot(pAir, pEffComp, data = StateList, geom=c('point', 'smooth'), method = 'lm', ylab = "Effective Competition", xxlab = "Platform: Air")
+# 
+# ##Land
+# 
+# qplot(pLand, pEffComp, data = StateList, geom=c('point', 'smooth'), method = 'lm', ylab = "Effective Competition", xxlab = "Platform: Land")
+# 
+# ##Fixed Price
+# 
+# qplot(pFixed, pEffComp, data = StateList, geom=c('point', 'smooth'), method = 'lm', ylab = "Effective Competition", xxlab = "Fixed Price Contracts")
+# 
+# ##IDV MAC
 
 
 
@@ -1661,7 +1648,7 @@ qplot(pFixed, pEffectiveComp, data = StateList, geom=c('point', 'smooth'), metho
 
 
 ###data exploration
-``` {r data exploration state list}
+``` {r DataExplorationStateList}
 
 ECmean1 <- mean(StateList$pEffComp)
 
@@ -1734,19 +1721,19 @@ qplot(StateList$pRnD, geom = "histogram", binwidth = .03, main = "Distribution o
 ##pLand
 
 
-LandmeanSL <- mean(StateList$pLand)
-
-ggplot(StateList, aes(x=pLand)) +
-  geom_histogram(aes(pLand="density"),
-                 binwidth = .02,
-                 color = "red", fill = "light blue", main = "HISTOGRAM") +
-  geom_density(alpha = .2, fill = "#FF6666") +
-  labs(title = "Distribution of Land Contracts: State Level") +
-  labs(x = "Land") +
-  geom_vline(aes(xintercept=LandmeanSL, color="blue"),
-             linetype = "dashed", size = 1)
-
-#pscLand
+# LandmeanSL <- mean(StateList$pLand)
+# 
+# ggplot(StateList, aes(x=pLand)) +
+#   geom_histogram(aes(pLand="density"),
+#                  binwidth = .02,
+#                  color = "red", fill = "light blue", main = "HISTOGRAM") +
+#   geom_density(alpha = .2, fill = "#FF6666") +
+#   labs(title = "Distribution of Land Contracts: State Level") +
+#   labs(x = "Land") +
+#   geom_vline(aes(xintercept=LandmeanSL, color="blue"),
+#              linetype = "dashed", size = 1)
+# 
+# #pscLand
 
 pscLandmean1 <- mean(StateList$pPscLand)
 
@@ -1777,9 +1764,9 @@ ggplot(StateList, aes(x=pPlatLand)) +
 
 ##Fixed
 
-boxplot(StateList$pFixed, col=(c("violet", "violet")), main = "Contracting Methods: Fixed Price", xlab = "percent of contract obligations spent on Fixed Price", horizontal = TRUE)
-
-qplot(StateList$pFixed, geom = "histogram", binwidth = .03, main = "Distribution of Fixed Price", xlab = "Contracting Method: Fixed Price", fill = I("violet"), col = I("red"), aplpha = .2, xlim = c(0, 1))
+# boxplot(StateList$pFixed, col=(c("violet", "violet")), main = "Contracting Methods: Fixed Price", xlab = "percent of contract obligations spent on Fixed Price", horizontal = TRUE)
+# 
+# qplot(StateList$pFixed, geom = "histogram", binwidth = .03, main = "Distribution of Fixed Price", xlab = "Contracting Method: Fixed Price", fill = I("violet"), col = I("red"), aplpha = .2, xlim = c(0, 1))
 
 #pWnA
 
@@ -2015,7 +2002,7 @@ ggplot(StateList, aes(x=pVehMAC)) +
 summary(StateList$pVehMAC)
 
 ##IDV multi
-pVehMAC
+# pVehMAC
 
 vehMACsmean1 <- mean(StateList$pVehMAC)
 
@@ -2031,7 +2018,7 @@ ggplot(StateList, aes(x=pVehMAC)) +
 
 
 ##IDV single
-pVehSAC
+# pVehSAC
 
 vehSACsmean1 <- mean(StateList$pVehSAC)
 
@@ -2082,31 +2069,31 @@ ggplot(StateList, aes(x=pIDV)) +
 ```
 
 ###final model exploration:
-``` {r echo = TRUE}
-
-mfit10 <- lm(pEffectiveComp ~ pcService+ I(pcService^2)+ pRnD+ pAir+ pLand + pFixed, data=StateList)
-
-summary(mfit10)
-
-##residual plot
-##http://www.r-bloggers.com/ggplot2-version-of-figures-in-%E2%80%9C25-recipes-for-getting-started-with-r%E2%80%9D/
-
-
-ggplotRegression <- function (fit) {
-
-require(ggplot2)
-
-ggplot(fit$model, aes_string(x = names(fit$model)[2], y = names(fit$model)[1])) + 
-  geom_point() +
-  stat_smooth(method = "lm", col = "green") +
-  labs(title = paste("Adj R2 = ",signif(summary(fit)$adj.r.squared, 5),
-                     "Intercept =",signif(fit$coef[[1]],5 ),
-                     " Slope =",signif(fit$coef[[2]], 5),
-                     " P =",signif(summary(fit)$coef[2,4], 5)))
-}
-
-ggplotRegression(mfit10)
-
+``` {r FinalExploration, echo = TRUE}
+# 
+# mfit10 <- lm(pEffComp ~ pcService+ I(pcService^2)+ pRnD+ pAir+ pLand + pFixed, data=StateList)
+# 
+# summary(mfit10)
+# 
+# ##residual plot
+# ##http://www.r-bloggers.com/ggplot2-version-of-figures-in-%E2%80%9C25-recipes-for-getting-started-with-r%E2%80%9D/
+# 
+# 
+# ggplotRegression <- function (fit) {
+# 
+# require(ggplot2)
+# 
+# ggplot(fit$model, aes_string(x = names(fit$model)[2], y = names(fit$model)[1])) + 
+#   geom_point() +
+#   stat_smooth(method = "lm", col = "green") +
+#   labs(title = paste("Adj R2 = ",signif(summary(fit)$adj.r.squared, 5),
+#                      "Intercept =",signif(fit$coef[[1]],5 ),
+#                      " Slope =",signif(fit$coef[[2]], 5),
+#                      " P =",signif(summary(fit)$coef[2,4], 5)))
+# }
+# 
+# ggplotRegression(mfit10)
+# 
 
 
 ```

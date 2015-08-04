@@ -19,9 +19,9 @@ options(warn=1)
 # debug(apply_lookups)
 # debug(CreateDuration)
 #*************************************Lookup Files*****************************************************
-# Path<-"K:\\2007-01 PROFESSIONAL SERVICES\\R scripts and data\\"
+Path<-"K:\\2007-01 PROFESSIONAL SERVICES\\R scripts and data\\"
 # Path<-"~\\FPDS\\R scripts and data\\"
-Path<-"C:\\Users\\Greg Sanders\\SkyDrive\\Documents\\R Scripts and Data SkyDrive\\"
+# Path<-"C:\\Users\\Greg Sanders\\SkyDrive\\Documents\\R Scripts and Data SkyDrive\\"
 # setwd("C:\\Users\\Greg Sanders\\Documents\\Development\\Competition")
 setwd("K:\\Development\\Competition")
 
@@ -45,7 +45,7 @@ source(paste(Path,"create_procedural_graphs.r",sep=""))
 # undebug(create_procedural_graphs)
 create_procedural_graphs("Defense Competition State","Overall",LayoutName="short half page")
 # create_procedural_graphs("Defense Competition State","StateCode")
-undebug(create_procedural_graphs)
+# undebug(create_procedural_graphs)
 # debug(apply_lookups)
 create_procedural_graphs("Defense Competition MCC","Overall",LayoutName="short half page")
 # debug(CreateChartOrTable)
