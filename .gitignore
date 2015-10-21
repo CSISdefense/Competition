@@ -3,3 +3,6 @@ bfg-1.12.3.jar
 Data/2014DefenseCompetitionByPlatformAreaPoP.csv
 Data/2014DefenseCompetitionVehicleByPlatformAreaMajorCommand.csv
 Data/2014DefenseCompetitionVehicleByPlatformAreaPoP.csv
+.RData
+.Rhistory
+*.db
